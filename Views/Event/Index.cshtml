@@ -1,0 +1,51 @@
+@model codecampster.Models.Event
+@{
+    ViewData["Title"] = "Event Info";
+}
+<h2>@ViewData["Title"].</h2>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+<address>
+    <strong>Email:</strong> <a href="mailto:board@onetug.com">board@onetug.com</a>
+</address>
+<address>
+    @string.Format("{0} to {1}", Model.EventStart, Model.EventEnd)
+</address>
+<address>
+    <strong>Location:</strong> @Model.CompleteAddress
+</address>
+
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap() {
+      $("#map").height($(document).height()*0.6);
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 28, lng: -81},
+          zoom: 15
+        });
+        var address = '@Model.CompleteAddress';
+          var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address': address}, function(results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                }
+            });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3B_NxTPCbQkKe8Xmnxz9iyr26SaX7cmU&callback=initMap"
+    async defer></script>

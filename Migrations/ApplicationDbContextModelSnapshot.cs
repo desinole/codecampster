@@ -74,6 +74,26 @@ namespace codecampster.Migrations
                     b.HasAnnotation("Relational:TableName", "AspNetUsers");
                 });
 
+            modelBuilder.Entity("codecampster.Models.Event", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CompleteAddress");
+
+                    b.Property<DateTime>("EventEnd");
+
+                    b.Property<DateTime>("EventStart");
+
+                    b.Property<bool>("IsCurrent");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("SocialMediaHashtag");
+
+                    b.HasKey("ID");
+                });
+
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
                 {
                     b.Property<string>("Id");

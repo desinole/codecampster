@@ -80,6 +80,8 @@ namespace codecampster
                     {
                         serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
                              .Database.Migrate();
+                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                        .EnsureSeed();
                     }
                 }
                 catch { }
