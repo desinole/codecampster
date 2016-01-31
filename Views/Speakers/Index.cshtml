@@ -1,0 +1,14 @@
+@model IQueryable<Speaker>
+
+<div>
+@foreach (var speaker in Model)
+{
+    <div style="float:left;width:250px">
+    <div><img style="width:240px;align:center" src="@speaker.AvatarURL" alt="@speaker.FullName" /></div>
+    <div><h3 style="text-align:center">
+        <a target="_blank" asp-action="Detail" asp-route-id="@speaker.ID">@speaker.FullName</a></h3>
+        </div>
+    </div>
+}
+</div>
+<div style="clear:both"></div>

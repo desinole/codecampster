@@ -9,6 +9,7 @@ namespace codecampster.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Event> Events { get; set; }
+        public DbSet<Speaker> Speakers {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -31,12 +32,24 @@ namespace codecampster.Models
                 x.Property<string>("CompleteAddress");
                 x.Property<bool>("IsCurrent");
 			});
+            builder.Entity(typeof(Speaker), x=>
+            {
+                x.Property<int>("ID");
+                x.Property<string>("FullName");
+                x.Property<string>("Company");
+                x.Property<string>("Title");
+                x.Property<string>("Bio");
+                x.Property<string>("Twitter");
+                x.Property<string>("Website");
+                x.Property<string>("Blog");
+                x.Property<string>("AvatarURL");
+            });
        }
        
        public void EnsureSeed()
        {
-           Task<bool> result =  this.Events.AnyAsync();
-           if (!result.Result)
+           Task<bool> containsEvents =  this.Events.AnyAsync();
+           if (!containsEvents.Result)
            {
                var ccEvent = new Event{ 
                    Name = "Orlando Codecamp 2016",
@@ -47,6 +60,20 @@ namespace codecampster.Models
                    CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746"
                    };
                this.Events.Add(ccEvent);
+               this.SaveChanges();
+           }
+           Task<bool> containsSpeakers = this.Speakers.AnyAsync();
+           if (!containsSpeakers.Result)
+           {
+               var speaker = new Speaker
+               {
+                   FullName = "SSC Advisory Committee",
+                   Company = "Seminole State College",
+                   Website = "https://www.seminolestate.edu/",
+                   Twitter = "SeminoleState",
+                   AvatarURL = "https://pbs.twimg.com/profile_images/529291538325450752/X0zAf03G_400x400.jpeg"
+               };
+               this.Speakers.Add(speaker);
                this.SaveChanges();
            }
        }

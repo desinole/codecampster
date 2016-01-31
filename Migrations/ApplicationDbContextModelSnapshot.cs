@@ -94,6 +94,30 @@ namespace codecampster.Migrations
                     b.HasKey("ID");
                 });
 
+            modelBuilder.Entity("codecampster.Models.Speaker", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AvatarURL");
+
+                    b.Property<string>("Bio");
+
+                    b.Property<string>("Blog");
+
+                    b.Property<string>("Company");
+
+                    b.Property<string>("FullName");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("Twitter");
+
+                    b.Property<string>("Website");
+
+                    b.HasKey("ID");
+                });
+
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
                 {
                     b.Property<string>("Id");
