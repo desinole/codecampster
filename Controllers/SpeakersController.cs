@@ -37,5 +37,10 @@ namespace codecampster.Controllers
         {
             return View(_context.Speakers.Select(s=>s));
         }
+        
+        public IActionResult Details(int id)
+        {
+            return View(_context.Speakers.Where(s=>s.ID==id).SingleOrDefault());
+        }
     }
 }

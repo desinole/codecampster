@@ -1,0 +1,41 @@
+@model Speaker
+@{
+    ViewData["Title"] = Model.FullName;
+}
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrEmpty(Model.AvatarURL))
+{
+    <p><img style="width:250px" src=@Model.AvatarURL /></p>
+}
+@if (!string.IsNullOrEmpty(Model.Title))
+{
+    <p>@Model.Title</p>
+}
+@if (!string.IsNullOrEmpty(Model.Company))
+{
+    <p>@Model.Company</p>
+}
+@if (!string.IsNullOrEmpty(Model.Twitter))
+{
+    <p><a target="_blank" href="https://twitter.com/@(Model.Twitter)">@(Model.Twitter)</a></p>
+}
+@if (!string.IsNullOrEmpty(Model.Website))
+{
+    <p><a target="_blank" href="@(Model.Website)">@(Model.Website)</a></p>
+}
+@if (!string.IsNullOrEmpty(Model.Blog))
+{
+    <p><a target="_blank" href="@(Model.Blog)">@(Model.Blog)</a></p>
+}
+@if (!string.IsNullOrEmpty(Model.Bio))
+{
+    <p>@Model.Bio</p>
+}
+
+        <!--public string Company {get;set;}
+        public string Title {get;set;}
+        public string Bio {get;set;}
+        public string Twitter {get;set;}
+        public string Website {get;set;}
+        public string Blog {get;set;}
+        public string AvatarURL {get;set;}-->

@@ -1,13 +1,22 @@
 @model IQueryable<Speaker>
-
+@{
+    ViewData["Title"] = "Speakers";
+}
+<h2>@ViewData["Title"]</h2>
 <div>
 @foreach (var speaker in Model)
 {
-    <div style="float:left;width:250px">
-    <div><img style="width:240px;align:center" src="@speaker.AvatarURL" alt="@speaker.FullName" /></div>
-    <div><h3 style="text-align:center">
-        <a target="_blank" asp-action="Detail" asp-route-id="@speaker.ID">@speaker.FullName</a></h3>
-        </div>
+    <div style="float:left;width:150px">
+    <div>
+        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">
+            <img style="width:145px;align:center" src="@speaker.AvatarURL" alt="@speaker.FullName" />
+        </a>
+    </div>
+    <div>
+        <h5 style="text-align:center">
+            <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">@speaker.FullName</a>
+        </h5>
+    </div>
     </div>
 }
 </div>
