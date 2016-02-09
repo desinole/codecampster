@@ -31,8 +31,8 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="Event" asp-action="Index">Event Info</a></li>
-                        <li><a asp-controller="Speakers" asp-action="Index">Speakers</a></li>
+                        <li><a asp-controller="Event" asp-action="Index">Event</a></li>
+                        <li><a asp-controller="Event" asp-action="Index">Sponsors</a></li>
                         <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
@@ -44,6 +44,7 @@
             <hr />
             <footer>
                 <p>&copy;@DateTime.Now.Year - ONETUG</p>
+                <p>Powered by the <a href="https://github.com/desinole/codecampster" target="_blank">Codecampster Github project</a></p>
             </footer>
         </div>
 

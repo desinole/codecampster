@@ -16,6 +16,21 @@ namespace codecampster.Migrations
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("codecampster.Models.Announcement", b =>
+                {
+                    b.Property<int>("ID");
+
+                    b.Property<DateTime>("ExpiresOn");
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime>("PublishOn");
+
+                    b.Property<int>("Rank");
+
+                    b.HasKey("ID");
+                });
+
             modelBuilder.Entity("codecampster.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");

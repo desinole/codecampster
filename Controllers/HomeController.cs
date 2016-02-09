@@ -35,6 +35,8 @@ namespace codecampster.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.Announcements = _context.Announcements.Where(a=>a.PublishOn<DateTime.Now && a.ExpiresOn>DateTime.Now).OrderBy(a=>a.Rank);
+            ViewBag.Speakers = _context.Speakers.Count();
             return View();
         }
 

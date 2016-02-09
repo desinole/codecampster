@@ -10,6 +10,7 @@ namespace codecampster.Models
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<Speaker> Speakers {get;set;}
+        public DbSet<Announcement> Announcements {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -43,6 +44,14 @@ namespace codecampster.Models
                 x.Property<string>("Website");
                 x.Property<string>("Blog");
                 x.Property<string>("AvatarURL");
+            });
+            builder.Entity(typeof(Announcement),x=>
+            {
+                x.Property<int>("ID");
+                x.Property<string>("Message");
+                x.Property<int>("Rank");
+                x.Property<System.DateTime>("PublishOn");
+                x.Property<System.DateTime>("ExpiresOn");
             });
        }
        

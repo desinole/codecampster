@@ -9,7 +9,8 @@
     <div style="float:left;width:150px">
     <div>
         <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">
-            <img style="width:145px;align:center" src="@speaker.AvatarURL" alt="@speaker.FullName" />
+        @*Use @Model.AvatarUrl instead of default path for icon*@
+            <img style="width:145px;align:center" src="~/images/default_user_icon.jpg" alt="@speaker.FullName" />
         </a>
     </div>
     <div>

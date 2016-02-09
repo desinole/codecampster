@@ -5,7 +5,8 @@
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrEmpty(Model.AvatarURL))
 {
-    <p><img style="width:250px" src=@Model.AvatarURL /></p>
+            @*Use @Model.AvatarUrl instead of default path for icon*@
+    <p><img style="width:150px" src="~/images/default_user_icon.jpg" /></p>
 }
 @if (!string.IsNullOrEmpty(Model.Title))
 {
@@ -17,15 +18,15 @@
 }
 @if (!string.IsNullOrEmpty(Model.Twitter))
 {
-    <p><a target="_blank" href="https://twitter.com/@(Model.Twitter)">@(Model.Twitter)</a></p>
+    <p><strong>Twitter:&nbsp;</strong><a target="_blank" href="https://twitter.com/@(Model.Twitter)">@(Model.Twitter)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Website))
 {
-    <p><a target="_blank" href="@(Model.Website)">@(Model.Website)</a></p>
+    <p><strong>Website:&nbsp;</strong><a target="_blank" href="@(Model.Website)">@(Model.Website)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Blog))
 {
-    <p><a target="_blank" href="@(Model.Blog)">@(Model.Blog)</a></p>
+    <p><strong>Blog:&nbsp;</strong><a target="_blank" href="@(Model.Blog)">@(Model.Blog)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Bio))
 {

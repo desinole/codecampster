@@ -1,6 +1,8 @@
+@using System.Security.Claims
 @{
     ViewData["Title"] = "Home Page";
 }
+
 
 <!--<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
@@ -29,26 +31,36 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h2>Announcement</h2>
-        <ul>
-            <li>Announcement 1</li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Sponsors</h2>
-        <ul>
-            <li><a href="http://www.orlandocodecamp.com/Content/Documents/Orlando%20Code%20Camp%202015%20Contributor%20Information.pdf">Check out the sponsor package</a></li>
-        </ul>
-        <h2>Speakers</h2>
-        <ul>
-            <li><a href="http://www.orlandocodecamp.com/Session/SpeakerSessions">Sign up to speak</a></li>
-        </ul>
         <h2>Attendees</h2>
         <ul>
-            <li>Sign up to attend</li>
-            <li>Add sessions to your agenda</li>
+            @if (User.IsSignedIn())
+            {
+                <li>RSVP (appears on sign in, toggle)</li>
+                <li>Volunteer (appears when signed in and RSVPed)</li>
+            }
+            else
+            {
+                <li>Sign up to attend or Sign In (disappears when signed in)</li>
+            }
+            <li>View agenda (visible whether logged in or not)</li>
+            <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
+            <li><a asp-controller="Speakers" asp-action="Index">72 Sessions</a></li>
+            <li><a asp-controller="Speakers" asp-action="Index">9 Tracks</a></li>
+            <li>600 Attendees</li>
         </ul>
     </div>
     <div class="col-md-3">
+        <ul>
+        </ul>
+        <h2>Announcements</h2>
+        <ul>
+            @foreach (var announcement in ViewBag.Announcements)
+            {
+            <li>@Html.Raw(announcement.Message)</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-3">
+        <div>Rotating sponsor banner here</div>
 <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-widget-id="691122639218286592">#orlandocc Tweets</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    </div>
 </div>
