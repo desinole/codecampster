@@ -11,6 +11,7 @@ namespace codecampster.Models
         public DbSet<Event> Events { get; set; }
         public DbSet<Speaker> Speakers {get;set;}
         public DbSet<Announcement> Announcements {get;set;}
+        public DbSet<Sponsor> Sponsors {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -52,6 +53,16 @@ namespace codecampster.Models
                 x.Property<int>("Rank");
                 x.Property<System.DateTime>("PublishOn");
                 x.Property<System.DateTime>("ExpiresOn");
+            });
+            builder.Entity(typeof(Sponsor), x=>
+            {
+                x.Property<int>("ID");
+                x.Property<string>("CompanyName");
+                x.Property<string>("SponsorLevel");
+                x.Property<string>("Bio");
+                x.Property<string>("Twitter");
+                x.Property<string>("Website");
+                x.Property<string>("AvatarURL");
             });
        }
        

@@ -18,7 +18,8 @@ namespace codecampster.Migrations
 
             modelBuilder.Entity("codecampster.Models.Announcement", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("ExpiresOn");
 
@@ -125,6 +126,26 @@ namespace codecampster.Migrations
                     b.Property<string>("FullName");
 
                     b.Property<string>("Title");
+
+                    b.Property<string>("Twitter");
+
+                    b.Property<string>("Website");
+
+                    b.HasKey("ID");
+                });
+
+            modelBuilder.Entity("codecampster.Models.Sponsor", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AvatarURL");
+
+                    b.Property<string>("Bio");
+
+                    b.Property<string>("CompanyName");
+
+                    b.Property<string>("SponsorLevel");
 
                     b.Property<string>("Twitter");
 

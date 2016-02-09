@@ -1,0 +1,24 @@
+@model IQueryable<Sponsor>
+@{
+    ViewData["Title"] = "Sponsors";
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+@foreach (var sponsor in Model)
+{
+    <div style="float:left;width:250px;padding:20px">
+    <div>
+        <a href="@Url.Content(string.Format("~/sponsors/details/{0}",@sponsor.ID))">
+            <img style="width:245px;align:center" src="@(sponsor.AvatarURL)" alt="@sponsor.CompanyName" />
+        </a>
+    </div>
+    <div>
+        <h5>
+            <a href="@Url.Content(string.Format("~/sponsors/details/{0}",@sponsor.ID))">@sponsor.CompanyName (<em>@sponsor.SponsorLevel</em>)</a>
+        </h5>
+
+    </div>
+    </div>
+}
+</div>
+<div style="clear:both"></div>

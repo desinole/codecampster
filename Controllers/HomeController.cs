@@ -37,6 +37,9 @@ namespace codecampster.Controllers
         {
             ViewBag.Announcements = _context.Announcements.Where(a=>a.PublishOn<DateTime.Now && a.ExpiresOn>DateTime.Now).OrderBy(a=>a.Rank);
             ViewBag.Speakers = _context.Speakers.Count();
+            Random r = new Random();
+            int toSkip = r.Next(0,_context.Sponsors.Count());
+            ViewBag.Sponsor = _context.Sponsors.Skip(toSkip).Take(1).FirstOrDefault();
             return View();
         }
 

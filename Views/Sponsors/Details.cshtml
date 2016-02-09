@@ -1,20 +1,11 @@
-@model Speaker
+@model Sponsor
 @{
-    ViewData["Title"] = Model.FullName;
+    ViewData["Title"] = string.Format("{0} ({1})",Model.CompanyName,Model.SponsorLevel);
 }
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrEmpty(Model.AvatarURL))
 {
-
-    <p><img style="width:150px" src="@Model.AvatarURL" /></p>
-}
-@if (!string.IsNullOrEmpty(Model.Title))
-{
-    <p>@Model.Title</p>
-}
-@if (!string.IsNullOrEmpty(Model.Company))
-{
-    <p>@Model.Company</p>
+    <p><img style="width:250px" src="@Model.AvatarURL" /></p>
 }
 @if (!string.IsNullOrEmpty(Model.Twitter))
 {
@@ -23,10 +14,6 @@
 @if (!string.IsNullOrEmpty(Model.Website))
 {
     <p><strong>Website:&nbsp;</strong><a target="_blank" href="@(Model.Website)">@(Model.Website)</a></p>
-}
-@if (!string.IsNullOrEmpty(Model.Blog))
-{
-    <p><strong>Blog:&nbsp;</strong><a target="_blank" href="@(Model.Blog)">@(Model.Blog)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Bio))
 {
