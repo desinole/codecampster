@@ -33,11 +33,14 @@ namespace codecampster.Controllers
             _logger = loggerFactory.CreateLogger<SpeakersController>();
             _context = context;
         }
+        
+        [ResponseCache(Duration = 300)]
         public IActionResult Index()
         {
-            return View(_context.Speakers.Select(s=>s));
+            return View(_context.Speakers.Select(s=>s).OrderBy(x => Guid.NewGuid()));
         }
         
+        [ResponseCache(Duration = 300)]
         public IActionResult Details(int id)
         {
             return View(_context.Speakers.Where(s=>s.ID==id).SingleOrDefault());

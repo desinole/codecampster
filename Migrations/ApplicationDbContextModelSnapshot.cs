@@ -70,6 +70,8 @@ namespace codecampster.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<bool?>("RSVP");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Twitter");
@@ -78,6 +80,8 @@ namespace codecampster.Migrations
 
                     b.Property<string>("UserName")
                         .HasAnnotation("MaxLength", 256);
+
+                    b.Property<bool?>("Volunteer");
 
                     b.HasKey("Id");
 

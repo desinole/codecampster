@@ -8,6 +8,7 @@ namespace codecampster.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Speaker> Speakers {get;set;}
         public DbSet<Announcement> Announcements {get;set;}
@@ -23,6 +24,8 @@ namespace codecampster.Models
 				x.Property<string>("Location");
 				x.Property<string>("Twitter");
 				x.Property<int?>("AvatarID");
+                x.Property<bool?>("RSVP");
+                x.Property<bool?>("Volunteer");
 			});
  	        builder.Entity(typeof (Event), x =>
 	        {
@@ -94,6 +97,35 @@ namespace codecampster.Models
                    AvatarURL = "https://pbs.twimg.com/profile_images/529291538325450752/X0zAf03G_400x400.jpeg"
                };
                this.Speakers.Add(speaker);
+               this.SaveChanges();
+           }
+           Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
+           if (!containsAnnouncements.Result)
+           {
+               var announcement = new Announcement
+               {
+                   ID = 1, //this is a bug. fix it
+                   Message = "Orlando Codecamp 2016 will be held all day April 2 2016 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                   PublishOn = DateTime.Now,
+                   ExpiresOn = DateTime.Now.AddYears(1),
+                   Rank = 1
+               };
+               this.Announcements.Add(announcement);
+               this.SaveChanges();
+           }
+           Task<bool> containsSponsors = this.Sponsors.AnyAsync();
+           if (!containsSponsors.Result)
+           {
+               var sponsor = new Sponsor
+               {
+                   CompanyName = "Orlando .NET User Group",
+                   SponsorLevel = "Platinum",
+                   Bio = "ONETUG was founded by Joel Martinez in 2001. Our goal is to showcase great speakers & content centered around, but not restricted to, the Microsoft .NET stack. We strive to bring together developers from all platforms by holding monthly meetings, Nerd Dinners & an annual Codecamp. Our vision is to collaborate with other tech groups & help build Orlando into a major hub for technology companies & startups.",
+                   Twitter = "ONETUG",
+                   Website = "http://onetug.org",
+                   AvatarURL = "/images/ONETUGlogo.png"
+               };
+               this.Sponsors.Add(sponsor);
                this.SaveChanges();
            }
        }

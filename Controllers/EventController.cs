@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using codecampster.Models;
 using codecampster.Services;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Logging;
@@ -38,5 +39,29 @@ namespace codecampster.Controllers
             var locationModel = _context.Events.Where(e=>e.IsCurrent).FirstOrDefault();
             return View(locationModel);
         }
+        
+        [Authorize]
+        public IActionResult RSVP()
+        {
+            var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).SingleOrDefault();
+            currentUser.RSVP = (!(currentUser.RSVP??false));
+            _context.SaveChanges();
+            DebugMessage(string.Format("{0} RSVP {1}",currentUser.UserName, currentUser.RSVP));
+            return RedirectToAction("Index", "Home");
+        }
+        
+        [Authorize]
+        public IActionResult Volunteer()
+        {
+            var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).SingleOrDefault();
+            currentUser.Volunteer = (!(currentUser.Volunteer??false));
+            _context.SaveChanges();
+            DebugMessage(string.Format("{0} Volunteer {1}",currentUser.UserName, currentUser.Volunteer));
+            return RedirectToAction("Index", "Home");
+        }
+        private async void DebugMessage(string message)
+        {
+            _logger.LogCritical(message);
+        }    
     }
 }

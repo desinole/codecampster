@@ -31,27 +31,47 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h2>Attendees</h2>
-        <ul>
+        <h2>To-Do</h2>
+        <ol>
             @if (User.IsSignedIn())
             {
-                <li>RSVP (appears on sign in, toggle)</li>
-                <li>Volunteer (appears when signed in and RSVPed)</li>
+                @if (!(ViewBag.RSVP??false))
+                {
+
+                <li><a asp-controller="Event" asp-action="RSVP">RSVP to attend</a></li>
+                }
+                else
+                {
+                <li>Thank you for RSVPing</li>
+                }
+                @if (!(ViewBag.Volunteer??false))
+                {
+
+                <li><a asp-controller="Event" asp-action="Volunteer">Volunteer to help</a></li>
+                }
+                else
+                {
+                <li>Thank you for volunteering</li>
+                }
             }
             else
             {
-                <li>Sign up to attend or Sign In (disappears when signed in)</li>
+                <li>Tell us about yourself</li>
+                <ul>
+                    <li>No account? <a asp-controller="Account" asp-action="Register">Sign up</a></li>
+                    <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
+                </ul>
             }
-            <li>View agenda (visible whether logged in or not)</li>
+            <li>View agenda</li>
+            <ul>
             <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
-            <li><a asp-controller="Speakers" asp-action="Index">72 Sessions</a></li>
-            <li><a asp-controller="Speakers" asp-action="Index">9 Tracks</a></li>
-            <li>600 Attendees</li>
-        </ul>
+            <li>x Sessions</li>
+            <li>x Tracks</li>
+            <li>@ViewBag.Attendees Attendees</li>
+            </ul>
+        </ol>
     </div>
     <div class="col-md-3">
-        <ul>
-        </ul>
         <h2>Announcements</h2>
         <ul>
             @foreach (var announcement in ViewBag.Announcements)
@@ -59,9 +79,12 @@
             <li>@Html.Raw(announcement.Message)</li>
             }
         </ul>
+        <h2>@ViewBag.Sponsor.SponsorLevel</h2>
+            <a href="@ViewBag.Sponsor.Website" target="_blank">
+            <img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" />
+            </a>
     </div>
     <div class="col-md-3">
-        <div><strong>@ViewBag.Sponsor.SponsorLevel</strong></div>
-        <div><a href="@ViewBag.Sponsor.Website" target="_blank"><img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" /></a></div>
-<a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-widget-id="691122639218286592">#orlandocc Tweets</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    </div>
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-widget-id="691122639218286592">#orlandocc Tweets</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
 </div>

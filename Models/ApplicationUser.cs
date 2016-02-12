@@ -10,5 +10,7 @@ namespace codecampster.Models
 		public string Location { get; set; }
 		public string Twitter { get; set; }
 		public int? AvatarID { get; set; }
+        public bool? RSVP {get;set;}
+        public bool? Volunteer {get;set;}
     }
 }
