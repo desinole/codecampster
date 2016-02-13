@@ -1,3 +1,5 @@
+using MailKit.Net.Smtp;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,25 @@ namespace codecampster.Services
     {
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            // Plug in your email service here to send an email.
+            var mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress("",""));
+            mimeMessage.To.Add(new MailboxAddress(email,email));
+            mimeMessage.Subject = subject;
+            mimeMessage.Body = new TextPart("plain") { Text = message };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.server.com", 587, false);
+
+                // We don't have an OAuth2 token, so we've disabled it
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                
+                client.Authenticate("username", "password");
+
+                client.Send(mimeMessage);
+                client.Disconnect(true);
+            }
+            
             return Task.FromResult(0);
         }
 
