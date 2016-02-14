@@ -43,7 +43,7 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 300)]
         public IActionResult Details(int id)
         {
-            return View(_context.Speakers.Where(s=>s.ID==id).SingleOrDefault());
+            return View(_context.Speakers.Where(s=>s.ID == id).SingleOrDefault());
         }
     }
 }

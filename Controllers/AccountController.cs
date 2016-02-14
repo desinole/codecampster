@@ -12,12 +12,14 @@ using Microsoft.Extensions.Logging;
 using codecampster.Models;
 using codecampster.Services;
 using codecampster.ViewModels.Account;
+using Microsoft.Extensions.OptionsModel;
 
 namespace codecampster.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private IOptions<AppSettings> _appSettings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -29,12 +31,14 @@ namespace codecampster.Controllers
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _appSettings = appSettings;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -112,10 +116,11 @@ namespace codecampster.Controllers
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                        "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User created a new account with password.");
+                    await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
+                    _appSettings.Value.UserName, _appSettings.Value.Password,
+                     model.Email, "Orlando Codecamp Confirm your account",
+                        "Please confirm your account by clicking this link: " + callbackUrl);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 AddErrors(result);
@@ -262,7 +267,7 @@ namespace codecampster.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)// || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -272,8 +277,10 @@ namespace codecampster.Controllers
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                Task result = _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
+                    _appSettings.Value.UserName, _appSettings.Value.Password,
+                    model.Email, "Orlando Codecamp Reset Password",
+                   "Please reset your password by clicking here: " + callbackUrl);
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -378,7 +385,9 @@ namespace codecampster.Controllers
             var message = "Your security code is: " + code;
             if (model.SelectedProvider == "Email")
             {
-                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
+                Task result = _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
+                    _appSettings.Value.UserName, _appSettings.Value.Password,
+                    await _userManager.GetEmailAsync(user), "Security Code", message);
             }
             else if (model.SelectedProvider == "Phone")
             {

@@ -1,0 +1,73 @@
+@model IEnumerable<codecampster.Models.Session>
+
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table">
+    @*<tr>
+        <th>
+            @Html.DisplayName("Speaker")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Level)
+        </th>
+        <th></th>
+    </tr>*@
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <div>
+                <div>
+                    <a href="@Url.Content(string.Format("~/speakers/details/{0}",@item.Speaker.ID))">
+                        <img style="max-width:50px;align:center" src="@(item.Speaker.AvatarURL)" alt="@item.Speaker.FullName" />
+                    </a>
+                </div>
+                <div>
+                    <h5>
+                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@item.Speaker.ID))">@item.Speaker.FullName</a>
+                    </h5>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div>
+                <h3>@item.Name</h3>
+            </div>
+            <div>
+                <em>@item.Level</em>
+            </div>
+            <div>
+                @(item.Description.Substring(0,Math.Min(200,item.Description.Length))).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })
+            </div>
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Level)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.SessionID">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.SessionID">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.SessionID">Delete</a>
+        </td>*@
+    </tr>
+}
+</table>

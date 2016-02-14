@@ -7,6 +7,6 @@ namespace codecampster.Services
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        Task SendEmailAsync(string server, string username, string password, string email, string subject, string message);
     }
 }

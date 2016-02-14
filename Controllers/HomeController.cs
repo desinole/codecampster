@@ -7,11 +7,13 @@ using codecampster.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 
 namespace codecampster.Controllers
 {
     public class HomeController : Controller
     {
+        private IOptions<AppSettings> _appSettings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -24,14 +26,16 @@ namespace codecampster.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IOptions<AppSettings> appSettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
-            _logger = loggerFactory.CreateLogger<HomeController>();
             _context = context;
+            _appSettings = appSettings;
+            _logger = loggerFactory.CreateLogger<HomeController>();
         }
         public IActionResult Index()
         {
@@ -39,6 +43,7 @@ namespace codecampster.Controllers
             ViewBag.Speakers = _context.Speakers.Count();
             var attendees = _context.ApplicationUsers.Select(a=>(a.RSVP==null?false:a.RSVP.Value)).ToList();
             ViewBag.Attendees = attendees.Where(a=>a).Count();
+            ViewBag.Sessions = _context.Sessions.Count();
             if (User.Identity.IsAuthenticated)
             {
                 var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefault();

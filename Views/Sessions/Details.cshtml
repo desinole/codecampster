@@ -1,0 +1,11 @@
+@model codecampster.Models.Session
+@{
+    ViewData["Title"] = Model.Name;
+}
+<h2>@ViewData["Title"]</h2>
+<p><img style="max-width:250px" src="@Model.Speaker.AvatarURL" /></p>
+<h5>
+    <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
+</h5>
+<p>@Model.Level</p>
+<p>@Model.Description</p>

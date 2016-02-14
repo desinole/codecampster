@@ -5,7 +5,7 @@
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrEmpty(Model.AvatarURL))
 {
-    <p><img style="width:250px" src="@Model.AvatarURL" /></p>
+    <p><img style="max-height:250px" src="@Model.AvatarURL" /></p>
 }
 @if (!string.IsNullOrEmpty(Model.Twitter))
 {

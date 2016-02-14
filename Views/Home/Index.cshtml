@@ -31,7 +31,7 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h2>To-Do</h2>
+        <h3>To-Do</h3>
         <ol>
             @if (User.IsSignedIn())
             {
@@ -65,24 +65,25 @@
             <li>View agenda</li>
             <ul>
             <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
-            <li>x Sessions</li>
-            <li>x Tracks</li>
+            <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
+            <li>Tracks (coming soon)</li>
+            <li>Create My Agenda (coming soon)</li>
             <li>@ViewBag.Attendees Attendees</li>
             </ul>
         </ol>
+        <h3>@ViewBag.Sponsor.SponsorLevel</h3>
+        <a href="@ViewBag.Sponsor.Website" target="_blank">
+            <img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" />
+        </a>
     </div>
     <div class="col-md-3">
-        <h2>Announcements</h2>
+        <h3>Announcements</h3>
         <ul>
             @foreach (var announcement in ViewBag.Announcements)
             {
             <li>@Html.Raw(announcement.Message)</li>
             }
         </ul>
-        <h2>@ViewBag.Sponsor.SponsorLevel</h2>
-            <a href="@ViewBag.Sponsor.Website" target="_blank">
-            <img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" />
-            </a>
     </div>
     <div class="col-md-3">
             <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-widget-id="691122639218286592">#orlandocc Tweets</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>

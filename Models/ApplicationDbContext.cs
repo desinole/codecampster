@@ -10,9 +10,10 @@ namespace codecampster.Models
     {
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<Speaker> Speakers {get;set;}
-        public DbSet<Announcement> Announcements {get;set;}
-        public DbSet<Sponsor> Sponsors {get;set;}
+        public DbSet<Speaker> Speakers { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Sponsor> Sponsors { get; set; }
+        public DbSet<Session> Sessions { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -67,6 +68,15 @@ namespace codecampster.Models
                 x.Property<string>("Website");
                 x.Property<string>("AvatarURL");
             });
+            builder.Entity(typeof(Session), x =>
+             {
+                 x.Property<int>("SessionID");
+                 x.Property<string>("Name");
+                 x.Property<string>("Description");
+                 x.Property<int>("Level");
+                 x.Property<int>("SpeakerID");
+             });
+            builder.Entity<Session>().HasOne(p => p.Speaker).WithMany(p => p.Sessions);
        }
        
        public void EnsureSeed()
@@ -98,22 +108,55 @@ namespace codecampster.Models
                };
                this.Speakers.Add(speaker);
                this.SaveChanges();
-           }
-           Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
+                Task<bool> containsSession = this.Sessions.AnyAsync();
+                if (!containsSession.Result)
+                {
+                    var session = new Session
+                    {
+                        Name = "Career Panel",
+                        Description = "Career Panel session hosted by Seminole State with industry leaders",
+                        Level = 1,
+                        SpeakerID = speaker.ID
+                    };
+                    this.Sessions.Add(session);
+                    this.SaveChanges();
+                }
+            }
+            Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
            if (!containsAnnouncements.Result)
            {
                var announcement = new Announcement
                {
                    ID = 1, //this is a bug. fix it
-                   Message = "Orlando Codecamp 2016 will be held all day April 2 2016 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                   Message = "Orlando Codecamp 2016 will be held 8am-5pm April 2 2016 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
                    PublishOn = DateTime.Now,
                    ExpiresOn = DateTime.Now.AddYears(1),
                    Rank = 1
                };
                this.Announcements.Add(announcement);
                this.SaveChanges();
-           }
-           Task<bool> containsSponsors = this.Sponsors.AnyAsync();
+                announcement = new Announcement
+                {
+                    ID = 2, //this is a bug. fix it
+                    Message = "Speakers party (sponsor: AgileThought) will be held at 6pm on April 1 2016 at Liam Fitzpatrick in Lake Mary",
+                    PublishOn = DateTime.Now,
+                    ExpiresOn = DateTime.Now.AddYears(1),
+                    Rank = 2
+                };
+                this.Announcements.Add(announcement);
+                this.SaveChanges();
+                announcement = new Announcement
+                {
+                    ID = 3, //this is a bug. fix it
+                    Message = "Attendees party will be held at 6pm on April 2 2016 at Liam Fitzpatrick in Lake Mary",
+                    PublishOn = DateTime.Now,
+                    ExpiresOn = DateTime.Now.AddYears(1),
+                    Rank = 3
+                };
+                this.Announcements.Add(announcement);
+                this.SaveChanges();
+            }
+            Task<bool> containsSponsors = this.Sponsors.AnyAsync();
            if (!containsSponsors.Result)
            {
                var sponsor = new Sponsor

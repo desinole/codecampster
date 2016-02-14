@@ -114,6 +114,22 @@ namespace codecampster.Migrations
                     b.HasKey("ID");
                 });
 
+            modelBuilder.Entity("codecampster.Models.Session", b =>
+                {
+                    b.Property<int>("SessionID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("Level");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("SpeakerID");
+
+                    b.HasKey("SessionID");
+                });
+
             modelBuilder.Entity("codecampster.Models.Speaker", b =>
                 {
                     b.Property<int>("ID")
@@ -238,6 +254,13 @@ namespace codecampster.Migrations
                     b.HasKey("UserId", "RoleId");
 
                     b.HasAnnotation("Relational:TableName", "AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("codecampster.Models.Session", b =>
+                {
+                    b.HasOne("codecampster.Models.Speaker")
+                        .WithMany()
+                        .HasForeignKey("SpeakerID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
