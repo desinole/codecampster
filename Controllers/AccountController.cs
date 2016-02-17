@@ -64,7 +64,7 @@ namespace codecampster.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -79,9 +79,10 @@ namespace codecampster.Controllers
                     _logger.LogWarning(2, "User account locked out.");
                     return View("Lockout");
                 }
+
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt. You either entered an invalid username/password or you need to register for a new account.");
                     return View(model);
                 }
             }
@@ -114,13 +115,13 @@ namespace codecampster.Controllers
                 {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
-                    _appSettings.Value.UserName, _appSettings.Value.Password,
-                     model.Email, "Orlando Codecamp Confirm your account",
-                        "Please confirm your account by clicking this link: " + callbackUrl);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    //await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
+                    //_appSettings.Value.UserName, _appSettings.Value.Password,
+                    // model.Email, "Orlando Codecamp Confirm your account",
+                    //    "Please confirm your account by clicking this link: " + callbackUrl);
+                    await _signInManager.SignInAsync(user, isPersistent: true);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 AddErrors(result);
@@ -270,7 +271,9 @@ namespace codecampster.Controllers
                 if (user == null)// || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    //return View("ForgotPasswordConfirmation");
+                    ModelState.AddModelError(string.Empty, string.Format("{0} is NOT a registered user. Register for a new account", model.Email));
+                    return View(model);
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713

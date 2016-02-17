@@ -8,11 +8,13 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 
 namespace codecampster.Controllers
 {
     public class EventController : Controller
     {
+        private IOptions<AppSettings> _appSettings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -25,17 +27,20 @@ namespace codecampster.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
+            IOptions<AppSettings> appSettings,
             ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _appSettings = appSettings;
             _logger = loggerFactory.CreateLogger<EventController>();
             _context = context;
         }
         public IActionResult Index()
         {
+            ViewBag.Key = _appSettings.Value.MapKey;
             var locationModel = _context.Events.Where(e=>e.IsCurrent).FirstOrDefault();
             return View(locationModel);
         }

@@ -7,5 +7,5 @@
 <h5>
     <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
 </h5>
-<p>@Model.Level</p>
+<p><em>@(Model.Level == 300 ? "Deep Dive" : (Model.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em></p>
 <p>@Model.Description</p>

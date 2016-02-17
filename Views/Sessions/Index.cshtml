@@ -51,7 +51,8 @@
                 <h3>@item.Name</h3>
             </div>
             <div>
-                <em>@item.Level</em>
+
+                <em>@(item.Level==300?"Deep Dive":(item.Level==200?"Prior knowledge needed":"For all levels"))</em>
             </div>
             <div>
                 @(item.Description.Substring(0,Math.Min(200,item.Description.Length))).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })

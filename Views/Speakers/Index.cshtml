@@ -1,24 +1,27 @@
 @model IQueryable<Speaker>
 @{
     ViewData["Title"] = "Speakers";
+    var i = 0;
 }
 <h2>@ViewData["Title"]</h2>
+
 <div>
 @foreach (var speaker in Model)
 {
-    <div style="float:left;width:150px">
-    <div>
-        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">
-            <img style="width:145px;align:center" src="@(speaker.AvatarURL)" alt="@speaker.FullName" />
-        </a>
-    </div>
-    <div>
-        <h5 style="text-align:center">
-            <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">@speaker.FullName</a>
-        </h5>
-    </div>
-    <div style="clear:both"></div>
-    </div>
+        <div style="float:left;width:100px;height:100px;">
+                <div style="text-align:center">
+                    <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">
+                        <img style="max-width:50px;align:center" src="@(speaker.AvatarURL)" alt="@speaker.FullName" />
+                    </a>
+                </div>
+                <div style="text-align:center">
+                    <h5>
+                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">@speaker.FullName</a>
+                    </h5>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+    i++;
 }
 </div>
 <div style="clear:both"></div>
