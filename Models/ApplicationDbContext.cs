@@ -14,6 +14,8 @@ namespace codecampster.Models
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Sponsor> Sponsors { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<Timeslot> Timeslots { get; set; }
+        public DbSet<Track> Tracks { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -48,6 +50,7 @@ namespace codecampster.Models
                 x.Property<string>("Twitter");
                 x.Property<string>("Website");
                 x.Property<string>("Blog");
+                x.Property<bool?>("Special");
                 x.Property<string>("AvatarURL");
             });
             builder.Entity(typeof(Announcement),x=>
@@ -75,11 +78,30 @@ namespace codecampster.Models
                  x.Property<string>("Description");
                  x.Property<int>("Level");
                  x.Property<int>("SpeakerID");
+                 x.Property<bool?>("Special");
              });
             builder.Entity<Session>().HasOne(p => p.Speaker).WithMany(p => p.Sessions);
-       }
-       
-       public void EnsureSeed()
+            builder.Entity<Speaker>().HasMany(p => p.Sessions);
+            builder.Entity(typeof(Track), x =>
+            {
+                x.Property<int>("ID");
+                x.Property<string>("Name");
+                x.Property<string>("RoomNumber");
+            });
+            builder.Entity<Session>().HasOne(p => p.Track).WithMany(p => p.Sessions);
+            builder.Entity<Track>().HasMany(p => p.Sessions);
+            builder.Entity(typeof(Timeslot), x =>
+            {
+                x.Property<int>("ID");
+                x.Property<string>("StartTime");
+                x.Property<string>("EndTime");
+                x.Property<bool?>("Special");
+            });
+            builder.Entity<Session>().HasOne(p => p.Timeslot).WithMany(p => p.Sessions);
+            builder.Entity<Timeslot>().HasMany(p => p.Sessions);
+        }
+
+        public void EnsureSeed()
        {
            Task<bool> containsEvents =  this.Events.AnyAsync();
            if (!containsEvents.Result)

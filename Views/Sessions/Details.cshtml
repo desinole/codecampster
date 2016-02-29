@@ -8,4 +8,13 @@
     <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
 </h5>
 <p><em>@(Model.Level == 300 ? "Deep Dive" : (Model.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em></p>
+@if (Model.Timeslot != null)
+{
+    <p><strong>Time:&nbsp;</strong>@string.Format("{0} - {1}", Model.Timeslot.StartTime, Model.Timeslot.EndTime)</p>
+}
+@if (Model.Track != null)
+{
+    <p><strong>Track:&nbsp;</strong>@Model.Track.Name</p>
+    <p><strong>Room:&nbsp;</strong>@Model.Track.RoomNumber</p>
+}
 <p>@Model.Description</p>

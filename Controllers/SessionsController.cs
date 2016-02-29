@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using codecampster.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace codecampster.Controllers
 {
@@ -35,14 +36,48 @@ namespace codecampster.Controllers
             _context = context;
         }
 
-        // GET: Sessions
-        public IActionResult Index()
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        public IActionResult Agenda()
         {
-            var applicationDbContext = _context.Sessions.Include(s => s.Speaker).OrderBy(x => Guid.NewGuid());
-            return View(applicationDbContext.ToList());
+            ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank);
+            ViewBag.TrackCount = _context.Tracks.Count();
+            ViewBag.Tracks = _context.Tracks;
+            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
+            return View(sessions.ToList());
         }
 
-        // GET: Sessions/Details/5
+
+        [ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
+        public IActionResult Index(string track, string timeslot)
+        {
+            ViewBag.Timeslots = _context.Timeslots.Where(s=> (!(s.Special == true))).OrderBy(t => t.Rank);
+            ViewBag.Tracks = _context.Tracks.OrderBy(x => x.Name);
+            IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
+            ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
+            if (!string.IsNullOrEmpty(track))
+            {
+                int trackID = 0;
+                if (int.TryParse(track, out trackID))
+                {
+                    var tr = _context.Tracks.Single(t => t.ID == trackID);
+                    ViewData["Title"] = string.Format("{0} Track Sessions {1}", tr.Name, tr.RoomNumber);
+                    return View(sessions.Where(s => (s.TrackID == trackID) && (!(s.Special == true))).ToList());
+                }
+            }
+            if (!string.IsNullOrEmpty(timeslot))
+            {
+                int timeslotId = 0;
+                if (int.TryParse(timeslot, out timeslotId))
+                {
+                    var ts = _context.Timeslots.Single(t => t.ID == timeslotId);
+                    ViewData["Title"] = string.Format("{0} - {1} Sessions", ts.StartTime, ts.EndTime);
+                    return View(sessions.Where(s => s.TimeslotID == timeslotId).ToList());
+                }
+            }
+            return View(sessions.ToList());
+        }
+
+        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -50,7 +85,7 @@ namespace codecampster.Controllers
                 return HttpNotFound();
             }
 
-            Session session = _context.Sessions.Include(s => s.Speaker).Single(m => m.SessionID == id);
+            Session session = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).Single(m => m.SessionID == id);
             if (session == null)
             {
                 return HttpNotFound();

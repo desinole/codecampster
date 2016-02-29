@@ -1,11 +1,14 @@
 @model IEnumerable<codecampster.Models.Session>
 
-@{
-    ViewData["Title"] = "Sessions";
-}
 
 <h2>@ViewData["Title"]</h2>
-
+<style>
+    .sessionLinks{
+        background-color:black;
+        color:white;
+        white-space: nowrap;
+    }
+</style>
 @*<p>
     <a asp-action="Create">Create New</a>
 </p>*@
@@ -26,10 +29,23 @@
         <th></th>
     </tr>*@
     <tr>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
+        <th colspan="2">
+        <strong>Tracks:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+            @foreach (var track in ViewBag.Tracks)
+            {
+                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?track={0}",track.ID))">@track.Name</a><text>&nbsp;</text>
+            }
+        </th>
     </tr>
-    
+    <tr>
+        <th colspan="2">
+        <strong>Timings:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+            @foreach (var timeslot in ViewBag.Timeslots)
+            {
+                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?timeslot={0}",timeslot.ID))">@string.Format("{0}-{1}",timeslot.StartTime,timeslot.EndTime)</a><text>&nbsp;</text>
+            }
+        </th>
+    </tr>
 @foreach (var item in Model) {
     <tr>
         <td>
@@ -48,14 +64,20 @@
         </td>
         <td>
             <div>
-                <h3>@item.Name</h3>
+                <h4>@item.Name</h4>
             </div>
             <div>
-
-                <em>@(item.Level==300?"Deep Dive":(item.Level==200?"Prior knowledge needed":"For all levels"))</em>
+                Track: @(item.Track != null ? string.Format("{0} ", item.Track.Name) : string.Empty)
             </div>
             <div>
-                @(item.Description.Substring(0,Math.Min(200,item.Description.Length))).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })
+                <em>@(item.Level == 300 ? "Deep Dive" : (item.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em>
+            </div>
+            <div>Time &amp; Location: 
+                @(item.Timeslot!=null?string.Format("{0}-{1} ",item.Timeslot.StartTime,item.Timeslot.EndTime):string.Empty)
+                @(item.Track!=null?string.Format("{0}",item.Track.RoomNumber):string.Empty)
+            </div>
+            <div>
+                @(((!(string.IsNullOrEmpty(item.Description) ))? item.Description.Substring(0,Math.Min(200,item.Description.Length)):"N/A")).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })
             </div>
         </td>
         @*<td>

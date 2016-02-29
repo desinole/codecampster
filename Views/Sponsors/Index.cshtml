@@ -2,8 +2,9 @@
 @{
     ViewData["Title"] = "Sponsors";
 }
-<h2>@ViewData["Title"]</h2>
+<h2>@(ViewData["Title"]).</h2>
 <div>
+<div>Interested in sponsoring Codecamp? Check out the <a href="@Url.Content("~/documents/ContributorInformation.pdf")">sponsor package</a></div>
 @foreach (var sponsor in Model)
 {
     <div>

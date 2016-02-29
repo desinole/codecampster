@@ -40,10 +40,9 @@ namespace codecampster.Controllers
         public IActionResult Index()
         {
             ViewBag.Announcements = _context.Announcements.Where(a => a.PublishOn < DateTime.Now && a.ExpiresOn > DateTime.Now).OrderBy(a => a.Rank);
-            ViewBag.Speakers = _context.Speakers.Count();
-            var attendees = _context.ApplicationUsers.Select(a=>(a.RSVP==null?false:a.RSVP.Value)).ToList();
-            ViewBag.Attendees = attendees.Where(a=>a).Count();
-            ViewBag.Sessions = _context.Sessions.Count();
+            ViewBag.Speakers = _context.Speakers.Select(s => ((s.Special == null ? false : s.Special.Value))).ToList().Where(s => !s).Count();
+            ViewBag.Attendees = _context.ApplicationUsers.Select(a => (a.RSVP == null ? false : a.RSVP.Value)).ToList().Where(a => a).Count();
+            ViewBag.Sessions = _context.Sessions.Select(s => ((s.Special == null ? false : s.Special.Value))).ToList().Where(s => !s).Count();
             if (User.Identity.IsAuthenticated)
             {
                 var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefault();

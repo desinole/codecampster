@@ -8,8 +8,25 @@
 <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
 	<h4>Create a new account.</h4>
 	<a asp-controller="Account" asp-action="Login">Already have an account?</a>
+    <p><strong>Note on emails:&nbsp;</strong>
+    <ul>
+        <li>Please provide a valid email address to receive timely updates</li>
+        <li>You will receive codecamp-related communication only</li>
+        @*The domain name should be customizable*@
+        <li>Add onetug.org to safe domains to receive all updates</li>
+        @*Org name should be customized*@
+        <li>We believe in protecting privacy of our participants, aka your email will not be shared with 3rd parties</li>
+    </ul>
+    </p>
     <hr />
     <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <div class="col-md-10 input-group">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
 	<div class="form-group">
 		<label asp-for="FirstName" class="col-md-2 control-label"></label>
 		<div class="col-md-10 input-group">
@@ -39,13 +56,6 @@
 			<span asp-validation-for="Twitter" class="text-danger"></span>
 		</div>
 	</div>
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10 input-group">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-    </div>
     <div class="form-group">
         <label asp-for="Password" class="col-md-2 control-label"></label>
         <div class="col-md-10 input-group">

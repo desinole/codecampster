@@ -13,6 +13,8 @@ namespace codecampster.Models
         public string Website { get; set; }
         public string Blog { get; set; }
         public string AvatarURL { get; set; }
+        //to display or hide speakers, for instance, the organizers
+        public bool? Special { get; set; }
 
         public List<Session> Sessions { get; set; }
     }

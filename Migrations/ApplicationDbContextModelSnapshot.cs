@@ -127,6 +127,12 @@ namespace codecampster.Migrations
 
                     b.Property<int>("SpeakerID");
 
+                    b.Property<bool?>("Special");
+
+                    b.Property<int?>("TimeslotID");
+
+                    b.Property<int?>("TrackID");
+
                     b.HasKey("SessionID");
                 });
 
@@ -144,6 +150,8 @@ namespace codecampster.Migrations
                     b.Property<string>("Company");
 
                     b.Property<string>("FullName");
+
+                    b.Property<bool?>("Special");
 
                     b.Property<string>("Title");
 
@@ -170,6 +178,34 @@ namespace codecampster.Migrations
                     b.Property<string>("Twitter");
 
                     b.Property<string>("Website");
+
+                    b.HasKey("ID");
+                });
+
+            modelBuilder.Entity("codecampster.Models.Timeslot", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("EndTime");
+
+                    b.Property<int>("Rank");
+
+                    b.Property<bool?>("Special");
+
+                    b.Property<string>("StartTime");
+
+                    b.HasKey("ID");
+                });
+
+            modelBuilder.Entity("codecampster.Models.Track", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("RoomNumber");
 
                     b.HasKey("ID");
                 });
@@ -261,6 +297,14 @@ namespace codecampster.Migrations
                     b.HasOne("codecampster.Models.Speaker")
                         .WithMany()
                         .HasForeignKey("SpeakerID");
+
+                    b.HasOne("codecampster.Models.Timeslot")
+                        .WithMany()
+                        .HasForeignKey("TimeslotID");
+
+                    b.HasOne("codecampster.Models.Track")
+                        .WithMany()
+                        .HasForeignKey("TrackID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>

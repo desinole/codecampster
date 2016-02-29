@@ -66,7 +66,7 @@
             <ul>
             <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
             <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
-            <li>Tracks (coming soon)</li>
+            <li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>
             <li>Create My Agenda (coming soon)</li>
             <li>@ViewBag.Attendees Attendees</li>
             </ul>
@@ -87,7 +87,7 @@
         </ul>
     </div>
     <div class="col-md-3">
-        <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-chrome="nofooter noscrollbar" data-related="onetug" data-widget-id="403285393182687234" data-tweet-limit="10">#OrlandoCC Tweets</a>
+        <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-chrome="nofooter noscrollbar" data-related="onetug" data-widget-id="403285393182687234" data-tweet-limit="5">#OrlandoCC Tweets</a>
         <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
     </div>
 </div>

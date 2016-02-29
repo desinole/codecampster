@@ -32,3 +32,11 @@
 {
     <p>@Model.Bio</p>
 }
+@if ((Model.Sessions != null) && (Model.Sessions.Count > 0))
+{
+    foreach(var s in Model.Sessions)
+    {
+        <p>@Html.ActionLink(s.Name, "Details", "Sessions", new { id = s.SessionID })</p>
+
+    }
+}

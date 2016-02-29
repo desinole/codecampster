@@ -1,0 +1,119 @@
+﻿@model IEnumerable<codecampster.Models.Session>
+@{
+    Layout = null;//this page is one-off with every session on it, making it easier to view and print
+    ViewData["Title"] = "Agenda";
+
+    var width = (int)(100 / (ViewBag.TrackCount));
+}
+
+<style>
+    table, th, td {
+   border: 1px solid black;
+}
+    tr:nth-child(even) {background-color: #f2f2f2}
+    th {
+    background-color: #000;
+    color: white;
+}
+    td:hover {
+    background-color: yellow;
+    cursor:pointer;
+    }
+    .ui-dialog 
+    {
+    position:fixed;
+    }
+</style>
+<p>Click on a session to view details (if available)</p>
+<p><a href="#" id="printLink">Print</a>&nbsp;|&nbsp;<a href="/">Back to main website</a></p>
+<table id="tblAgenda" style="padding:1px;text-align:center">
+    <tr>
+        <th>&nbsp;</th>
+        @foreach (var track in ViewBag.Tracks)
+        {
+            <th style="@(string.Format("width:{0}%",width))">
+                <div><strong>@(track.Name)</strong></div>
+                @if (!string.IsNullOrEmpty(track.RoomNumber))
+                {
+                <div><em>@track.RoomNumber</em></div>
+                }
+            </th>
+        }
+    </tr>
+    @foreach (var timing in ViewBag.Timeslots)
+    {
+        var classString = "";
+        if (timing.Special ?? false)
+        {
+            classString = "class=\"specialTimeslot\"";
+        }
+        <tr>
+            <td @(classString)>@string.Format("{0} - {1}",timing.StartTime, timing.EndTime)</td>
+            @foreach (var trackTime in ViewBag.Tracks)
+            {
+                var session = Model.Where(s => s.TrackID == trackTime.ID && s.TimeslotID == timing.ID).FirstOrDefault();
+                if (session == null)
+                {
+                    <td>&nbsp;</td>
+                }
+                else
+                {
+                    <td id="@string.Format("td{0}",session.SessionID)" class="tdSession">@(session.Name)
+            @if (!(timing.Special ?? false))
+            {
+                <br /><em><strong>@session.Speaker.FullName</strong></em>
+                <br/><text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
+                    <div id="@string.Format("div{0}",session.SessionID)" class="divDescription" title="@session.Name">
+                        <h3>@session.Name</h3>
+                        <p>Speaker: @session.Speaker.FullName</p>
+                        <p>Time: @session.Timeslot.StartTime - @session.Timeslot.EndTime</p>
+                        <p>Room: @session.Track.RoomNumber</p>
+                        <p>Track: @session.Track.Name</p>
+                        <p>@session.Description</p>
+                    </div>
+            }
+                    </td>
+                }
+            }
+        </tr>
+
+
+    }
+</table>
+<environment names="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery">
+    </script>
+    <script src="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+    </script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+</environment>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".divDescription").dialog({
+            autoOpen: false,
+            modal: true,
+            width: 320,
+            height: 520,
+            position: 'center'
+        });
+        $(".tdSession").click(function () {
+            var divId = this.id.replace("td", "");
+            $("#div" + divId).dialog("open");
+        });
+        $("#printLink").click(function () {
+            alert("Print this the week of codecamp");
+        });
+    });
+</script>

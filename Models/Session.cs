@@ -12,9 +12,19 @@ namespace codecampster.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int Level { get; set; }
+        //to display or hide sessions, for instance, keynote, lunch, etc
+        public bool? Special { get; set; }
 
         public int SpeakerID { get; set; }
         [ForeignKey("SpeakerID")]
         public Speaker Speaker { get; set; }
+
+        public int? TrackID { get; set; }
+        [ForeignKey("TrackID")]
+        public Track Track { get; set; }
+
+        public int? TimeslotID { get; set; }
+        [ForeignKey("TimeslotID")]
+        public Timeslot Timeslot { get; set; }
     }
 }
