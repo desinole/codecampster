@@ -3,10 +3,16 @@
 
 <h2>@ViewData["Title"]</h2>
 <style>
-    .sessionLinks{
-        background-color:black;
-        color:white;
+    .sessionLinks:hover {
+        background-color: #337ab7;
+        color: #eee;
+        text-decoration: none;
+        padding: 4px;
+    }
+    .sessionLinks {
+        color: #337ab7;
         white-space: nowrap;
+        padding: 4px;
     }
 </style>
 @*<p>
@@ -72,7 +78,7 @@
             <div>
                 <em>@(item.Level == 300 ? "Deep Dive" : (item.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em>
             </div>
-            <div>Time &amp; Location: 
+            <div>Time &amp; Location:
                 @(item.Timeslot!=null?string.Format("{0}-{1} ",item.Timeslot.StartTime,item.Timeslot.EndTime):string.Empty)
                 @(item.Track!=null?string.Format("{0}",item.Track.RoomNumber):string.Empty)
             </div>
