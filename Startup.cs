@@ -17,6 +17,10 @@ namespace codecampster
 {
     public class Startup
     {
+        // For API
+        private const string CORS_POLICY_NAME = "allowAll";
+
+
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Set up configuration sources.
@@ -57,6 +61,22 @@ namespace codecampster
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
+            // For the API. Allow other domain names to call us.
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CORS_POLICY_NAME, cors =>
+                {
+                    cors.AllowAnyHeader();
+                    cors.AllowAnyMethod();
+                    cors.AllowAnyOrigin();
+                    cors.AllowCredentials();
+                });
+            });
+
+            services.AddMvc()
+                .AddJsonOptions(options => {
+                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,6 +123,14 @@ namespace codecampster
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // For the API:
+            app.UseCors(builder =>
+                builder.WithOrigins("*/*")
+                .AllowAnyHeader()
+                );
+
+
         }
 
         // Entry point for the application.
