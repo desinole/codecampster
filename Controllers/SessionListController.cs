@@ -22,38 +22,17 @@ namespace codecampster.Controllers
     [Produces("application/json")]
     public class SessionListController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ISmsSender _smsSender;
-        private readonly ILogger _logger;
         private ApplicationDbContext _context;
 
-        public SessionListController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ISmsSender smsSender,
-            ILoggerFactory loggerFactory,
-            ApplicationDbContext context)
+        public SessionListController(ApplicationDbContext context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _smsSender = smsSender;
-            _logger = loggerFactory.CreateLogger<SpeakersController>();
             _context = context;
         }
 
         [HttpGet]
-        //[Produces(typeof(Session[]))]
         public IActionResult Get()
         {    
-            ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank);
-            ViewBag.TrackCount = _context.Tracks.Count();
-            ViewBag.Tracks = _context.Tracks;
-            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
-            Session[] sessionArray = sessions.ToArray();
+            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
             return Ok(sessions.ToList());
         }
     

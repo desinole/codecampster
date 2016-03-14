@@ -62,26 +62,34 @@ namespace codecampster
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // For the API. Allow other domain names to call us.
-            services.AddCors(options =>
-            {
-                options.AddPolicy(CORS_POLICY_NAME, cors =>
-                {
-                    cors.AllowAnyHeader();
-                    cors.AllowAnyMethod();
-                    cors.AllowAnyOrigin();
-                    cors.AllowCredentials();
-                });
-            });
-
             services.AddMvc()
                 .AddJsonOptions(options => {
                   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFromAll",
+                    builder => builder
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader());
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            // For the API : to allow other domains than ours to access the API
+            app.UseCors(policy => {
+                policy.WithOrigins("*");
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -124,11 +132,6 @@ namespace codecampster
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            // For the API:
-            app.UseCors(builder =>
-                builder.WithOrigins("*/*")
-                .AllowAnyHeader()
-                );
 
 
         }
