@@ -32,7 +32,7 @@ namespace codecampster.Controllers
         [HttpGet]
         public IActionResult Get()
         {    
-            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
+            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).OrderBy(x => Guid.NewGuid());
             return Ok(sessions.ToList());
         }
     
