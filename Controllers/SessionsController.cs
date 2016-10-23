@@ -1,13 +1,12 @@
 using System.Linq;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Data.Entity;
 using codecampster.Models;
-using Microsoft.AspNet.Identity;
 using codecampster.Services;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace codecampster.Controllers
 {
@@ -82,13 +81,13 @@ namespace codecampster.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             Session session = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).Single(m => m.SessionID == id);
             if (session == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(session);
@@ -121,13 +120,13 @@ namespace codecampster.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             Session session = _context.Sessions.Single(m => m.SessionID == id);
             if (session == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             ViewData["SpeakerID"] = new SelectList(_context.Speakers, "ID", "Speaker", session.SpeakerID);
             return View(session);
@@ -154,13 +153,13 @@ namespace codecampster.Controllers
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             Session session = _context.Sessions.Single(m => m.SessionID == id);
             if (session == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
 
             return View(session);

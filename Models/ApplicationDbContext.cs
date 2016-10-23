@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace codecampster.Models
 {
@@ -101,7 +100,7 @@ namespace codecampster.Models
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);
         }
 
-        public void EnsureSeed()
+       public void EnsureSeed()
        {
            Task<bool> containsEvents =  this.Events.AnyAsync();
            if (!containsEvents.Result)
@@ -194,5 +193,11 @@ namespace codecampster.Models
                this.SaveChanges();
            }
        }
+
+       protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseInMemoryDatabase();
+            base.OnConfiguring(options);
+        }
     }
 }

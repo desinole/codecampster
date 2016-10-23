@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
 using codecampster.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace codecampster.Controllers
 {
