@@ -100,7 +100,7 @@ namespace codecampster.Models
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);
         }
 
-        public void EnsureSeed()
+       public void EnsureSeed()
        {
            Task<bool> containsEvents =  this.Events.AnyAsync();
            if (!containsEvents.Result)
