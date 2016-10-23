@@ -193,5 +193,11 @@ namespace codecampster.Models
                this.SaveChanges();
            }
        }
+
+       protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseInMemoryDatabase();
+            base.OnConfiguring(options);
+        }
     }
 }

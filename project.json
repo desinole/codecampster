@@ -1,21 +1,23 @@
 {
   "version": "1.0.0-*",
   "userSecretsId": "aspnet5-codecampster-f688b52e-cf70-4fad-ab55-25519f7b48c3",
-  "buildOptions": {
-    "emitEntryPoint": true
-  },
+
   "tooling": {
     "defaultNamespace": "codecampster"
   },
 
   "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
     "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.0",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
     "Microsoft.AspNetCore.Identity": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
-    "NETStandard.Library": "1.6.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
@@ -32,11 +34,36 @@
   },
 
   "frameworks": {
-    "netstandard1.6": {}
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
   },
-  "runtimes": {
-    "win10-x64": {}
+
+  "buildOptions": {
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
   },
+
+  "runtimeOptions": {
+    "configProperties": {
+      "System.GC.Server": true
+    }
+  },
+
+  "publishOptions": {
+    "include": [
+      "wwwroot",
+      "Views",
+      "appsettings.json",
+      "web.config"
+    ]
+  },
+
   "scripts": {
     "prepublish": [
       "npm install",

@@ -1,4 +1,4 @@
-@using System.Security.Claims
+@using System.Security.Principal
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -33,7 +33,7 @@
     <div class="col-md-3">
         <h3>To-Do</h3>
         <ol>
-            @if (User.IsSignedIn())
+            @if (User.Identity.IsAuthenticated)
             {
                 @if (!(ViewBag.RSVP??false))
                 {
