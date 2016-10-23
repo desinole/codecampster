@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using codecampster.Models;
-using Microsoft.Data.Entity.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace codecampster.Migrations
 {

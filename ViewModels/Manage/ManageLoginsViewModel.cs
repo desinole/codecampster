@@ -1,9 +1,6 @@
-using System;
+using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Http.Authentication;
-using Microsoft.AspNet.Identity;
 
 namespace codecampster.ViewModels.Manage
 {

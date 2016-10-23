@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using codecampster.Models;
 using codecampster.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
+using System.IO;
 
 namespace codecampster
 {
@@ -21,7 +18,7 @@ namespace codecampster
         private const string CORS_POLICY_NAME = "allowAll";
 
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
@@ -46,7 +43,7 @@ namespace codecampster
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddEntityFramework().AddSqlServer()
+            services.AddEntityFramework()
                 .AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
@@ -59,7 +56,6 @@ namespace codecampster
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // For the API. Allow other domain names to call us.
             services.AddMvc()
@@ -116,8 +112,7 @@ namespace codecampster
                 }
                 catch { }
             }
-
-            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
+            
 
             app.UseStaticFiles();
 
@@ -131,12 +126,18 @@ namespace codecampster
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
-
         }
 
-        // Entry point for the application.
-        public static void Main(string[] args) => Microsoft.AspNet.Hosting.WebApplication.Run<Startup>(args);
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
     }
 }

@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using codecampster.Models;
 using codecampster.Services;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace codecampster.Controllers
 {
