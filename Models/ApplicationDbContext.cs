@@ -195,9 +195,9 @@ namespace codecampster.Models
        }
 
        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            options.UseInMemoryDatabase();
+       {
+       		options.UseInMemoryDatabase();
             base.OnConfiguring(options);
-        }
+       }
     }
 }
