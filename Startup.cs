@@ -41,10 +41,16 @@ namespace codecampster
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddEntityFramework()
-                .AddEntityFrameworkInMemoryDatabase()
-                .AddDbContext<ApplicationDbContext>();
+			// Add framework services
+			// For local testing, needs to be configured to only operate when running locally, otherwise use commented out connection below.
+			services.AddEntityFramework()
+				.AddEntityFrameworkInMemoryDatabase()
+				.AddDbContext<ApplicationDbContext>();
+
+			//!!!-- needs to be tested with actual database -- !!!
+			//services.AddEntityFramework().AddEntityFrameworkSqlServer()
+			//.AddDbContext<ApplicationDbContext>(options =>
+			//	options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
