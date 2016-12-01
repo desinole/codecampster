@@ -1,0 +1,93 @@
+@using System.Security.Principal
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<!--<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="~/images/CodeCampHeaderLogo.png" alt="ASP.NET" class="img-responsive" />
+            <div class="carousel-caption">
+                <p>
+                    What is Orlando Codecamp?
+                    <a class="btn btn-default btn-default" asp-controller="Home" asp-action="FAQ">Learn More</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>-->
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>To-Do</h3>
+        <ol>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @if (!(ViewBag.RSVP??false))
+                {
+
+                <li><a asp-controller="Event" asp-action="RSVP">RSVP to attend</a></li>
+                }
+                else
+                {
+                <li>Thank you for RSVPing</li>
+                }
+                @if (!(ViewBag.Volunteer??false))
+                {
+
+                <li><a asp-controller="Event" asp-action="Volunteer">Volunteer to help</a></li>
+                }
+                else
+                {
+                <li>Thank you for volunteering</li>
+                }
+            }
+            else
+            {
+                <li>Tell us about yourself</li>
+                <ul>
+                    <li>No account? <a asp-controller="Account" asp-action="Register">Register</a></li>
+                    <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
+                </ul>
+            }
+            <li>View agenda</li>
+            <ul>
+            <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
+            <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
+            <li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>
+            <li>Create My Agenda (coming soon)</li>
+            <li>@ViewBag.Attendees Attendees</li>
+            </ul>
+        </ol>
+        <h3>Featured Sponsor</h3>
+        <h5>@ViewBag.Sponsor.SponsorLevel</h5>
+        <a href="@ViewBag.Sponsor.Website" target="_blank">
+            <img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" />
+        </a>
+    </div>
+    <div class="col-md-3">
+        <h3>Announcements</h3>
+        <ul>
+            @foreach (var announcement in ViewBag.Announcements)
+            {
+            <li>@Html.Raw(announcement.Message)</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-3">
+        <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-chrome="nofooter noscrollbar" data-related="onetug" data-widget-id="403285393182687234" data-tweet-limit="5">#OrlandoCC Tweets</a>
+        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+    </div>
+</div>
