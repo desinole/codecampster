@@ -12,5 +12,7 @@ namespace codecampster.Models
 		public int? AvatarID { get; set; }
         public bool? RSVP {get;set;}
         public bool? Volunteer {get;set;}
+
+        public Speaker Speaker { get; set; }
     }
 }

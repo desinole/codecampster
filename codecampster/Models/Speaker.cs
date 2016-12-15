@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace codecampster.Models
 {
     public class Speaker
     {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity), Key()]
         public int ID { get; set; }
         public string FullName { get; set; }
         public string Company { get; set; }
@@ -15,6 +18,10 @@ namespace codecampster.Models
         public string AvatarURL { get; set; }
         //to display or hide speakers, for instance, the organizers
         public bool? Special { get; set; }
+
+        public string ApplicationUserId { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        public ApplicationUser AppUser { get; set; }
 
         public List<Session> Sessions { get; set; }
     }

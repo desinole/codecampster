@@ -22,6 +22,7 @@ namespace codecampster.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -29,7 +30,8 @@ namespace codecampster.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,6 +39,7 @@ namespace codecampster.Controllers
             _smsSender = smsSender;
             _appSettings = appSettings;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _context = context;
         }
 
         //
@@ -92,7 +95,7 @@ namespace codecampster.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register()
+        public IActionResult Register(bool? speaker=false)
         {
             return View();
         }
@@ -102,14 +105,21 @@ namespace codecampster.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model, bool? speaker = false)
         {
             if (ModelState.IsValid)
             {
+                
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Location = model.Location, FirstName = model.FirstName, LastName = model.LastName, Twitter = model.Twitter };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    string fullName = string.Format("{0} {1}", user.FirstName, user.LastName);
+                    Speaker sp = new Speaker() { FullName = fullName, Twitter = user.Twitter };
+                    var currentUser = _context.ApplicationUsers.Where(u => u.Email == user.Email).SingleOrDefault();
+                    currentUser.Speaker = sp;
+                    _context.SaveChanges();
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
