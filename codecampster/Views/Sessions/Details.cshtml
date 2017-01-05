@@ -2,12 +2,12 @@
 @{
     ViewData["Title"] = Model.Name;
 }
-<h2>@ViewData["Title"]</h2>
-<p><img style="max-width:250px" src="@Model.Speaker.AvatarURL" /></p>
+<h2><strong>Title:&nbsp;</strong>@ViewData["Title"]</h2>
+<p><img style="max-width:100px" src="@Model.Speaker.AvatarURL" /></p>
 <h5>
     <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
 </h5>
-<p><em>@(Model.Level == 300 ? "Deep Dive" : (Model.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em></p>
+<p>Target Audience:&nbsp;<em>@(Model.Level == 3 ? "Deep Dive" : (Model.Level == 2 ? "Some prior knowledge needed" : "All skill levels"))</em></p>
 @if (Model.Timeslot != null)
 {
     <p><strong>Time:&nbsp;</strong>@string.Format("{0} - {1}", Model.Timeslot.StartTime, Model.Timeslot.EndTime)</p>
@@ -18,3 +18,4 @@
     <p><strong>Room:&nbsp;</strong>@Model.Track.RoomNumber</p>
 }
 <p>@Model.Description</p>
+<a asp-controller="Speakers" asp-action="Sessions">Back to List</a>

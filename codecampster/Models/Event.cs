@@ -9,6 +9,7 @@ namespace codecampster.Models
         public System.DateTime EventEnd {get;set;}
         public string CompleteAddress {get;set;}
         public bool IsCurrent {get;set;}
-        
+        public bool? AttendeeRegistrationOpen { get; set; }
+        public bool? SpeakerRegistrationOpen { get; set; }
     }
 }

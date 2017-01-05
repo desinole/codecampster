@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using codecampster.ViewModels.Speaker;
+using System.Threading.Tasks;
 
 namespace codecampster.Controllers
 {
@@ -31,6 +33,48 @@ namespace codecampster.Controllers
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<SpeakersController>();
             _context = context;
+        }
+        [HttpGet]
+        public IActionResult Edit()
+        {
+            var speaker = _context.Speakers.Where(s=>s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            SpeakerViewModel model = new SpeakerViewModel()
+            {
+                AvatarURL = speaker.AvatarURL,
+                Bio = speaker.Bio,
+                Blog = speaker.Blog,
+                Company = speaker.Company,
+                Title = speaker.Title,
+                Twitter = speaker.Twitter,
+                Website = speaker.Website
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Sessions()
+        {
+            var speaker = _context.Speakers.Include(s=>s.Sessions).Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            return View(speaker.Sessions);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(SpeakerViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+                speaker.AvatarURL = model.AvatarURL;
+                speaker.Title = model.Title;
+                speaker.Bio = model.Bio;
+                speaker.Blog = model.Blog;
+                speaker.Company = model.Company;
+                speaker.Twitter = model.Twitter;
+                speaker.Website = model.Website;
+                _context.SaveChanges();
+            }
+            return View(model);
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]

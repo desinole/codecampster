@@ -13,6 +13,9 @@
     <EmbeddedResource Include="**\*.resx" Exclude="$(GlobalExclude)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="ViewModels\Shared\SmtpConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MailKit">
       <Version>1.10.0</Version>
     </PackageReference>
@@ -95,6 +98,14 @@
     </DotNetCliToolReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\Shared\" />
+  </ItemGroup>
   <!--
    <Target Name="BeforePublish">
     <Exec Command="bower install" />

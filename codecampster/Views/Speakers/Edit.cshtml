@@ -1,0 +1,78 @@
+@model codecampster.ViewModels.Speaker.SpeakerViewModel
+@{
+    ViewData["Title"] = "Edit Speaker Profile";
+}
+
+<h2>@ViewData["Title"].</h2>
+
+<form asp-controller="Speakers" asp-action="Edit" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Company" class="col-md-2 control-label"></label>
+        <div class="col-md-10 input-group">
+            <input asp-for="Company" class="form-control" />
+            <span asp-validation-for="Company" class="text-danger"></span>
+        </div>
+    </div>
+	<div class="form-group">
+		<label asp-for="Title" class="col-md-2 control-label"></label>
+		<div class="col-md-10 input-group">
+			<input asp-for="Title" class="form-control" />
+			<span asp-validation-for="Title" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="Bio" class="col-md-2 control-label"></label>
+		<div class="col-md-10 input-group">
+			<textarea asp-for="Bio" class="form-control" rows="5"></textarea>
+			<span asp-validation-for="Bio" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label asp-for="AvatarURL" class="col-md-2 control-label"></label>
+		<div class="col-md-10 input-group">
+			<input asp-for="AvatarURL" class="form-control" />
+			<span asp-validation-for="AvatarURL" class="text-danger"></span>
+		</div>
+	</div>
+    @if (!string.IsNullOrEmpty(Model.AvatarURL))
+    {
+
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-10 input-group"><img style="max-width:250px" src="@Model.AvatarURL" />
+            </div>
+        </div>
+    }
+    <div class="form-group">
+            <label asp-for="Twitter" class="col-md-2 control-label"></label>
+            <div class="col-md-10 input-group">
+                <div class="input-group-addon">@@</div>
+                <input asp-for="Twitter" class="form-control" />
+                <span asp-validation-for="Twitter" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Website" class="col-md-2 control-label"></label>
+            <div class="col-md-10 input-group">
+                <input asp-for="Website" class="form-control" />
+                <span asp-validation-for="Website" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Blog" class="col-md-2 control-label"></label>
+            <div class="col-md-10 input-group">
+                <input asp-for="Blog" class="form-control" />
+                <span asp-validation-for="Blog" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Save</button>
+            </div>
+        </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

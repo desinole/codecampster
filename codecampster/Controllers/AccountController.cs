@@ -95,8 +95,9 @@ namespace codecampster.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(bool? speaker=false)
+        public IActionResult Register(string id = "attendee")
         {
+            ViewBag.RoleId = id.ToUpper();
             return View();
         }
 
@@ -105,7 +106,7 @@ namespace codecampster.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, bool? speaker = false)
+        public async Task<IActionResult> Register(RegisterViewModel model, string id = "attendee")
         {
             if (ModelState.IsValid)
             {
@@ -114,20 +115,24 @@ namespace codecampster.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    string fullName = string.Format("{0} {1}", user.FirstName, user.LastName);
-                    Speaker sp = new Speaker() { FullName = fullName, Twitter = user.Twitter };
-                    var currentUser = _context.ApplicationUsers.Where(u => u.Email == user.Email).SingleOrDefault();
-                    currentUser.Speaker = sp;
-                    _context.SaveChanges();
+                    if (id == "speaker")
+                    {
+
+                        string fullName = string.Format("{0} {1}", user.FirstName, user.LastName);
+                        Speaker sp = new Speaker() { FullName = fullName, Twitter = user.Twitter };
+                        var currentUser = _context.ApplicationUsers.Where(u => u.Email == user.Email).SingleOrDefault();
+                        currentUser.Speaker = sp;
+                        _context.SaveChanges();
+                    }
 
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
-                    //_appSettings.Value.UserName, _appSettings.Value.Password,
-                    // model.Email, "Orlando Codecamp Confirm your account",
-                    //    "Please confirm your account by clicking this link: " + callbackUrl);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer,
+                    _appSettings.Value.SmtpUser, _appSettings.Value.SmtpPass,
+                     model.Email, "Orlando Codecamp: confirm your email",
+                        "Please confirm your email address by clicking  this link or copy-pasting in a browser: " + callbackUrl);
                     await _signInManager.SignInAsync(user, isPersistent: true);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
@@ -287,9 +292,9 @@ namespace codecampster.Controllers
                 // Send an email with this link
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                Task result = _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
-                    _appSettings.Value.UserName, _appSettings.Value.Password,
-                    model.Email, "Orlando Codecamp Reset Password",
+                await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer,
+                _appSettings.Value.SmtpUser, _appSettings.Value.SmtpPass,
+                model.Email, "Orlando Codecamp Reset Password",
                    "Please reset your password by clicking here: " + callbackUrl);
                 return View("ForgotPasswordConfirmation");
             }
@@ -395,8 +400,8 @@ namespace codecampster.Controllers
             var message = "Your security code is: " + code;
             if (model.SelectedProvider == "Email")
             {
-                Task result = _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer, 
-                    _appSettings.Value.UserName, _appSettings.Value.Password,
+                Task result = _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer,
+                    _appSettings.Value.SmtpUser, _appSettings.Value.SmtpPass,
                     await _userManager.GetEmailAsync(user), "Security Code", message);
             }
             else if (model.SelectedProvider == "Phone")

@@ -37,6 +37,7 @@ namespace codecampster.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.Event = _context.Events.SingleOrDefault();
             ViewBag.Announcements = _context.Announcements.Where(a => a.PublishOn < DateTime.Now && a.ExpiresOn > DateTime.Now).OrderBy(a => a.Rank);
             ViewBag.Speakers = _context.Speakers.Select(s => ((s.Special == null ? false : s.Special.Value))).ToList().Where(s => !s).Count();
             ViewBag.Attendees = _context.ApplicationUsers.Select(a => (a.RSVP == null ? false : a.RSVP.Value)).ToList().Where(a => a).Count();
@@ -50,7 +51,10 @@ namespace codecampster.Controllers
                 User.Identity.Name, 
                 currentUser.RSVP??false,
                 currentUser.Volunteer??false));
+                var speaker = _context.Speakers.Where(s => s.AppUser.UserName == User.Identity.Name).FirstOrDefault();
+                ViewBag.SpeakerProfile = speaker;
             }
+
             ViewBag.Sponsor = _context.Sponsors.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
             return View();
         }

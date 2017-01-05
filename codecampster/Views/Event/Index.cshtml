@@ -34,7 +34,7 @@
           center: {lat: 28, lng: -81},
           zoom: 15
         });
-        var address = '@Model.CompleteAddress';
+        var address = '100 Weldon Blvd, Sanford FL 32746';
           var geocoder = new google.maps.Geocoder();
             geocoder.geocode({'address': address}, function(results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {

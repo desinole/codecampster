@@ -1,6 +1,6 @@
 @model RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = string.Format("{0} {1}", ViewBag.RoleId, "Registration");
 }
 
 <h2>@ViewData["Title"].</h2>

@@ -1,0 +1,107 @@
+﻿@model IEnumerable<codecampster.Models.Session>
+
+@{
+    ViewData["Title"] = "Session";
+}
+
+<h2>@ViewData["Title"]</h2>
+<style>
+    .sessionLinks:hover {
+        background-color: #337ab7;
+        color: #eee;
+        text-decoration: none;
+        padding: 4px;
+    }
+
+    .sessionLinks {
+        color: #337ab7;
+        white-space: nowrap;
+        padding: 4px;
+    }
+</style>
+<p>
+        <a asp-controller="Sessions" asp-action="Edit">Add session</a>
+    </p>
+@if ( (Model != null) && (Model.Count() > 0) )
+{
+    <text>This page is happy.</text>
+
+<table class="table">
+    @*<tr>
+        <th colspan="2">
+            <strong>Tracks:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+            @foreach (var track in ViewBag.Tracks)
+            {
+                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?track={0}",track.ID))">@track.Name</a><text>&nbsp;</text>
+            }
+        </th>
+    </tr>*@
+    @*<tr>
+        <th colspan="2">
+            <strong>Timings:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+            @foreach (var timeslot in ViewBag.Timeslots)
+            {
+                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?timeslot={0}",timeslot.ID))">@string.Format("{0}-{1}", timeslot.StartTime, timeslot.EndTime)</a><text>&nbsp;</text>
+            }
+        </th>
+    </tr>*@
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                <div>
+                    <div>
+                        <a href="@Url.Content(string.Format("~/speakers/details/{0}", @item.Speaker.ID))">
+                            <img style="max-width:50px;align:center" src="@(item.Speaker.AvatarURL)" alt="@item.Speaker.FullName" />
+                        </a>
+                    </div>
+                    <div>
+                        <h5>
+                            <a href="@Url.Content(string.Format("~/speakers/details/{0}", @item.Speaker.ID))">@item.Speaker.FullName</a>
+                        </h5>
+                    </div>
+                </div>
+            </td>*@
+            <td>
+                <div>
+                    <h4>@item.Name</h4>
+                </div>
+                @*<div>
+                    Track: @(item.Track != null ? string.Format("{0} ", item.Track.Name) : string.Empty)
+                </div>*@
+                <div>
+                    <em>@(item.Level == 300 ? "Deep Dive" : (item.Level == 200 ? "Prior knowledge needed" : "For all levels"))</em>
+                </div>
+                @*<div>
+                    Time &amp; Location:
+                    @(item.Timeslot != null ? string.Format("{0}-{1} ", item.Timeslot.StartTime, item.Timeslot.EndTime) : string.Empty)
+                    @(item.Track != null ? string.Format("{0}", item.Track.RoomNumber) : string.Empty)
+                </div>*@
+                <div>
+                    @(((!(string.IsNullOrEmpty(item.Description))) ? item.Description.Substring(0, Math.Min(200, item.Description.Length)) : "N/A")).....@Html.ActionLink("Learn More", "Details", new { id = item.SessionID })
+                </div>
+            </td>
+            <td>
+                <a asp-controller="Sessions" asp-action="Edit" asp-route-id="@item.SessionID">Edit</a> |
+                <a asp-controller="Sessions" asp-action="Details" asp-route-id="@item.SessionID">Details</a> |
+                <a asp-controller="Sessions" asp-action="Delete" asp-route-id="@item.SessionID">Delete</a>
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.SessionID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.SessionID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SessionID">Delete</a>
+                </td>*@
+        </tr>
+    }
+</table>
+}
+else
+{
+    <text>This page is sad because you have not submitted any sessions. Make this page happy, submit sessions.</text>
+}

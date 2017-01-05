@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using codecampster.ViewModels.Session;
+using System.Collections.Generic;
 
 namespace codecampster.Controllers
 {
@@ -34,6 +36,7 @@ namespace codecampster.Controllers
             _logger = loggerFactory.CreateLogger<SpeakersController>();
             _context = context;
         }
+
 
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
@@ -118,33 +121,81 @@ namespace codecampster.Controllers
         // GET: Sessions/Edit/5
         public IActionResult Edit(int? id)
         {
-            if (id == null)
+            SessionViewModel model = new SessionViewModel();
+            ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value");
+            if (id.HasValue)
             {
-                return NotFound();
+                var sessionDetails = _context.Sessions.Include(s=>s.Speaker).Include(s=>s.Speaker.AppUser).Where(s=>s.SessionID == id.Value).FirstOrDefault();
+                if (sessionDetails != null)// && sessionDetails.Speaker.AppUser.UserName==
+                {
+
+                    model = new SessionViewModel()
+                    {
+                        Title = sessionDetails.Name,
+                        Description = sessionDetails.Description,
+                        CoSpeakers = sessionDetails.CoSpeakers,
+                        Keywords = sessionDetails.KeyWords,
+                        Level = sessionDetails.Level
+                    };
+                    ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value", sessionDetails.Level);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
 
-            Session session = _context.Sessions.Single(m => m.SessionID == id);
-            if (session == null)
-            {
-                return NotFound();
-            }
-            ViewData["SpeakerID"] = new SelectList(_context.Speakers, "ID", "Speaker", session.SpeakerID);
-            return View(session);
+            return View(model);
         }
 
         // POST: Sessions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Session session)
+        public IActionResult Edit(SessionViewModel model, int? id)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Update(session);
+                var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+                if (id.HasValue)
+                {
+                    Session session = _context.Sessions.Find(id.Value);
+                    session.Name = model.Title;
+                    session.CoSpeakers = model.CoSpeakers;
+                    session.Description = model.Description;
+                    session.KeyWords = model.Keywords;
+                    session.Level = model.Level;
+                    _context.Update(session);
+                }
+                else
+                {
+                    Session session = new Session();
+                    session.Name = model.Title;
+                    session.CoSpeakers = model.CoSpeakers;
+                    session.Description = model.Description;
+                    session.KeyWords = model.Keywords;
+                    session.Level = model.Level;
+                    session.SpeakerID = speaker.ID;
+                    _context.Sessions.Add(session);
+                }
                 _context.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Sessions", "Speakers");
             }
-            ViewData["SpeakerID"] = new SelectList(_context.Speakers, "ID", "Speaker", session.SpeakerID);
-            return View(session);
+            Dictionary<int, string> levels = new Dictionary<int, string>();
+            levels.Add(1, "All skill levels");
+            levels.Add(2, "Some prior knowledge needed");
+            levels.Add(3, "Deep Dive");
+            ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value", model.Level);
+            return View(model);
+        }
+
+        private Dictionary<int, string> GetLevels()
+        {
+            Dictionary<int, string> levels = new Dictionary<int, string>();
+            levels.Add(1, "All skill levels");
+            levels.Add(2, "Some prior knowledge needed");
+            levels.Add(3, "Deep Dive");
+            return levels;
         }
 
         // GET: Sessions/Delete/5
@@ -173,7 +224,7 @@ namespace codecampster.Controllers
             Session session = _context.Sessions.Single(m => m.SessionID == id);
             _context.Sessions.Remove(session);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Sessions", "Speakers");
         }
     }
 }

@@ -22,7 +22,7 @@ namespace codecampster.Controllers
         [HttpGet]
         [ResponseCache(Duration =3600,Location =ResponseCacheLocation.Any)]
         public IActionResult Get()
-        {    
+        {
             IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).OrderBy(x => Guid.NewGuid());
             return Ok(sessions.ToList());
         }

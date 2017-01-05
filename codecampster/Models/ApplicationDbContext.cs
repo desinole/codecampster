@@ -77,6 +77,9 @@ namespace codecampster.Models
                  x.Property<string>("Description");
                  x.Property<int>("Level");
                  x.Property<int>("SpeakerID");
+                 x.Property<int?>("CoSpeakerID");
+                 x.Property<int>("SpeakerID");
+                 x.Property<int?>("TimeslotID");
                  x.Property<bool?>("Special");
              });
             builder.Entity<Session>().HasOne(p => p.Speaker).WithMany(p => p.Sessions);
@@ -106,73 +109,36 @@ namespace codecampster.Models
            if (!containsEvents.Result)
            {
                var ccEvent = new Event{ 
-                   Name = "Orlando Codecamp 2016",
-                   EventStart = DateTime.Parse("2016-04-02 08:00:00"),
-                   EventEnd = DateTime.Parse("2016-04-02 17:00:00"),
+                   Name = "Orlando Codecamp 2017",
+                   EventStart = DateTime.Parse("2017-04-08 08:00:00"),
+                   EventEnd = DateTime.Parse("2017-04-08 17:00:00"),
                    IsCurrent = true,
                    SocialMediaHashtag = "#OrlandoCC",
-                   CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746"
+                   CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                   SpeakerRegistrationOpen = true
                    };
                this.Events.Add(ccEvent);
                this.SaveChanges();
            }
-           Task<bool> containsSpeakers = this.Speakers.AnyAsync();
-           if (!containsSpeakers.Result)
-           {
-               var speaker = new Speaker
-               {
-                   FullName = "SSC Advisory Committee",
-                   Company = "Seminole State College",
-                   Website = "https://www.seminolestate.edu/",
-                   Twitter = "SeminoleState",
-                   AvatarURL = "https://pbs.twimg.com/profile_images/529291538325450752/X0zAf03G_400x400.jpeg"
-               };
-               this.Speakers.Add(speaker);
-               this.SaveChanges();
-                Task<bool> containsSession = this.Sessions.AnyAsync();
-                if (!containsSession.Result)
-                {
-                    var session = new Session
-                    {
-                        Name = "Career Panel",
-                        Description = "Career Panel session hosted by Seminole State with industry leaders",
-                        Level = 1,
-                        SpeakerID = speaker.ID
-                    };
-                    this.Sessions.Add(session);
-                    this.SaveChanges();
-                }
-            }
             Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
            if (!containsAnnouncements.Result)
            {
                var announcement = new Announcement
                {
                    ID = 1, //this is a bug. fix it
-                   Message = "Orlando Codecamp 2016 will be held 8am-5pm April 2 2016 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                   Message = "Orlando Codecamp 2017 will be held 8am-5pm April 8th 2017 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
                    PublishOn = DateTime.Now,
                    ExpiresOn = DateTime.Now.AddYears(1),
                    Rank = 1
                };
                this.Announcements.Add(announcement);
-               this.SaveChanges();
                 announcement = new Announcement
                 {
                     ID = 2, //this is a bug. fix it
-                    Message = "Speakers party (sponsor: AgileThought) will be held at 6pm on April 1 2016 at Liam Fitzpatrick in Lake Mary",
+                    Message = "Speaker registration is now open. We did not carry over logins from last year, so if you're a returning speaker, please register your account again.",
                     PublishOn = DateTime.Now,
                     ExpiresOn = DateTime.Now.AddYears(1),
                     Rank = 2
-                };
-                this.Announcements.Add(announcement);
-                this.SaveChanges();
-                announcement = new Announcement
-                {
-                    ID = 3, //this is a bug. fix it
-                    Message = "Attendees party will be held at 6pm on April 2 2016 at Liam Fitzpatrick in Lake Mary",
-                    PublishOn = DateTime.Now,
-                    ExpiresOn = DateTime.Now.AddYears(1),
-                    Rank = 3
                 };
                 this.Announcements.Add(announcement);
                 this.SaveChanges();

@@ -18,7 +18,6 @@ namespace codecampster.Models
         public string AvatarURL { get; set; }
         //to display or hide speakers, for instance, the organizers
         public bool? Special { get; set; }
-
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser AppUser { get; set; }
