@@ -43,19 +43,19 @@ namespace codecampster
         {
             // Add framework services
             // For local testing, needs to be configured to only operate when running locally, otherwise use commented out connection below.
-            if (env.IsDevelopment())
-            {
-                services.AddEntityFramework()
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .AddDbContext<ApplicationDbContext>();
-            }
-            else
-            {
+            //if (env.IsDevelopment())
+            //{
+            //    services.AddEntityFramework()
+            //        .AddEntityFrameworkInMemoryDatabase()
+            //        .AddDbContext<ApplicationDbContext>();
+            //}
+            //else
+            //{
 
-                services.AddDbContext<ApplicationDbContext>
-                    (options => options.UseSqlServer
-                    (Configuration.GetConnectionString("DefaultConnection")));
-            }
+            services.AddDbContext<ApplicationDbContext>
+                (options => options.UseSqlServer
+                (Configuration.GetConnectionString("DefaultConnection")));
+            //}
 
             ////!!!-- needs to be tested with actual database -- !!!
             //services.AddEntityFramework().AddEntityFrameworkSqlServer()
@@ -109,32 +109,44 @@ namespace codecampster
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
 
-                using(var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                    .CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                        .EnsureSeed();
-                    }
+                //using(var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                //    .CreateScope())
+                //    {
+                //        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                //        .EnsureSeed();
+                //    }
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
-                try
-                {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                             .Database.Migrate();
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                        .EnsureSeed();
-                    }
-                }
-                catch { }
+                //try
+                //{
+                //    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                //        .CreateScope())
+                //    {
+                //        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                //             .Database.Migrate();
+                //        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                //        .EnsureSeed();
+                //    }
+                //}
+                //catch { }
             }
-            
+
+            try
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
+                    .CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                         .Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                    .EnsureSeed();
+                }
+            }
+            catch { }
 
             app.UseStaticFiles();
 

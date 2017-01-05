@@ -125,7 +125,6 @@ namespace codecampster.Models
            {
                var announcement = new Announcement
                {
-                   ID = 1, //this is a bug. fix it
                    Message = "Orlando Codecamp 2017 will be held 8am-5pm April 8th 2017 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
                    PublishOn = DateTime.Now,
                    ExpiresOn = DateTime.Now.AddYears(1),
@@ -134,7 +133,6 @@ namespace codecampster.Models
                this.Announcements.Add(announcement);
                 announcement = new Announcement
                 {
-                    ID = 2, //this is a bug. fix it
                     Message = "Speaker registration is now open. We did not carry over logins from last year, so if you're a returning speaker, please register your account again.",
                     PublishOn = DateTime.Now,
                     ExpiresOn = DateTime.Now.AddYears(1),
@@ -162,8 +160,14 @@ namespace codecampster.Models
 
        protected override void OnConfiguring(DbContextOptionsBuilder options)
        {
-       		options.UseInMemoryDatabase();
+       		//options.UseInMemoryDatabase();
+           // options.UseSqlServer(.["Data:DefaultConnection:ConnectionString"]))
             base.OnConfiguring(options);
        }
+
+        public ApplicationDbContext(DbContextOptions options):base(options)
+        {
+
+        }
     }
 }
