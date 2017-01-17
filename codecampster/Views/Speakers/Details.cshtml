@@ -3,11 +3,6 @@
     ViewData["Title"] = Model.FullName;
 }
 <h2>@ViewData["Title"]</h2>
-@if (!string.IsNullOrEmpty(Model.AvatarURL))
-{
-
-    <p><img style="max-width:250px" src="@Model.AvatarURL" /></p>
-}
 @if (!string.IsNullOrEmpty(Model.Title))
 {
     <p>@Model.Title</p>
@@ -15,6 +10,11 @@
 @if (!string.IsNullOrEmpty(Model.Company))
 {
     <p>@Model.Company</p>
+}
+@if (!string.IsNullOrEmpty(Model.AvatarURL))
+{
+
+    <p><img style="max-width:250px" src="@Model.AvatarURL" /></p>
 }
 @if (!string.IsNullOrEmpty(Model.Twitter))
 {
@@ -30,11 +30,19 @@
 }
 @if (!string.IsNullOrEmpty(Model.Bio))
 {
-    <p>@Model.Bio</p>
+    <p><strong>Bio:&nbsp;</strong>@Model.Bio</p>
+}
+@if (!string.IsNullOrEmpty(Model.MVPDetails))
+{
+    <p><strong>Bio:&nbsp;</strong>@Model.MVPDetails</p>
+}
+@if (!string.IsNullOrEmpty(Model.AuthorDetails))
+{
+    <p><strong>Author:&nbsp;</strong>@Model.Bio</p>
 }
 @if ((Model.Sessions != null) && (Model.Sessions.Count > 0))
 {
-    foreach(var s in Model.Sessions)
+    foreach (var s in Model.Sessions)
     {
         <p>@Html.ActionLink(s.Name, "Details", "Sessions", new { id = s.SessionID })</p>
 

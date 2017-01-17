@@ -12,9 +12,7 @@
     <Compile Include="**\*.cs" Exclude="$(GlobalExclude)" />
     <EmbeddedResource Include="**\*.resx" Exclude="$(GlobalExclude)" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="ViewModels\Shared\SmtpConfig.cs" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="MailKit">
       <Version>1.10.0</Version>
@@ -101,12 +99,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Remove="ViewModels\Shared\**" />
+    <Content Remove="ViewModels\Shared\**" />
+    <EmbeddedResource Remove="ViewModels\Shared\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\Shared\" />
   </ItemGroup>
   <!--
    <Target Name="BeforePublish">

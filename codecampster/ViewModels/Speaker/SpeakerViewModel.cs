@@ -18,5 +18,11 @@ namespace codecampster.ViewModels.Speaker
         public string Blog { get; set; }
         [Display(Name = "Avatar link (ideally 250x250px image)")]
         public string AvatarURL { get; set; }
+        [Display(Name ="MVP Details")]
+        public string MVPDetails { get; set; }
+        [Display(Name = "Author Details")]
+        public string AuthorDetails { get; set; }
+        [Display(Name = "Note to Organizers")]
+        public string NoteToOrganizers { get; set; }
     }
 }

@@ -12,8 +12,8 @@
                 if ((ViewBag.Event.SpeakerRegistrationOpen ?? false)
                     && (ViewBag.SpeakerProfile != null))
                 {
-                    <li><a asp-controller="Speakers" asp-action="Edit">Edit Speaker Profile</a></li>
-                    <li><a asp-controller="Speakers" asp-action="Sessions">Manage Sessions</a></li>
+                    <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-large">Edit Speaker Profile</button></a><br/><br /></li>
+                    <li><a asp-controller="Speakers" asp-action="Sessions"><button class="btn btn-large">Manage Sessions</button></a><br /><br /></li>
 
                 }
                 if (ViewBag.Event.AttendeeRegistrationOpen ?? false)
@@ -44,7 +44,7 @@
                 {
                     <li>Speakers</li>
                     <ul>
-                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="speaker">Signup as a speaker</a></li>
+                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="speaker"><button class="btn btn-large">Signup as a speaker</button></a></li>
                         <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
                     </ul>
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using codecampster.ViewModels.Session;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace codecampster.Controllers
 {
@@ -97,6 +98,7 @@ namespace codecampster.Controllers
         }
 
         // GET: Sessions/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["SpeakerID"] = new SelectList(_context.Speakers, "ID", "Speaker");
@@ -106,6 +108,7 @@ namespace codecampster.Controllers
         // POST: Sessions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Create(Session session)
         {
             if (ModelState.IsValid)
@@ -119,6 +122,7 @@ namespace codecampster.Controllers
         }
 
         // GET: Sessions/Edit/5
+        [Authorize]
         public IActionResult Edit(int? id)
         {
             SessionViewModel model = new SessionViewModel();
@@ -150,6 +154,7 @@ namespace codecampster.Controllers
 
         // POST: Sessions/Edit/5
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(SessionViewModel model, int? id)
         {
@@ -199,6 +204,7 @@ namespace codecampster.Controllers
         }
 
         // GET: Sessions/Delete/5
+        [Authorize]
         [ActionName("Delete")]
         public IActionResult Delete(int? id)
         {
@@ -219,6 +225,7 @@ namespace codecampster.Controllers
         // POST: Sessions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult DeleteConfirmed(int id)
         {
             Session session = _context.Sessions.Single(m => m.SessionID == id);

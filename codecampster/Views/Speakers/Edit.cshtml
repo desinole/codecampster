@@ -23,6 +23,7 @@
 	</div>
 	<div class="form-group">
 		<label asp-for="Bio" class="col-md-2 control-label"></label>
+        <abbr title="Provide a brief biography">?</abbr>
 		<div class="col-md-10 input-group">
 			<textarea asp-for="Bio" class="form-control" rows="5"></textarea>
 			<span asp-validation-for="Bio" class="text-danger"></span>
@@ -46,6 +47,7 @@
     }
     <div class="form-group">
             <label asp-for="Twitter" class="col-md-2 control-label"></label>
+            <abbr title="Provide your Twitter handle">?</abbr>
             <div class="col-md-10 input-group">
                 <div class="input-group-addon">@@</div>
                 <input asp-for="Twitter" class="form-control" />
@@ -54,6 +56,7 @@
         </div>
         <div class="form-group">
             <label asp-for="Website" class="col-md-2 control-label"></label>
+            <abbr title="Provide the URL for your website">?</abbr>
             <div class="col-md-10 input-group">
                 <input asp-for="Website" class="form-control" />
                 <span asp-validation-for="Website" class="text-danger"></span>
@@ -61,11 +64,37 @@
         </div>
         <div class="form-group">
             <label asp-for="Blog" class="col-md-2 control-label"></label>
+            <abbr title="Provide the URL for your blog">?</abbr>
             <div class="col-md-10 input-group">
                 <input asp-for="Blog" class="form-control" />
                 <span asp-validation-for="Blog" class="text-danger"></span>
             </div>
         </div>
+    <div class="form-group">
+        <label asp-for="MVPDetails" class="col-md-2 control-label"></label>
+        <abbr title="If you're the recepient of Microsoft MVP or other community awards, provide details">?</abbr>
+        <div class="col-md-10 input-group">
+            <textarea asp-for="MVPDetails" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="MVPDetails" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="AuthorDetails" class="col-md-2 control-label"></label>
+        <abbr title="If you're an author/co-author/contributor for a book or course, provide details">?</abbr>
+        <div class="col-md-10 input-group">
+            <textarea asp-for="AuthorDetails" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="AuthorDetails" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="NoteToOrganizers" class="col-md-2 control-label"></label>
+        <abbr title="Visible only to organizers. Use this section to leave any information to organizers. If you submit multiple sessions - rank them in order of preference. Let us know if you prefer to speak earlier or later in the day, back to back or further apart. We will do our best to accomodate your request, but because of logistics we cannot guarantee anything">?</abbr>
+        <div class="col-md-10 input-group">
+            <textarea asp-for="NoteToOrganizers" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="NoteToOrganizers" class="text-danger"></span>
+        </div>
+    </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit" class="btn btn-default">Save</button>

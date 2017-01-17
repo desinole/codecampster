@@ -16,6 +16,9 @@ namespace codecampster.Models
         public string Website { get; set; }
         public string Blog { get; set; }
         public string AvatarURL { get; set; }
+        public string MVPDetails { get; set; }
+        public string AuthorDetails { get; set; }
+        public string NoteToOrganizers { get; set; }
         //to display or hide speakers, for instance, the organizers
         public bool? Special { get; set; }
         public string ApplicationUserId { get; set; }

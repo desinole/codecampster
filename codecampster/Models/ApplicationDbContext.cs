@@ -51,6 +51,10 @@ namespace codecampster.Models
                 x.Property<string>("Blog");
                 x.Property<bool?>("Special");
                 x.Property<string>("AvatarURL");
+                x.Property<string>("MVPDetails");
+                x.Property<string>("AuthorDetails");
+                x.Property<string>("NoteToOrganizers");
+
             });
             builder.Entity(typeof(Announcement),x=>
             {
