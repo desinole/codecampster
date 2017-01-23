@@ -11,7 +11,7 @@
         <div style="float:left;width:100px;height:100px;">
                 <div style="text-align:center">
                     <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">
-                        <img style="max-width:50px" src="@(speaker.AvatarURL)" alt="@speaker.FullName" />
+                        <img style="max-width:50px" src="@(string.IsNullOrEmpty(speaker.AvatarURL)?"/images/default_user_icon.jpg":speaker.AvatarURL)" alt="@speaker.FullName" />
                     </a>
                 </div>
                 <div style="text-align:center">

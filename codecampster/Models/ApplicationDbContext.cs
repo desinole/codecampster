@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace codecampster.Models
 {
@@ -18,28 +19,27 @@ namespace codecampster.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-	        builder.Entity(typeof (ApplicationUser), x =>
-	        {
-		        x.Property<string>("FirstName");
-				x.Property<string>("LastName");
-				x.Property<string>("Location");
-				x.Property<string>("Twitter");
-				x.Property<int?>("AvatarID");
-                x.Property<bool?>("RSVP");
-                x.Property<bool?>("Volunteer");
-			});
- 	        builder.Entity(typeof (Event), x =>
-	        {
-		        x.Property<int>("ID");
-                x.Property<string>("Name");
-                x.Property<string>("SocialMediaHashtag");
-                x.Property<System.DateTime>("EventStart");
-                x.Property<System.DateTime>("EventEnd");
-                x.Property<string>("CompleteAddress");
-                x.Property<bool>("IsCurrent");
-			});
-            builder.Entity(typeof(Speaker), x=>
+            builder.Entity(typeof(ApplicationUser), x =>
+           {
+               x.Property<string>("FirstName");
+               x.Property<string>("LastName");
+               x.Property<string>("Location");
+               x.Property<string>("Twitter");
+               x.Property<int?>("AvatarID");
+               x.Property<bool?>("RSVP");
+               x.Property<bool?>("Volunteer");
+           });
+            builder.Entity(typeof(Event), x =>
+          {
+              x.Property<int>("ID");
+              x.Property<string>("Name");
+              x.Property<string>("SocialMediaHashtag");
+              x.Property<System.DateTime>("EventStart");
+              x.Property<System.DateTime>("EventEnd");
+              x.Property<string>("CompleteAddress");
+              x.Property<bool>("IsCurrent");
+          });
+            builder.Entity(typeof(Speaker), x =>
             {
                 x.Property<int>("ID");
                 x.Property<string>("FullName");
@@ -56,15 +56,15 @@ namespace codecampster.Models
                 x.Property<string>("NoteToOrganizers");
 
             });
-            builder.Entity(typeof(Announcement),x=>
-            {
-                x.Property<int>("ID");
-                x.Property<string>("Message");
-                x.Property<int>("Rank");
-                x.Property<System.DateTime>("PublishOn");
-                x.Property<System.DateTime>("ExpiresOn");
-            });
-            builder.Entity(typeof(Sponsor), x=>
+            builder.Entity(typeof(Announcement), x =>
+             {
+                 x.Property<int>("ID");
+                 x.Property<string>("Message");
+                 x.Property<int>("Rank");
+                 x.Property<System.DateTime>("PublishOn");
+                 x.Property<System.DateTime>("ExpiresOn");
+             });
+            builder.Entity(typeof(Sponsor), x =>
             {
                 x.Property<int>("ID");
                 x.Property<string>("CompanyName");
@@ -107,34 +107,79 @@ namespace codecampster.Models
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);
         }
 
-       public void EnsureSeed()
-       {
-           Task<bool> containsEvents =  this.Events.AnyAsync();
-           if (!containsEvents.Result)
-           {
-               var ccEvent = new Event{ 
-                   Name = "Orlando Codecamp 2017",
-                   EventStart = DateTime.Parse("2017-04-08 08:00:00"),
-                   EventEnd = DateTime.Parse("2017-04-08 17:00:00"),
-                   IsCurrent = true,
-                   SocialMediaHashtag = "#OrlandoCC",
-                   CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
-                   SpeakerRegistrationOpen = true
-                   };
-               this.Events.Add(ccEvent);
-               this.SaveChanges();
-           }
+        public void EnsureSeed(string adminUser, string adminPass)
+        {
+            int records = 0;
+            Task<bool> hasRoles = this.Roles.AnyAsync();
+            if (!hasRoles.Result)
+            {
+                var userStore = new UserStore<ApplicationUser>(this);
+                var role = new IdentityRole();
+                role.Name = "speaker";
+                role.NormalizedName = "SPEAKER";
+                this.Roles.Add(role);
+                records = this.SaveChanges();
+                role = new IdentityRole();
+                role.Name = "attendee";
+                role.NormalizedName = "ATTENDEE";
+                this.Roles.Add(role);
+                records = this.SaveChanges();
+                role = new IdentityRole();
+                role.Name = "administrator";
+                role.NormalizedName = "ADMINISTRATOR";
+                this.Roles.Add(role);
+                records = this.SaveChanges();
+                Task<bool> anyAdmins = this.UserRoles.AnyAsync(r => r.RoleId == role.Id);
+                if (!anyAdmins.Result)
+                {
+                    var user = new ApplicationUser
+                    {
+                        FirstName = adminUser,
+                        LastName = adminUser,
+                        Email = adminUser,
+                        UserName = adminUser,
+                        NormalizedEmail = adminUser.ToUpper(),
+                        NormalizedUserName = adminUser.ToUpper(),
+                        EmailConfirmed = true,
+                        SecurityStamp = Guid.NewGuid().ToString("D")
+                    };
+
+                    var password = new PasswordHasher<ApplicationUser>();
+                    var hashed = password.HashPassword(user, adminPass);
+                    user.PasswordHash = hashed;
+
+                    var userResult = userStore.CreateAsync(user);
+                    var roleResult = userStore.AddToRoleAsync(user, role.NormalizedName);
+
+                }
+            }
+            Task<bool> containsEvents = this.Events.AnyAsync();
+            if (!containsEvents.Result)
+            {
+                var ccEvent = new Event
+                {
+                    Name = "Orlando Codecamp 2017",
+                    EventStart = DateTime.Parse("2017-04-08 08:00:00"),
+                    EventEnd = DateTime.Parse("2017-04-08 17:00:00"),
+                    IsCurrent = true,
+                    SocialMediaHashtag = "#OrlandoCC",
+                    CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                    SpeakerRegistrationOpen = true
+                };
+                this.Events.Add(ccEvent);
+                this.SaveChanges();
+            }
             Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
-           if (!containsAnnouncements.Result)
-           {
-               var announcement = new Announcement
-               {
-                   Message = "Orlando Codecamp 2017 will be held 8am-5pm April 8th 2017 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
-                   PublishOn = DateTime.Now,
-                   ExpiresOn = DateTime.Now.AddYears(1),
-                   Rank = 1
-               };
-               this.Announcements.Add(announcement);
+            if (!containsAnnouncements.Result)
+            {
+                var announcement = new Announcement
+                {
+                    Message = "Orlando Codecamp 2017 will be held 8am-5pm April 8th 2017 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
+                    PublishOn = DateTime.Now,
+                    ExpiresOn = DateTime.Now.AddYears(1),
+                    Rank = 1
+                };
+                this.Announcements.Add(announcement);
                 announcement = new Announcement
                 {
                     Message = "Speaker registration is now open. We did not carry over logins from last year, so if you're a returning speaker, please register your account again.",
@@ -146,32 +191,31 @@ namespace codecampster.Models
                 this.SaveChanges();
             }
             Task<bool> containsSponsors = this.Sponsors.AnyAsync();
-           if (!containsSponsors.Result)
-           {
-               var sponsor = new Sponsor
-               {
-                   CompanyName = "Orlando .NET User Group",
-                   SponsorLevel = "Platinum",
-                   Bio = "ONETUG was founded by Joel Martinez in 2001. Our goal is to showcase great speakers & content centered around, but not restricted to, the Microsoft .NET stack. We strive to bring together developers from all platforms by holding monthly meetings, Nerd Dinners & an annual Codecamp. Our vision is to collaborate with other tech groups & help build Orlando into a major hub for technology companies & startups.",
-                   Twitter = "ONETUG",
-                   Website = "http://onetug.org",
-                   AvatarURL = "/images/ONETUGlogo.png"
-               };
-               this.Sponsors.Add(sponsor);
-               this.SaveChanges();
-           }
-       }
+            if (!containsSponsors.Result)
+            {
+                var sponsor = new Sponsor
+                {
+                    CompanyName = "Orlando .NET User Group",
+                    SponsorLevel = "Platinum",
+                    Bio = "ONETUG was founded by Joel Martinez in 2001. Our goal is to showcase great speakers & content centered around, but not restricted to, the Microsoft .NET stack. We strive to bring together developers from all platforms by holding monthly meetings, Nerd Dinners & an annual Codecamp. Our vision is to collaborate with other tech groups & help build Orlando into a major hub for technology companies & startups.",
+                    Twitter = "ONETUG",
+                    Website = "http://onetug.org",
+                    AvatarURL = "/images/ONETUGlogo.png"
+                };
+                this.Sponsors.Add(sponsor);
+                this.SaveChanges();
+            }
+        }
 
-       protected override void OnConfiguring(DbContextOptionsBuilder options)
-       {
-       		//options.UseInMemoryDatabase();
-           // options.UseSqlServer(.["Data:DefaultConnection:ConnectionString"]))
-            base.OnConfiguring(options);
-       }
-
-        public ApplicationDbContext(DbContextOptions options):base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
+            //options.UseInMemoryDatabase();
+            // options.UseSqlServer(.["Data:DefaultConnection:ConnectionString"]))
+            base.OnConfiguring(options);
+        }
 
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
         }
     }
 }
