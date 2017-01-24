@@ -169,27 +169,6 @@ namespace codecampster.Models
                 this.Events.Add(ccEvent);
                 this.SaveChanges();
             }
-            Task<bool> containsAnnouncements = this.Announcements.AnyAsync();
-            if (!containsAnnouncements.Result)
-            {
-                var announcement = new Announcement
-                {
-                    Message = "Orlando Codecamp 2017 will be held 8am-5pm April 8th 2017 at University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",
-                    PublishOn = DateTime.Now,
-                    ExpiresOn = DateTime.Now.AddYears(1),
-                    Rank = 1
-                };
-                this.Announcements.Add(announcement);
-                announcement = new Announcement
-                {
-                    Message = "Speaker registration is now open. We did not carry over logins from last year, so if you're a returning speaker, please register your account again.",
-                    PublishOn = DateTime.Now,
-                    ExpiresOn = DateTime.Now.AddYears(1),
-                    Rank = 2
-                };
-                this.Announcements.Add(announcement);
-                this.SaveChanges();
-            }
             Task<bool> containsSponsors = this.Sponsors.AnyAsync();
             if (!containsSponsors.Result)
             {

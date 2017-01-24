@@ -26,13 +26,13 @@
 @foreach (var item in Model)
 {
     <tr>
-        <td>@(item.PublishOn)</td>
-        <td>@(item.ExpiresOn)</td>
+        <td>@(String.Format("{0:MM/dd/yyyy}", item.PublishOn))</td>
+        <td>@(String.Format("{0:MM/dd/yyyy}", item.ExpiresOn))</td>
         <td>@(item.Rank)</td>
-        <td>@(item.Message)</td>
+        <td>@Html.Raw(item.Message)</td>
         <td>
-            <a asp-controller="Announcement" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-            <a asp-controller="Announcement" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+            @*<a asp-controller="Announcement" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+            <a asp-controller="Announcement" asp-action="Details" asp-route-id="@item.ID">Details</a> |*@
             <a asp-controller="Announcement" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
         </td>
     </tr>

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace codecampster.Controllers
 {
+    [Authorize(Roles = "administrator")]
     public class AnnouncementController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -27,11 +28,34 @@ namespace codecampster.Controllers
             _logger = loggerFactory.CreateLogger<AnnouncementController>();
             _context = context;
         }
-        // GET: /<controller>/
-        [Authorize(Roles = "administator")]
+
         public IActionResult Index()
         {
             return View(_context.Announcements.OrderBy(a=>a.Rank));
         }
+
+        public IActionResult Create()
+        {
+            var announcement = new Announcement();
+            announcement.Rank = 1;
+            return View(new Announcement());
+        }
+
+        [HttpPost]
+        public IActionResult Create(Announcement announcement)
+        {
+            _context.Add(announcement);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var announcement = _context.Announcements.Find(id);
+            if (_context.Remove(announcement) != null)
+                _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
     }
 }

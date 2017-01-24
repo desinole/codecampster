@@ -47,6 +47,19 @@
                 </div>
             </div>
         </div>
+
+        @if (User.IsInRole("administrator"))
+        {
+            <div class="container">
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a asp-controller="Announcement" asp-action="Index">Announcements</a></li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+
         <div class="container body-content">
             @RenderBody()
             <hr />
