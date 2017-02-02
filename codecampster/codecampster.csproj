@@ -12,7 +12,6 @@
     <Compile Include="**\*.cs" Exclude="$(GlobalExclude)" />
     <EmbeddedResource Include="**\*.resx" Exclude="$(GlobalExclude)" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="MailKit">
       <Version>1.10.0</Version>
