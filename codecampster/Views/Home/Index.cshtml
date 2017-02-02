@@ -5,14 +5,22 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h3>To-Do</h3>
+        <p>&nbsp;</p>
+        <h4>@ViewBag.Event.Name</h4>
+        @if (ViewBag.Event.SpeakerRegistrationOpen ?? false)
+        {
+        <p>Currently we're signing up speakers and accepting session proposals.</p>
+        <h5><a asp-controller="Speakers" asp-action="Index">@(ViewBag.Speakers) Speakers signed up</a></h5>
+        <h5>@(ViewBag.Sessions) Sessions submitted</h5>
+        }
+        <h4>Action Items</h4>
         <ol>
             @if (User.Identity.IsAuthenticated)
             {
                 if ((ViewBag.Event.SpeakerRegistrationOpen ?? false)
                     && (ViewBag.SpeakerProfile != null))
                 {
-                    <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-large">Edit Speaker Profile</button></a><br/><br /></li>
+                    <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-large">Edit Speaker Profile</button></a><br /><br /></li>
                     <li><a asp-controller="Speakers" asp-action="Sessions"><button class="btn btn-large">Manage Sessions</button></a><br /><br /></li>
 
                 }
@@ -51,9 +59,9 @@
                 }
                 if (ViewBag.Event.AttendeeRegistrationOpen ?? false)
                 {
-                    <li>Tell us about yourself</li>
+                    <li>Attendees</li>
                     <ul>
-                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="attendee">Signup as an attendee</a></li>
+                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="attendee"><button class="btn btn-large">Signup as an attendee</button></a></li>
                         <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
                     </ul>
                     <li>View agenda</li>
@@ -67,23 +75,30 @@
                 }
             }
         </ol>
-        <h3>Featured Sponsor</h3>
+        <h4>Featured Sponsor</h4>
         <h5>@ViewBag.Sponsor.SponsorLevel</h5>
         <a href="@ViewBag.Sponsor.Website" target="_blank">
             <img style="width:250px" src="@ViewBag.Sponsor.AvatarURL" alt="@ViewBag.Sponsor.CompanyName" />
         </a>
+        <p>&nbsp;</p>
+        <p>
+            Orlando Codecamp 2016 had 65 speakers, 75 talks and around 600 attendees. <a target="_blank" href="https://storify.com/_s_hari/orlandocc/slideshow?utm_source=embed&utm_medium=publisher&utm_campaign=embed-header-slideshow">
+                Check out the #OrlandoCC 2016 story.
+            </a>
+        </p>
     </div>
     <div class="col-md-3">
-        <h3>Announcements</h3>
+        <p>&nbsp;</p>
+        <h4>Announcements</h4>
         <ul>
             @foreach (var announcement in ViewBag.Announcements)
             {
-            <li>@Html.Raw(announcement.Message)</li>
+                <li>@Html.Raw(announcement.Message)</li>
             }
         </ul>
     </div>
     <div class="col-md-3">
         <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-chrome="nofooter noscrollbar" data-related="onetug" data-widget-id="403285393182687234" data-tweet-limit="5">#OrlandoCC Tweets</a>
-        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } } (document, "script", "twitter-wjs");</script>
     </div>
 </div>

@@ -1,0 +1,71 @@
+﻿@model codecampster.Models.Announcement
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Announcement</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Message" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea asp-for="Message" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Message" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Rank" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Rank" class="form-control" value="" />
+                <span asp-validation-for="Rank" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Effective</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PublishOn, new { @class = "form-control datepicker", placeholder ="" })
+                <span asp-validation-for="PublishOn" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Expires</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ExpiresOn, new { @class = "form-control datepicker", placeholder = ""})
+                <span asp-validation-for="ExpiresOn" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker({
+                format: 'mm/dd/yyyy',
+                startDate: '-3d'
+            });
+            $("#PublishOn").val('@String.Format("{0:MM/dd/yyyy}", DateTime.Today)');
+            $("#ExpiresOn").val('@String.Format("{0:MM/dd/yyyy}", DateTime.Today)');
+            //Initialise any date pickers
+        });
+    </script>
+}
+
+

@@ -140,10 +140,13 @@ namespace codecampster
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                     .CreateScope())
                 {
+                    var configurationSection = Configuration.GetSection("AppSettings");
+                    var adminUser = configurationSection.GetValue<string>("AdminUser");
+                    var adminPass = configurationSection.GetValue<string>("AdminPass");
                     serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
                          .Database.Migrate();
                     serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                    .EnsureSeed();
+                    .EnsureSeed(adminUser, adminPass);
                 }
             }
             catch { }

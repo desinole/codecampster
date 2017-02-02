@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace codecampster.Controllers
 {
@@ -19,6 +20,7 @@ namespace codecampster.Controllers
         private IOptions<AppSettings> _appSettings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -26,6 +28,7 @@ namespace codecampster.Controllers
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
@@ -35,6 +38,7 @@ namespace codecampster.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _appSettings = appSettings;
@@ -115,23 +119,30 @@ namespace codecampster.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    if (id == "speaker")
+                    string fullName = string.Format("{0} {1}", user.FirstName, user.LastName);
+                    var currentUser = _context.ApplicationUsers.Where(u => u.Email == user.Email).SingleOrDefault();
+                    switch (id)
                     {
-
-                        string fullName = string.Format("{0} {1}", user.FirstName, user.LastName);
-                        Speaker sp = new Speaker() { FullName = fullName, Twitter = user.Twitter };
-                        var currentUser = _context.ApplicationUsers.Where(u => u.Email == user.Email).SingleOrDefault();
-                        currentUser.Speaker = sp;
-                        _context.SaveChanges();
+                        case "speaker":
+                            Speaker sp = new Speaker() { FullName = fullName, Twitter = user.Twitter };
+                            currentUser.Speaker = sp;
+                            _userManager.AddToRoleAsync(currentUser, "SPEAKER").Wait();
+                            break;
+                        case "attendee":
+                        default:
+                            _userManager.AddToRoleAsync(currentUser, "ATTENDEE").Wait();
+                            break;
                     }
+                    _context.SaveChanges();
 
+                    var currentEvent = _context.Events.FirstOrDefault();
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     await _emailSender.SendEmailAsync(_appSettings.Value.SmtpServer,
                     _appSettings.Value.SmtpUser, _appSettings.Value.SmtpPass,
-                     model.Email, "Orlando Codecamp: confirm your email",
+                     model.Email, currentEvent.Name + ": confirm your email",
                         "Please confirm your email address by clicking  this link or copy-pasting in a browser: " + callbackUrl);
                     await _signInManager.SignInAsync(user, isPersistent: true);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
