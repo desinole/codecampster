@@ -5,6 +5,11 @@
 <h2>@(ViewData["Title"]).</h2>
 <div>
 <div>Interested in sponsoring Codecamp? Check out the <a href="@Url.Content("~/documents/ContributorInformation.pdf")">sponsor package</a></div>
+<div>
+	<p>
+		<a asp-action="Create" asp-route-id="">Add Sponsor</a>
+	</p>
+</div>
 @foreach (var sponsor in Model)
 {
     <div>
@@ -17,8 +22,10 @@
         <h3>
             <a href="@Url.Content(string.Format("~/sponsors/details/{0}",@sponsor.ID))">@sponsor.CompanyName (<em>@sponsor.SponsorLevel</em>)</a>
         </h3>
-
     </div>
+	<div>
+		<a href="@Url.Content(string.Format("~/sponsors/Delete/{0}",@sponsor.ID))">Delete</a>
+	</div>
     <hr/>
     </div>
 }
