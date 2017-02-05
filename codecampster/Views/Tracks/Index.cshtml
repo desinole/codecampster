@@ -1,0 +1,17 @@
+﻿@model IList<Track>
+@{
+    ViewData["Title"] = "Tracks";
+}
+<h2>@(ViewData["Title"]).</h2>
+<p>
+    <a asp-controller="Tracks" asp-action="Edit">Add track</a>
+</p>
+
+@foreach (var track in Model)
+{
+    <div>@track.Name</div>
+    <div>@track.RoomNumber</div>
+    <div><a asp-controller="Tracks" asp-action="Delete" asp-route-id="@track.ID">Delete</a></div>
+        <hr />
+}
+<div style="clear:both"></div>
