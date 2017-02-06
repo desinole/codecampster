@@ -83,7 +83,7 @@
                 @(item.Track!=null?string.Format("{0}",item.Track.RoomNumber):string.Empty)
             </div>
             <div>
-                @(((!(string.IsNullOrEmpty(item.Description) ))? item.Description.Substring(0,Math.Min(200,item.Description.Length)):"N/A")).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })
+                @(((!(string.IsNullOrEmpty(item.Description) ))? item.Description.Substring(0,Math.Min(200,item.Description.Length)):"N/A")).....@Html.ActionLink("Learn More","Details","Sessions",new { id = item.SessionID }, null)
             </div>
         </td>
         @*<td>
