@@ -20,6 +20,7 @@ namespace codecampster.Controllers
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
         private readonly ApplicationDbContext _context;
+
         public SpeakersController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -35,11 +36,15 @@ namespace codecampster.Controllers
             _logger = loggerFactory.CreateLogger<SpeakersController>();
             _context = context;
         }
+
         [Authorize]
         [HttpGet]
         public IActionResult Edit()
         {
-            var speaker = _context.Speakers.Where(s=>s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            var speaker = _context.Speakers
+                .Where(s=>s.AppUser.Email == User.Identity.Name)
+                .FirstOrDefault();
+                
             SpeakerViewModel model = new SpeakerViewModel()
             {
                 AvatarURL = speaker.AvatarURL,
@@ -59,7 +64,11 @@ namespace codecampster.Controllers
         [HttpGet]
         public IActionResult Sessions()
         {
-            var speaker = _context.Speakers.Include(s=>s.Sessions).Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            var speaker = _context.Speakers
+                .Include(s => s.Sessions)
+                .Where(s => s.AppUser.Email == User.Identity.Name)
+                .FirstOrDefault();
+
             return View(speaker.Sessions);
         }
 
@@ -70,7 +79,10 @@ namespace codecampster.Controllers
         {
             if (ModelState.IsValid)
             {
-                var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+                var speaker = _context.Speakers
+                    .Where(s => s.AppUser.Email == User.Identity.Name)
+                    .FirstOrDefault();
+
                 speaker.AvatarURL = model.AvatarURL;
                 speaker.Title = model.Title;
                 speaker.Bio = model.Bio;
@@ -81,15 +93,23 @@ namespace codecampster.Controllers
                 speaker.MVPDetails = model.MVPDetails;
                 speaker.AuthorDetails = model.AuthorDetails;
                 speaker.NoteToOrganizers = model.NoteToOrganizers;
+
                _context.SaveChanges();
             }
+
             return View(model);
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
-            return View(_context.Speakers.Where(s => !(s.Special == true)).Select(s => s).OrderBy(x => Guid.NewGuid()));
+            var speakers = _context.Speakers
+                .Include(s => s.Sessions)
+                .Where(s => !(s.Special == true) 
+                    && s.Sessions.Any())
+                .OrderBy(x => x.FullName);
+
+            return View(speakers);
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
