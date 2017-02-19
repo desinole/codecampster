@@ -17,23 +17,21 @@
         <ol>
             @if (User.Identity.IsAuthenticated)
             {
-                if ((ViewBag.Event.SpeakerRegistrationOpen ?? false)
-                    && (ViewBag.SpeakerProfile != null))
+                if ((ViewBag.SpeakerProfile != null))
                 {
                     <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-large">Edit Speaker Profile</button></a><br /><br /></li>
                     <li><a asp-controller="Speakers" asp-action="Sessions"><button class="btn btn-large">Manage Sessions</button></a><br /><br /></li>
 
                 }
-                if (ViewBag.Event.AttendeeRegistrationOpen ?? false)
+                else
                 {
                     if (!(ViewBag.RSVP ?? false))
                     {
-
-                        <li><a asp-controller="Event" asp-action="RSVP">RSVP to attend</a></li>
+                    <li><a asp-controller="Event" asp-action="RSVP">RSVP to attend</a></li>
                     }
                     else
                     {
-                        <li>Thank you for RSVPing</li>
+                    <li>Thank you for RSVPing</li>
                     }
                     @if (!(ViewBag.Volunteer ?? false))
                     {
@@ -44,6 +42,17 @@
                     {
                         <li>Thank you for volunteering</li>
                     }
+                }
+
+                if (ViewBag.Event.AttendeeRegistrationOpen ?? false)
+                {
+                    <li>View agenda</li>
+                    <ul>
+                        <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
+                        <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
+                        @*<li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>*@
+                        <li>@ViewBag.Attendees Attendees</li>
+                    </ul>
                 }
             }
             else
@@ -68,8 +77,7 @@
                     <ul>
                         <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
                         <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
-                        <li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>
-                        <li>Create My Agenda (coming soon)</li>
+                        @*<li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>*@
                         <li>@ViewBag.Attendees Attendees</li>
                     </ul>
                 }

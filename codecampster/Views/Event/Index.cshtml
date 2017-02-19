@@ -14,8 +14,17 @@
         height: 100%;
       }
     </style>
+@if (User.IsInRole("administrator"))
+{
+    <div>
+        <p>
+            <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a>
+        </p>
+    </div>
+
+}
 <address>
-    <strong>Email:</strong> <a href="mailto:board@onetug.com">board@onetug.com</a>
+    <strong>Email:</strong> <a href="mailto:board@onetug.org">board@onetug.org</a>
 </address>
 <address>
     @string.Format("{0} to {1}", Model.EventStart, Model.EventEnd)

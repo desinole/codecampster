@@ -95,6 +95,7 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Details(int id)
         {
+            ViewBag.IsSpeakerSubmissionOpen = _context.Events.SingleOrDefault().SpeakerRegistrationOpen??false;
             return View(_context.Speakers.Include(s => s.Sessions).Where(s => s.ID == id).SingleOrDefault());
         }
     }

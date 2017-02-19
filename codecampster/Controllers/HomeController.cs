@@ -38,10 +38,16 @@ namespace codecampster.Controllers
         public IActionResult Index()
         {
             ViewBag.Event = _context.Events.SingleOrDefault();
-            ViewBag.Announcements = _context.Announcements.Where(a => a.PublishOn < DateTime.Now && a.ExpiresOn > DateTime.Now).OrderBy(a => a.Rank);
-            ViewBag.Speakers = _context.Speakers.Select(s => ((s.Special == null ? false : s.Special.Value))).ToList().Where(s => !s).Count();
+            ViewBag.Announcements = _context.Announcements.OrderBy(a => a.Rank);
             ViewBag.Attendees = _context.ApplicationUsers.Select(a => (a.RSVP == null ? false : a.RSVP.Value)).ToList().Where(a => a).Count();
-            ViewBag.Sessions = _context.Sessions.Select(s => ((s.Special == null ? false : s.Special.Value))).ToList().Where(s => !s).Count();
+            var approveSessions = _context.Sessions.Where(s => 
+            (s.IsApproved) && !((s.Special == null ? false : s.Special.Value))).ToList();
+            ViewBag.Sessions = approveSessions.Count;
+            var approvedSpeakers = approveSessions.Select(w => w.SpeakerID).ToList();
+            ViewBag.Speakers = _context.Speakers.Where(s => 
+            (approvedSpeakers.Contains(s.ID)) && 
+            !((s.Special == null ? false : s.Special.Value))).ToList().Count();
+
             if (User.Identity.IsAuthenticated)
             {
                 var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefault();

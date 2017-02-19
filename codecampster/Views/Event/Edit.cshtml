@@ -1,0 +1,98 @@
+﻿@model codecampster.ViewModels.Event.EventViewModel
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<h2>@ViewData["Title"].</h2>
+
+<form asp-controller="Event" asp-action="Edit" asp-route-id="@Model.ID" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+        </div>
+        <div class="col-md-10 input-group">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <div class="col-md-10 input-group">
+                <label asp-for="IsAttendeeRegistrationOpen" class="col-md-2 control-label"></label>
+            </div>
+            <div class="col-md-10 input-group checkbox">
+                <input asp-for="IsAttendeeRegistrationOpen" class="form-control" />
+                <span asp-validation-for="IsAttendeeRegistrationOpen" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <div class="col-md-10 input-group">
+                <label asp-for="IsSpeakerRegistrationOpen" class="col-md-2 control-label"></label>
+            </div>
+            <div class="col-md-10 input-group checkbox">
+                <input asp-for="IsSpeakerRegistrationOpen" class="form-control" />
+                <span asp-validation-for="IsSpeakerRegistrationOpen" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <div class="col-md-10 input-group">
+                <label asp-for="IsCurrent" class="col-md-2 control-label"></label>
+            </div>
+            <div class="col-md-10 input-group checkbox">
+                <input asp-for="IsCurrent" class="form-control" />
+                <span asp-validation-for="IsCurrent" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <label asp-for="EventStart" class="col-md-2 control-label"></label>
+        </div>
+        <div class="col-md-10 input-group">
+            <input asp-for="EventStart" class="form-control datepicker" />
+            <div class="input-group bootstrap-timepicker timepicker">
+                <input class="form-control timepicker" type="text" /><span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span></div>
+                <span asp-validation-for="EventStart" class="text-danger"></span>
+            </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10 input-group">
+            <label asp-for="EventEnd" class="col-md-2 control-label"></label>
+        </div>
+        <div class="col-md-10 input-group">
+            <input asp-for="EventEnd" class="form-control datepicker" />
+            <div class="input-group bootstrap-timepicker timepicker">
+                <input class="form-control timepicker" type="text" /><span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span></div>
+                <span asp-validation-for="EventEnd" class="text-danger"></span>
+            </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Save</button>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/wwwroot/lib/tether/dist/js/tether.js"></script>
+<script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+<script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker();
+            $('.timepicker').timepicker();
+            @*$("#EventStart").val('@String.Format("{0:MM/dd/yyyy}", DateTime.Today)');
+            $("#EventEnd").val('@String.Format("{0:MM/dd/yyyy}", DateTime.Today)');*@
+            //Initialise any date pickers
+        });
+</script>
+}

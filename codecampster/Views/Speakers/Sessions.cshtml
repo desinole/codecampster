@@ -24,7 +24,6 @@
     </p>
 @if ( (Model != null) && (Model.Count() > 0) )
 {
-    <text>This page is happy.</text>
 
 <table class="table">
     @*<tr>
@@ -64,7 +63,7 @@
             </td>*@
             <td>
                 <div>
-                    <h4>@item.Name</h4>
+                    <h4>@item.Name</h4><font style="font-weight:bold;color:green">@(item.IsApproved ? "Approved" : "")</font>
                 </div>
                 @*<div>
                     Track: @(item.Track != null ? string.Format("{0} ", item.Track.Name) : string.Empty)
