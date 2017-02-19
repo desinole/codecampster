@@ -31,9 +31,10 @@
 {
     <p><strong>Bio:&nbsp;</strong>@Model.Bio</p>
 }
+
 @if (!string.IsNullOrEmpty(Model.MVPDetails))
 {
-    <p><strong>Community Awards:&nbsp;</strong>@Model.MVPDetails</p>
+    <p><strong>Community Awards/MVP:&nbsp;</strong>@Model.MVPDetails</p>
 }
 @if (!string.IsNullOrEmpty(Model.AuthorDetails))
 {
