@@ -62,12 +62,19 @@
             @if (!(timing.Special ?? false))
             {
                 <br /><em><strong>@session.Speaker.FullName</strong></em>
-                <br/><text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
+                <br/>
+                @if (!string.IsNullOrEmpty(trackTime.RoomNumber))
+                {
+            <text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
+                }
                     <div id="@string.Format("div{0}",session.SessionID)" class="divDescription" title="@session.Name">
                         <h3>@session.Name</h3>
                         <p>Speaker: @session.Speaker.FullName</p>
                         <p>Time: @session.Timeslot.StartTime - @session.Timeslot.EndTime</p>
+@if (!string.IsNullOrEmpty(session.Track.RoomNumber))
+{
                         <p>Room: @session.Track.RoomNumber</p>
+}
                         <p>Track: @session.Track.Name</p>
                         <p>@session.Description</p>
                     </div>

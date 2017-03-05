@@ -42,9 +42,9 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
         {
-            ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank);
-            ViewBag.TrackCount = _context.Tracks.Count();
-            ViewBag.Tracks = _context.Tracks;
+            ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank).ToList();
+            ViewBag.Tracks = _context.Tracks.ToList();
+            ViewBag.TrackCount = ViewBag.Tracks.Count;
             IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
             return View(sessions.ToList());
         }

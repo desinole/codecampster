@@ -103,13 +103,26 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
-            var speakers = _context.Speakers
-                .Include(s => s.Sessions)
-                .Where(s => !(s.Special == true) 
-                    && s.Sessions.Any())
-                .OrderBy(x => x.FullName);
+            if (_context.Events.SingleOrDefault().AttendeeRegistrationOpen ?? false)
+            {
+                var speakers = _context.Speakers
+                    .Include(s => s.Sessions)
+                    .Where(s => !(s.Special == true)
+                        && s.Sessions.Any())
+                    .OrderBy(x => x.FullName);
+                return View(speakers);
+            }
+            else
+            {
+                var speakers = _context.Speakers
+                    .Include(s => s.Sessions)
+                    .Where(s => !(s.Special == true)
+                    && s.Sessions.Any(c=>c.IsApproved))
+                    .OrderBy(x => x.FullName);
+                return View(speakers);
 
-            return View(speakers);
+            }
+
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
