@@ -47,7 +47,7 @@
 
     <div class="form-group">
             <label asp-for="Twitter" class="col-md-2 control-label"></label>
-            <abbr title="Provide your Twitter handle">?</abbr>
+            <abbr title="Provide your Twitter handle, without the @@ sign">?</abbr>
             <div class="col-md-10 input-group">
                 <div class="input-group-addon">@@</div>
                 <input asp-for="Twitter" class="form-control" />
@@ -56,7 +56,7 @@
         </div>
         <div class="form-group">
             <label asp-for="Website" class="col-md-2 control-label"></label>
-            <abbr title="Provide the URL for your website">?</abbr>
+            <abbr title="Provide the full URL for your website, including http[s]://">?</abbr>
             <div class="col-md-10 input-group">
                 <input asp-for="Website" class="form-control" />
                 <span asp-validation-for="Website" class="text-danger"></span>
@@ -64,7 +64,7 @@
         </div>
         <div class="form-group">
             <label asp-for="Blog" class="col-md-2 control-label"></label>
-            <abbr title="Provide the URL for your blog">?</abbr>
+            <abbr title="Provide the full URL for your blog, including http[s]://">?</abbr>
             <div class="col-md-10 input-group">
                 <input asp-for="Blog" class="form-control" />
                 <span asp-validation-for="Blog" class="text-danger"></span>
