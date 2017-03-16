@@ -39,7 +39,14 @@ namespace codecampster.Controllers
         {
             ViewBag.Event = _context.Events.SingleOrDefault();
             ViewBag.Announcements = _context.Announcements.OrderBy(a => a.Rank);
-            ViewBag.Attendees = _context.ApplicationUsers.Select(a => (a.RSVP == null ? false : a.RSVP.Value)).ToList().Where(a => a).Count();
+            ViewBag.Attendees = (from users in _context.ApplicationUsers
+                                 join userroles in _context.UserRoles
+                                 on users.Id equals userroles.UserId
+                                 join roles in _context.Roles
+                                 on userroles.RoleId equals roles.Id
+                                 where roles.Name == "ATTENDEE"
+                                 select users).Count();
+                //_context.ApplicationUsers.Where(u => u.Roles.Contains(attendeeRole)).Select(a => a).ToList().Count();
             var approveSessions = _context.Sessions.Where(s => 
             (s.IsApproved) && !((s.Special == null ? false : s.Special.Value))).ToList();
             ViewBag.Sessions = approveSessions.Count;

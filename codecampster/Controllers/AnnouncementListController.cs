@@ -1,30 +1,28 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using codecampster.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-//using System.Web.Http;
 
 namespace codecampster.Controllers
 {
-
-    [Route("api/[controller]")]
     [Produces("application/json")]
-    public class SessionListController : Controller
+    [Route("api/AnnouncementList")]
+    public class AnnouncementListController : Controller
     {
         private ApplicationDbContext _context;
 
-        public SessionListController(ApplicationDbContext context)
+        public AnnouncementListController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // GET: api/TrackList
         [HttpGet]
-        [ResponseCache(Duration =3600,Location =ResponseCacheLocation.Any)]
-        public IActionResult Get()
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        public IEnumerable<Announcement> GetAnnouncements()
         {
-            return Ok(_context.Sessions.Where(s=>s.IsApproved).Include(s => s.Speaker).ToList());
+            return _context.Announcements.OrderBy(a=>a.Rank);
         }
 
         protected override void Dispose(bool disposing)
@@ -35,5 +33,6 @@ namespace codecampster.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }

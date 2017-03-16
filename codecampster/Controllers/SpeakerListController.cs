@@ -21,7 +21,12 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
         public IEnumerable<Speaker> GetSpeakers()
         {
-            return _context.Speakers.OrderBy(s=>s.FullName);
+            var approvedSpeakers = from speakers in _context.Speakers
+                                   join sessions in _context.Sessions
+                                   on speakers.ID equals sessions.SpeakerID
+                                   where sessions.IsApproved
+                                   select speakers;
+            return approvedSpeakers.OrderBy(s => s.FullName).Distinct<Speaker>();
         }
 
         protected override void Dispose(bool disposing)
