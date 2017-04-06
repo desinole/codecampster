@@ -18,7 +18,7 @@ namespace codecampster.Models
         public int SpeakerID { get; set; }
         [ForeignKey("SpeakerID")]
         public Speaker Speaker { get; set; }
-
+        public int? CoSpeakerID { get; set; }
         public string CoSpeakers { get; set; }
 
         public int? TrackID { get; set; }

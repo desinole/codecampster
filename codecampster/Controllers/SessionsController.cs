@@ -39,17 +39,55 @@ namespace codecampster.Controllers
         }
 
 
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
         {
             ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank).ToList();
             ViewBag.Tracks = _context.Tracks.ToList();
             ViewBag.TrackCount = ViewBag.Tracks.Count;
+            ViewBag.MySessions = new List<int>();
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.MySessions = _context.AttendeeSessions.Where(a => a.AppUser.UserName == User.Identity.Name).Select(a => a.SessionID).ToList();
+            }
             IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
             return View(sessions.ToList());
         }
 
+        [Authorize]
+        public JsonResult AddSessionToAgenda(int id)
+        {
+            var user = _context.ApplicationUsers.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if (user != null)
+            {
+                AttendeeSession obj = new AttendeeSession() { SessionID = id, ApplicationUserId = user.Id };
+                _context.AttendeeSessions.Add(obj);
+                return Json(_context.SaveChanges() > 0);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
 
+        [Authorize]
+        public JsonResult RemoveSessionFromAgenda(int id)
+        {
+            var user = _context.ApplicationUsers.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if (user != null)
+            {
+                AttendeeSession obj = _context.AttendeeSessions.
+                    Where(a => a.SessionID == id && a.ApplicationUserId == user.Id).FirstOrDefault();
+                if (obj == null)
+                    return Json(false);
+                _context.AttendeeSessions.Remove(obj);
+                return Json(_context.SaveChanges() > 0);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
         [ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
@@ -64,7 +102,7 @@ namespace codecampster.Controllers
                 {
                     var tr = _context.Tracks.Single(t => t.ID == trackID);
                     ViewData["Title"] = string.Format("{0} Track Sessions {1}", tr.Name, tr.RoomNumber);
-                    return View(sessions.Where(s => (s.TrackID == trackID) && (!(s.Special == true))).ToList());
+                    return View(sessions.Where(s => (s.TrackID == trackID) && (!(s.Special == true))).OrderBy(t=>t.Timeslot.Rank).ToList());
                 }
             }
             if (!string.IsNullOrEmpty(timeslot))
@@ -74,10 +112,10 @@ namespace codecampster.Controllers
                 {
                     var ts = _context.Timeslots.Single(t => t.ID == timeslotId);
                     ViewData["Title"] = string.Format("{0} - {1} Sessions", ts.StartTime, ts.EndTime);
-                    return View(sessions.Where(s => s.TimeslotID == timeslotId).ToList());
+                    return View(sessions.Where(s => s.TimeslotID == timeslotId).OrderBy(t=>t.Track.Name).ToList());
                 }
             }
-            return View(sessions.ToList());
+            return View(sessions.OrderBy(t=>t.Timeslot.Rank).ThenBy(t=>t.Track.Name).ToList());
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
@@ -89,6 +127,7 @@ namespace codecampster.Controllers
             }
 
             Session session = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).Single(m => m.SessionID == id);
+            ViewBag.CoSpeaker = session.CoSpeakerID.HasValue ? _context.Speakers.Find(session.CoSpeakerID.Value) : null;
             if (session == null)
             {
                 return NotFound();

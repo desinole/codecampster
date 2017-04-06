@@ -16,6 +16,7 @@ namespace codecampster.Models
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Timeslot> Timeslots { get; set; }
         public DbSet<Track> Tracks { get; set; }
+        public DbSet<AttendeeSession> AttendeeSessions { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -105,6 +106,14 @@ namespace codecampster.Models
             });
             builder.Entity<Session>().HasOne(p => p.Timeslot).WithMany(p => p.Sessions);
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);
+            builder.Entity(typeof(AttendeeSession), x =>
+             {
+                 x.Property<int>("ID");
+                 x.Property<string>("ApplicationUserId");
+                 x.Property<int>("SessionID");
+             });
+            builder.Entity<AttendeeSession>().HasOne(p => p.RelatedSession);
+            builder.Entity<AttendeeSession>().HasOne(p => p.AppUser);
         }
 
         public void EnsureSeed(string adminUser, string adminPass)

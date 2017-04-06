@@ -108,7 +108,8 @@ namespace codecampster.Controllers
                 var speakers = _context.Speakers
                     .Include(s => s.Sessions)
                     .Where(s => !(s.Special == true)
-                        && s.Sessions.Any())
+                    && s.Sessions.Any(c => c.IsApproved)
+                    )
                     .OrderBy(x => x.FullName);
                 return View(speakers);
             }
@@ -116,11 +117,9 @@ namespace codecampster.Controllers
             {
                 var speakers = _context.Speakers
                     .Include(s => s.Sessions)
-                    .Where(s => !(s.Special == true)
-                    && s.Sessions.Any(c=>c.IsApproved))
+                    .Where(s => !(s.Special == true))
                     .OrderBy(x => x.FullName);
                 return View(speakers);
-
             }
 
         }

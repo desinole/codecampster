@@ -5,27 +5,39 @@
 
     var width = (int)(100 / (ViewBag.TrackCount));
 }
-
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 <style>
     table, th, td {
-   border: 1px solid black;
-}
-    tr:nth-child(even) {background-color: #f2f2f2}
-    th {
-    background-color: #000;
-    color: white;
-}
-    td:hover {
-    background-color: yellow;
-    cursor:pointer;
+        border: 1px solid black;
     }
-    .ui-dialog 
-    {
-    position:fixed;
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        background-color: #000;
+        color: white;
+    }
+
+    td:hover {
+        background-color: yellow;
+        cursor: pointer;
+    }
+
+    .ui-dialog {
+        position: fixed;
+    }
+    .showImage {
+        visibility: visible;
+    }
+    .hideImage {
+        visibility: hidden;
     }
 </style>
+<p><a href="/">Back to main website</a></p>
 <p>Click on a session to view details (if available)</p>
-<p><a href="#" id="printLink">Print</a>&nbsp;|&nbsp;<a href="/">Back to main website</a></p>
+<p><strong><em>Note:&nbsp;</em></strong>If you're logged in, you can click on a session and add it to your Agenda from the details window</p>
 <table id="tblAgenda" style="padding:1px;text-align:center">
     <tr>
         <th>&nbsp;</th>
@@ -35,7 +47,7 @@
                 <div><strong>@(track.Name)</strong></div>
                 @if (!string.IsNullOrEmpty(track.RoomNumber))
                 {
-                <div><em>@track.RoomNumber</em></div>
+                    <div><em>@track.RoomNumber</em></div>
                 }
             </th>
         }
@@ -48,7 +60,7 @@
             classString = "class=\"specialTimeslot\"";
         }
         <tr>
-            <td @(classString)>@string.Format("{0} - {1}",timing.StartTime, timing.EndTime)</td>
+            <td @(classString)>@string.Format("{0} - {1}", timing.StartTime, timing.EndTime)</td>
             @foreach (var trackTime in ViewBag.Tracks)
             {
                 var session = Model.Where(s => s.TrackID == trackTime.ID && s.TimeslotID == timing.ID).FirstOrDefault();
@@ -58,28 +70,63 @@
                 }
                 else
                 {
-                    <td id="@string.Format("td{0}",session.SessionID)" class="tdSession">@(session.Name)
-            @if (!(timing.Special ?? false))
-            {
-                <br /><em><strong>@session.Speaker.FullName</strong></em>
-                <br/>
-                @if (!string.IsNullOrEmpty(trackTime.RoomNumber))
-                {
-            <text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
-                }
-                    <div id="@string.Format("div{0}",session.SessionID)" class="divDescription" title="@session.Name">
-                        <h3>@session.Name</h3>
-                        <p>Speaker: @session.Speaker.FullName</p>
-                        <p>Time: @session.Timeslot.StartTime - @session.Timeslot.EndTime</p>
-@if (!string.IsNullOrEmpty(session.Track.RoomNumber))
-{
-                        <p>Room: @session.Track.RoomNumber</p>
-}
-                        <p>Track: @session.Track.Name</p>
-                        <p>@session.Description</p>
-                    </div>
-            }
-                    </td>
+                    <td id="@string.Format("td{0}",session.SessionID)" class="tdSession">
+                        @(session.Name)
+                    @if (!(timing.Special ?? false))
+                    {
+                        <br /><em><strong>@session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers ?? string.Empty))</strong></em>
+                        <br />
+                        @if (!string.IsNullOrEmpty(trackTime.RoomNumber))
+                        {
+                            <text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
+                        }
+                        <div id="@string.Format("div{0}",session.SessionID)" class="divDescription" title="@session.Name">
+                            @if ((User.Identity.IsAuthenticated))
+                            {
+                                if ((ViewBag.MySessions != null) && (ViewBag.MySessions.Contains(session.SessionID)))
+                                {
+                                    <p><a href="#" class="delSession" id="@(string.Format("d{0}",session.SessionID))" title="[-] Remove from My Agenda">[-] Remove from My Agenda</a></p>
+                                }
+                                else
+                                {
+                                    <p><a href="#" class="addSession" id="@(string.Format("a{0}",session.SessionID))" title="[+] Add to My Agenda">[+] Add to My Agenda</a></p>
+                                }
+                            }
+                            else
+                            {
+                                <text>&nbsp;</text>
+                            }
+
+
+                            <h3>@session.Name</h3>
+                            <p>Speaker: @session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers??string.Empty))</p>
+                            <p>Time: @session.Timeslot.StartTime - @session.Timeslot.EndTime</p>
+                            @if (!string.IsNullOrEmpty(session.Track.RoomNumber))
+                            {
+                                <p>Room: @session.Track.RoomNumber</p>
+                            }
+                            <p>Track: @session.Track.Name</p>
+                            <p>@session.Description</p>
+                        </div>
+                    }
+                        @if ((User.Identity.IsAuthenticated))
+                        {
+                            if ((ViewBag.MySessions != null) && (ViewBag.MySessions.Contains(session.SessionID)))
+                            {
+                                <img style="height:16px" id="@(string.Format("imgFav{0}",session.SessionID))" src="/images/star_full.png" class="showImage" />
+                            }
+                            else
+                            {
+                                <img style="height:16px" id="@(string.Format("imgFav{0}",session.SessionID))" src="/images/star_full.png" class="hideImage" />
+                            }
+                        }
+                        else
+                        {
+                            <text>&nbsp;</text>
+                        }
+
+
+                </td>
                 }
             }
         </tr>
@@ -115,12 +162,37 @@
             height: 520,
             position: 'center'
         });
+        $(".delSession").click(function () {
+            var id = this.id.replace("d", "");
+            $("#div" + id).dialog("close");
+            $.get('@(Url.Content("/Sessions/RemoveSessionFromAgenda"))' + '/' + id, function (data) {
+                if (data) {
+                    location.reload();
+                }
+            });
+        });
+        $(".addSession").click(function () {
+            var id = this.id.replace("a", "");
+            $("#div" + id).dialog("close");
+            $.get('@(Url.Content("/Sessions/AddSessionToAgenda"))' + '/' + id, function (data) {
+                if (data) {
+                    location.reload();
+                }
+            });
+        });
         $(".tdSession").click(function () {
             var divId = this.id.replace("td", "");
             $("#div" + divId).dialog("open");
         });
         $("#printLink").click(function () {
-            alert("Print this the week of codecamp");
+            var newWin = window.open("");
+            newWin.document.write($("#tblAgenda")[0].outerHTML);
+            newWin.print();
+            newWin.close();
+
         });
     });
 </script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58d739451a8b33cb"></script>
+

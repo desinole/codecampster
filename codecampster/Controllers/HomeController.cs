@@ -91,5 +91,10 @@ namespace codecampster.Controllers
         {
             return View();
         }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
     }
 }

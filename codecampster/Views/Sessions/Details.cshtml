@@ -7,6 +7,13 @@
 <h5>
     <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
 </h5>
+@if (ViewBag.CoSpeaker != null)
+{
+    <p><img style="max-width:100px" src="@(string.IsNullOrEmpty(ViewBag.CoSpeaker.AvatarURL)?"/images/default_user_icon.jpg": ViewBag.CoSpeaker.AvatarURL)" /></p>
+<h5>
+    <a href="@Url.Content(string.Format("~/speakers/details/{0}", Model.CoSpeakerID))">@Model.CoSpeakers</a>
+</h5>
+}
 <p>Target Audience:&nbsp;<em>@(Model.Level == 3 ? "Deep Dive" : (Model.Level == 2 ? "Some prior knowledge needed" : "All skill levels"))</em></p>
 @if (Model.Timeslot != null)
 {
