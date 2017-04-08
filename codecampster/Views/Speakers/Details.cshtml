@@ -21,11 +21,11 @@
 }
 @if (!string.IsNullOrEmpty(Model.Website))
 {
-    <p><strong>Website:&nbsp;</strong><a target="_blank" href="@(Model.Website)">@(Model.Website)</a></p>
+    <p><strong>Website:&nbsp;</strong><a target="_blank" href="@(Model.Website.StartsWith("http")?Model.Website:"http://"+Model.Website>@(Model.Website)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Blog))
 {
-    <p><strong>Blog:&nbsp;</strong><a target="_blank" href="@(Model.Blog)">@(Model.Blog)</a></p>
+    <p><strong>Blog:&nbsp;</strong><a target="_blank" href="@(Model.Blog.StartsWith("http)?Model.Website:"http://"+Model.Website>@(Model.Blog)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Bio))
 {
