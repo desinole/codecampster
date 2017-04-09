@@ -70,7 +70,7 @@
         </td>
         <td>
             <div>
-                <h4>@item.Name</h4>
+                <h4>@Html.ActionLink(item.Name,"Details", new {id= item.SessionID})</h4>
             </div>
             <div>
                 Track: @(item.Track != null ? string.Format("{0} ", item.Track.Name) : string.Empty)
