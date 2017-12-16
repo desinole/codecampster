@@ -1,9 +1,9 @@
 @model codecampster.ViewModels.Speaker.SpeakerViewModel
 @{
-    ViewData["Title"] = "Edit Speaker Profile";
+    ViewData["Title"] = "Edit" + Model.FullName + "'s Speaker Profile";
 }
 
-<h2>@ViewData["Title"].</h2>
+<h2>@ViewData["Title"]</h2>
 
 <form asp-controller="Speakers" asp-action="Edit" method="post" class="form-horizontal" role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -21,6 +21,14 @@
 			<span asp-validation-for="Title" class="text-danger"></span>
 		</div>
 	</div>
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+        <abbr title="Please provide your phone number">?</abbr>
+        <div class="col-md-10 input-group">
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
 	<div class="form-group">
 		<label asp-for="Bio" class="col-md-2 control-label"></label>
         <abbr title="Provide a brief biography">?</abbr>
@@ -36,15 +44,12 @@
 			<span asp-validation-for="AvatarURL" class="text-danger"></span>
 		</div>
 	</div>
-
-        <div class="form-group">
-            <label class="col-md-2 control-label"></label>
-            <div class="col-md-10 input-group">
-                <img style="max-width:50px" src="@(string.IsNullOrEmpty(Model.AvatarURL)?"/images/default_user_icon.jpg":Model.AvatarURL)" alt="Profile Photo" />
-
-            </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-10 input-group">
+            <img style="max-width:50px" src="@(string.IsNullOrEmpty(Model.AvatarURL)?"/images/default_user_icon.jpg":Model.AvatarURL)" alt="Profile Photo" />
         </div>
-
+    </div>
     <div class="form-group">
             <label asp-for="Twitter" class="col-md-2 control-label"></label>
             <abbr title="Provide your Twitter handle, without the @@ sign">?</abbr>
@@ -70,6 +75,14 @@
                 <span asp-validation-for="Blog" class="text-danger"></span>
             </div>
         </div>
+    <div class="form-group">
+        <label asp-for="IsMvp" class="col-md-2 control-label"></label>
+        <abbr title="If you are a Microsoft MVP check here">?</abbr>
+        <div class="col-md-10 input-group">
+            <input asp-for="IsMvp" type="checkbox" class="form-check" />
+            <span asp-validation-for="IsMvp" class="text-danger"></span>
+        </div>
+    </div>
     <div class="form-group">
         <label asp-for="MVPDetails" class="col-md-2 control-label"></label>
         <abbr title="If you're the recepient of Microsoft MVP or other community awards, provide details">?</abbr>

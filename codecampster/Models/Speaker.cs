@@ -19,6 +19,9 @@ namespace codecampster.Models
         public string MVPDetails { get; set; }
         public string AuthorDetails { get; set; }
         public string NoteToOrganizers { get; set; }
+        public bool IsMvp { get; set; }
+        public string PhoneNumber { get; set; }
+        public string LinkedIn { get; set; }
         //to display or hide speakers, for instance, the organizers
         public bool? Special { get; set; }
         public string ApplicationUserId { get; set; }

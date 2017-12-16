@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using codecampster.ViewModels.Speaker;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using codecampster.ViewModels.Session;
+using System.Collections.Generic;
 
 namespace codecampster.Controllers
 {
@@ -41,24 +43,43 @@ namespace codecampster.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            var speaker = _context.Speakers
-                .Where(s=>s.AppUser.Email == User.Identity.Name)
-                .FirstOrDefault();
-                
-            SpeakerViewModel model = new SpeakerViewModel()
-            {
-                AvatarURL = speaker.AvatarURL,
-                Bio = speaker.Bio,
-                Blog = speaker.Blog,
-                Company = speaker.Company,
-                Title = speaker.Title,
-                Twitter = speaker.Twitter,
-                Website = speaker.Website,
-                MVPDetails = speaker.MVPDetails,
-                AuthorDetails = speaker.AuthorDetails,
-                NoteToOrganizers = speaker.NoteToOrganizers
-            };
-            return View(model);
+            var speaker = (from _speaker in _context.Speakers
+                           join applicationUser in _context.ApplicationUsers on _speaker.ApplicationUserId equals applicationUser.Id
+                           where applicationUser.Email == User.Identity.Name
+                           select new SpeakerViewModel
+                           {
+                               ID = _speaker.ID,
+                               AvatarURL = _speaker.AvatarURL,
+                               Bio = _speaker.Bio,
+                               Blog = _speaker.Blog,
+                               Company = _speaker.Company,
+                               Title = _speaker.Title,
+                               Twitter = _speaker.Twitter,
+                               Website = _speaker.Website,
+                               MVPDetails = _speaker.MVPDetails,
+                               AuthorDetails = _speaker.AuthorDetails,
+                               NoteToOrganizers = _speaker.NoteToOrganizers,
+                               IsMvp = _speaker.IsMvp,
+                               PhoneNumber = _speaker.PhoneNumber,
+                               LinkedIn = _speaker.LinkedIn,
+                               FullName = (applicationUser.FirstName.Length > 0 ? applicationUser.FirstName : string.Empty)
+                                          + " " + (applicationUser.LastName.Length > 0 ? applicationUser.LastName : string.Empty)
+                           }).FirstOrDefault();
+
+            var sessions = from session in _context.Sessions
+                           where session.SpeakerID == speaker.ID
+                           select new SessionViewModel
+                           {
+                               Title = session.Name,
+                               Description = session.Description,
+                               Level = session.Level,
+                               Keywords = session.KeyWords,
+                               CoSpeakers = session.CoSpeakers
+                           };
+
+            speaker.Sessions = sessions;
+
+            return View(speaker);
         }
 
         [HttpGet]
@@ -93,6 +114,10 @@ namespace codecampster.Controllers
                 speaker.MVPDetails = model.MVPDetails;
                 speaker.AuthorDetails = model.AuthorDetails;
                 speaker.NoteToOrganizers = model.NoteToOrganizers;
+                speaker.IsMvp = model.IsMvp;
+                speaker.PhoneNumber = model.PhoneNumber;
+                speaker.LinkedIn = model.LinkedIn;
+                speaker.FullName = model.FullName;
 
                _context.SaveChanges();
             }
@@ -127,8 +152,47 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Details(int id)
         {
-            ViewBag.IsSpeakerSubmissionOpen = _context.Events.SingleOrDefault().SpeakerRegistrationOpen??false;
-            return View(_context.Speakers.Include(s => s.Sessions).Where(s => s.ID == id).SingleOrDefault());
+            ViewBag.IsSpeakerSubmissionOpen 
+                = _context.Events.SingleOrDefault().SpeakerRegistrationOpen
+                ??false;
+
+            // Get the session specified by the supplied session ID
+            var sessionVm = from session in _context.Sessions
+                            where session.SessionID == id
+                            select new SessionViewModel
+                            {
+                                SessionID = session.SessionID,
+                                SpeakerID = session.SpeakerID,
+                                Title = session.Name,
+                                Description = session.Description,
+                                Level = session.Level,
+                                Keywords = session.KeyWords,
+                                CoSpeakers = session.CoSpeakers
+                            };
+
+            // Get the speaker for the supplied session ID
+            var speakerVm = from speaker in _context.Speakers
+                            where speaker.ID == sessionVm.FirstOrDefault().SpeakerID
+                            select new SpeakerViewModel
+                            {
+                                AvatarURL = speaker.AvatarURL,
+                                Bio = speaker.Bio,
+                                Blog = speaker.Blog,
+                                Company = speaker.Company,
+                                Title = speaker.Title,
+                                Twitter = speaker.Twitter,
+                                Website = speaker.Website,
+                                MVPDetails = speaker.MVPDetails,
+                                AuthorDetails = speaker.AuthorDetails,
+                                NoteToOrganizers = speaker.NoteToOrganizers,
+                                IsMvp = speaker.IsMvp,
+                                PhoneNumber = speaker.PhoneNumber,
+                                LinkedIn = speaker.LinkedIn,
+                                FullName = speaker.FullName,
+                                Sessions = sessionVm != null ? sessionVm : null
+                            };
+
+            return View(speakerVm.FirstOrDefault());
         }
     }
 }

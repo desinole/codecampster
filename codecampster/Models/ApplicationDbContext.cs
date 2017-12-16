@@ -55,7 +55,9 @@ namespace codecampster.Models
                 x.Property<string>("MVPDetails");
                 x.Property<string>("AuthorDetails");
                 x.Property<string>("NoteToOrganizers");
-
+                x.Property<bool>("IsMvp");
+                x.Property<string>("PhoneNumber");
+                x.Property<string>("LinkedIn");
             });
             builder.Entity(typeof(Announcement), x =>
              {

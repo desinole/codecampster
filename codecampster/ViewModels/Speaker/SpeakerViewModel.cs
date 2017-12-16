@@ -1,9 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using codecampster.ViewModels.Session;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace codecampster.ViewModels.Speaker
 {
     public class SpeakerViewModel
     {
+        // Not displayed
+        public int ID { get; set; }
+
         [Display(Name = "Company")]
         public string Company { get; set; }
         [Display(Name = "Title")]
@@ -24,5 +30,15 @@ namespace codecampster.ViewModels.Speaker
         public string AuthorDetails { get; set; }
         [Display(Name = "Note to Organizers")]
         public string NoteToOrganizers { get; set; }
+        [Display(Name = "Is Speaker and MVP")]
+        public bool IsMvp { get; set; }
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+        [Display(Name = "LinkedIn")]
+        public string LinkedIn { get; set; }
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+
+        public IQueryable<SessionViewModel> Sessions { get; set; }
     }
 }

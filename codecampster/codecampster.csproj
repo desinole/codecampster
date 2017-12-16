@@ -8,6 +8,10 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
+  <PropertyGroup>
+    <Configurations>Debug</Configurations>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" Exclude="$(GlobalExclude)" />
     <EmbeddedResource Include="**\*.resx" Exclude="$(GlobalExclude)" />
@@ -103,9 +107,9 @@
     <EmbeddedResource Remove="ViewModels\Shared\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Compile Update="Migrations\20171201114900_Speaker registration.Designer.cs">
+      <DependentUpon>20171201114900_Speaker registration.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <!--
    <Target Name="BeforePublish">
