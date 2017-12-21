@@ -1,4 +1,4 @@
-@model codecampster.Models.Session
+@model codecampster.ViewModels.Session.SessionViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -24,17 +24,18 @@
             @Html.DisplayFor(model => model.Level)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Title)
         </dd>
     </dl>
     
     <form asp-action="Delete">
+        <input type="hidden" asp-for="ReferringUrl" />
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            <a asp-controller="Speakers" asp-action="Sessions">Back to List</a>
+            <input type="submit" value="Delete" class="btn btn-primary" />
+            <a asp-controller="Sessions" asp-action="ReturnToCaller" asp-route-referringUrl=@Model.ReferringUrl><span class="btn btn-default">Cancel</span></a><br />
         </div>
     </form>
 </div>

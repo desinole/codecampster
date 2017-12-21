@@ -111,6 +111,11 @@
       <DependentUpon>20171201114900_Speaker registration.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <!--
    <Target Name="BeforePublish">
     <Exec Command="bower install" />

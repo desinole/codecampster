@@ -1,7 +1,7 @@
-﻿@model IEnumerable<codecampster.Models.Session>
+﻿@model codecampster.ViewModels.Speaker.SpeakerViewModel
 
 @{
-    ViewData["Title"] = "Session";
+    ViewData["Title"] = Model.FullName + "'s Session";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -22,7 +22,7 @@
 <p>
         <a asp-controller="Sessions" asp-action="Edit">Add session</a>
     </p>
-@if ( (Model != null) && (Model.Count() > 0) )
+@if ( (Model.Sessions != null) && (Model.Sessions.Count() > 0) )
 {
 
 <table class="table">
@@ -44,7 +44,7 @@
             }
         </th>
     </tr>*@
-    @foreach (var item in Model)
+    @foreach (var item in Model.Sessions)
     {
         <tr>
             @*<td>
@@ -63,7 +63,7 @@
             </td>*@
             <td>
                 <div>
-                    <h4>@item.Name</h4><font style="font-weight:bold;color:green">@(item.IsApproved ? "Approved" : "")</font>
+                    <h4>@item.Title</h4><font style="font-weight:bold;color:green">@(item.IsApproved ? "Approved" : "")</font>
                 </div>
                 @*<div>
                     Track: @(item.Track != null ? string.Format("{0} ", item.Track.Name) : string.Empty)
@@ -77,7 +77,7 @@
                     @(item.Track != null ? string.Format("{0}", item.Track.RoomNumber) : string.Empty)
                 </div>*@
                 <div>
-                    @(((!(string.IsNullOrEmpty(item.Description))) ? item.Description.Substring(0, Math.Min(200, item.Description.Length)) : "N/A")).....@Html.ActionLink("Learn More", "Details", new { id = item.SessionID })
+                    @(((!(string.IsNullOrEmpty(item.Description))) ? item.Description.Substring(0, Math.Min(200, item.Description.Length)) : "N/A"))
                 </div>
             </td>
             <td>

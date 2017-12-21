@@ -1,6 +1,6 @@
 @model codecampster.ViewModels.Speaker.SpeakerViewModel
 @{
-    ViewData["Title"] = "Edit" + Model.FullName + "'s Speaker Profile";
+    ViewData["Title"] = "Edit " + Model.FullName + "'s Speaker Profile";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -14,13 +14,13 @@
             <span asp-validation-for="Company" class="text-danger"></span>
         </div>
     </div>
-	<div class="form-group">
-		<label asp-for="Title" class="col-md-2 control-label"></label>
-		<div class="col-md-10 input-group">
-			<input asp-for="Title" class="form-control" />
-			<span asp-validation-for="Title" class="text-danger"></span>
-		</div>
-	</div>
+    <div class="form-group">
+        <label asp-for="Title" class="col-md-2 control-label"></label>
+        <div class="col-md-10 input-group">
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
     <div class="form-group">
         <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
         <abbr title="Please provide your phone number">?</abbr>
@@ -29,21 +29,21 @@
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
     </div>
-	<div class="form-group">
-		<label asp-for="Bio" class="col-md-2 control-label"></label>
+    <div class="form-group">
+        <label asp-for="Bio" class="col-md-2 control-label"></label>
         <abbr title="Provide a brief biography">?</abbr>
-		<div class="col-md-10 input-group">
-			<textarea asp-for="Bio" class="form-control" rows="5"></textarea>
-			<span asp-validation-for="Bio" class="text-danger"></span>
-		</div>
-	</div>
-	<div class="form-group">
-		<label asp-for="AvatarURL" class="col-md-2 control-label"></label>
-		<div class="col-md-10 input-group">
-			<input asp-for="AvatarURL" class="form-control" />
-			<span asp-validation-for="AvatarURL" class="text-danger"></span>
-		</div>
-	</div>
+        <div class="col-md-10 input-group">
+            <textarea asp-for="Bio" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Bio" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="AvatarURL" class="col-md-2 control-label"></label>
+        <div class="col-md-10 input-group">
+            <input asp-for="AvatarURL" class="form-control" />
+            <span asp-validation-for="AvatarURL" class="text-danger"></span>
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-md-2 control-label"></label>
         <div class="col-md-10 input-group">
@@ -51,30 +51,38 @@
         </div>
     </div>
     <div class="form-group">
-            <label asp-for="Twitter" class="col-md-2 control-label"></label>
-            <abbr title="Provide your Twitter handle, without the @@ sign">?</abbr>
-            <div class="col-md-10 input-group">
-                <div class="input-group-addon">@@</div>
-                <input asp-for="Twitter" class="form-control" />
-                <span asp-validation-for="Twitter" class="text-danger"></span>
-            </div>
+        <label asp-for="Twitter" class="col-md-2 control-label"></label>
+        <abbr title="Provide your Twitter handle, without the @@ sign">?</abbr>
+        <div class="col-md-10 input-group">
+            <div class="input-group-addon">@@</div>
+            <input asp-for="Twitter" class="form-control" />
+            <span asp-validation-for="Twitter" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="Website" class="col-md-2 control-label"></label>
-            <abbr title="Provide the full URL for your website, including http[s]://">?</abbr>
-            <div class="col-md-10 input-group">
-                <input asp-for="Website" class="form-control" />
-                <span asp-validation-for="Website" class="text-danger"></span>
-            </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="LinkedIn" class="col-md-2 control-label"></label>
+        <abbr title="Provide your LinkedIn handle">?</abbr>
+        <div class="col-md-10 input-group">
+            <input asp-for="LinkedIn" class="form-control" />
+            <span asp-validation-for="LinkedIn" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="Blog" class="col-md-2 control-label"></label>
-            <abbr title="Provide the full URL for your blog, including http[s]://">?</abbr>
-            <div class="col-md-10 input-group">
-                <input asp-for="Blog" class="form-control" />
-                <span asp-validation-for="Blog" class="text-danger"></span>
-            </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Website" class="col-md-2 control-label"></label>
+        <abbr title="Provide the full URL for your website, including http[s]://">?</abbr>
+        <div class="col-md-10 input-group">
+            <input asp-for="Website" class="form-control" />
+            <span asp-validation-for="Website" class="text-danger"></span>
         </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Blog" class="col-md-2 control-label"></label>
+        <abbr title="Provide the full URL for your blog, including http[s]://">?</abbr>
+        <div class="col-md-10 input-group">
+            <input asp-for="Blog" class="form-control" />
+            <span asp-validation-for="Blog" class="text-danger"></span>
+        </div>
+    </div>
     <div class="form-group">
         <label asp-for="IsMvp" class="col-md-2 control-label"></label>
         <abbr title="If you are a Microsoft MVP check here">?</abbr>
@@ -108,11 +116,12 @@
         </div>
     </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-default">Save</button>
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-controller="Home" asp-action="Index"><span class="btn btn-default">Cancel</span></a><br /><br />
         </div>
+    </div>
 </form>
 
 @section Scripts {

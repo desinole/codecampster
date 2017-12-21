@@ -1,28 +1,32 @@
-@model codecampster.Models.Session
+@model codecampster.ViewModels.Session.SessionViewModel
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = Model.Title;
 }
 <h2><strong>Title:&nbsp;</strong>@ViewData["Title"]</h2>
-<p><img style="max-width:100px" src="@Model.Speaker.AvatarURL" /></p>
+<p><img style="max-width:50px" src="@(string.IsNullOrEmpty(Model.Speaker.AvatarURL)?"/images/default_user_icon.jpg":Model.Speaker.AvatarURL)" alt="@Model.Speaker.FullName" /></p>
 <h5>
     <a href="@Url.Content(string.Format("~/speakers/details/{0}",Model.Speaker.ID))">@Model.Speaker.FullName</a>
 </h5>
-@if (ViewBag.CoSpeaker != null)
+@if (!string.IsNullOrEmpty(Model.CoSpeakers))
 {
-    <p><img style="max-width:100px" src="@(string.IsNullOrEmpty(ViewBag.CoSpeaker.AvatarURL)?"/images/default_user_icon.jpg": ViewBag.CoSpeaker.AvatarURL)" /></p>
-<h5>
-    <a href="@Url.Content(string.Format("~/speakers/details/{0}", Model.CoSpeakerID))">@Model.CoSpeakers</a>
-</h5>
+    <h5>@Model.CoSpeakers</h5>
 }
 <p>Target Audience:&nbsp;<em>@(Model.Level == 3 ? "Deep Dive" : (Model.Level == 2 ? "Some prior knowledge needed" : "All skill levels"))</em></p>
-@if (Model.Timeslot != null)
+
+@if (!string.IsNullOrEmpty(Model.StartTime) && !string.IsNullOrEmpty(Model.EndTime))
 {
-    <p><strong>Time:&nbsp;</strong>@string.Format("{0} - {1}", Model.Timeslot.StartTime, Model.Timeslot.EndTime)</p>
+    <p><strong>Time:&nbsp;</strong>@string.Format("{0} - {1}", Model.StartTime, Model.EndTime)</p>
 }
-@if (Model.Track != null)
+@if (!string.IsNullOrEmpty(Model.TrackName))
 {
-    <p><strong>Track:&nbsp;</strong>@Model.Track.Name</p>
-    <p><strong>Room:&nbsp;</strong>@Model.Track.RoomNumber</p>
+    <p><strong>Track:&nbsp;</strong>@Model.TrackName</p>
+}
+@if (!string.IsNullOrEmpty(Model.RoomNumber))
+{
+    <p><strong>Room:&nbsp;</strong>@Model.RoomNumber</p>
 }
 <p>@Model.Description</p>
+
+<a asp-controller="Sessions" asp-action="ReturnToCaller" asp-route-referringUrl=@Model.ReferringUrl>Back to Sessions</a><br />
+
 @*<a asp-controller="Speakers" asp-action="Sessions">Back to List</a>*@

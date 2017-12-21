@@ -1,7 +1,7 @@
 @model codecampster.ViewModels.Session.SessionViewModel
 
 @{
-    ViewData["Title"] = "Session";
+    ViewData["Title"] = Model.Title;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -10,7 +10,6 @@
     <div class="form-horizontal">
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @*<input type="hidden" asp-for="SessionID" />*@
         <div class="form-group">
             <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -46,17 +45,17 @@
                 <span asp-validation-for="CoSpeakers" class="text-danger" />
             </div>
         </div>
+        <!-- Capture the ReferringUrl.  This is passed back to the controller
+         so the controller can return to the invoking page. -->
+        <input type="hidden" asp-for="ReferringUrl" />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-controller="Sessions" asp-action="ReturnToCaller" asp-route-referringUrl=@Model.ReferringUrl><span class="btn btn-default">Cancel</span></a><br />
             </div>
         </div>
     </div>
 </form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

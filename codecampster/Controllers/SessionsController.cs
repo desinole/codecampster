@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using codecampster.ViewModels.Session;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using codecampster.ViewModels.Speaker;
+using codecampster.ViewModels.Helpers;
 
 namespace codecampster.Controllers
 {
@@ -121,19 +123,34 @@ namespace codecampster.Controllers
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Details(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
                 return NotFound();
             }
 
-            Session session = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).Single(m => m.SessionID == id);
-            ViewBag.CoSpeaker = session.CoSpeakerID.HasValue ? _context.Speakers.Find(session.CoSpeakerID.Value) : null;
-            if (session == null)
+            var sessionDetails 
+                = _context.Sessions.Include(s => s.Speaker)
+                .Include(s => s.Track).Include(s => s.Timeslot)
+                .FirstOrDefault(m => m.SessionID == id);
+            ViewBag.CoSpeaker 
+                = sessionDetails.CoSpeakerID.HasValue 
+                ? _context.Speakers.Find(sessionDetails.CoSpeakerID.Value) : null;
+            if (sessionDetails == null)
             {
                 return NotFound();
             }
 
-            return View(session);
+            var sessionSpeakerApplicationUser = _context.ApplicationUsers
+                .Where(au => au.Id == sessionDetails.Speaker.ApplicationUserId)
+                .FirstOrDefault();
+
+            var sessionViewModel = sessionDetails.ToSessionViewModel(sessionSpeakerApplicationUser);
+
+            // Capture the page that caused the edit.  This will be
+            // used to return to that page upon completion of edit
+            sessionViewModel.ReferringUrl = Request.Headers["Referer"].ToString();
+
+            return View(sessionViewModel);
         }
 
         // GET: Sessions/Create
@@ -164,73 +181,119 @@ namespace codecampster.Controllers
         [Authorize]
         public IActionResult Edit(int? id)
         {
-            SessionViewModel model = new SessionViewModel();
+            // Get the speaker info
+            var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            if (speaker == null) return NotFound();
+
             ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value");
+
             if (id.HasValue)
             {
-                var sessionDetails = _context.Sessions.Include(s=>s.Speaker).Include(s=>s.Speaker.AppUser).Where(s=>s.SessionID == id.Value).FirstOrDefault();
-                if (sessionDetails != null)// && sessionDetails.Speaker.AppUser.UserName==
-                {
+                //
+                // Edit an existing session
+                //
+                var sessionDetails = _context.Sessions
+                    .Include(s=>s.Speaker)
+                    .Include(s=>s.Speaker.AppUser)
+                    .Where(s=>s.SessionID == id.Value)
+                    .FirstOrDefault();
 
-                    model = new SessionViewModel()
-                    {
-                        Title = sessionDetails.Name,
-                        Description = sessionDetails.Description,
-                        CoSpeakers = sessionDetails.CoSpeakers,
-                        Keywords = sessionDetails.KeyWords,
-                        Level = sessionDetails.Level
-                    };
+                var sessionSpeakerApplicationUser = _context.ApplicationUsers
+                    .Where(au => au.Id == sessionDetails.Speaker.ApplicationUserId)
+                    .FirstOrDefault();
+
+                if (sessionDetails != null)
+                {
+                    // Convert the session to a session view model
+                    var sessionViewModel = sessionDetails.ToSessionViewModel(sessionSpeakerApplicationUser);
+
+                    // Capture the page that caused the edit.  This will be
+                    // used to return to that page upon completion of edit
+                    sessionViewModel.ReferringUrl = Request.Headers["Referer"].ToString();
+
+                    // Set the selected value
                     ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value", sessionDetails.Level);
+
+                    return View(sessionViewModel);
                 }
                 else
                 {
-                    return NotFound();
+                    NotFound();
                 }
             }
 
-            return View(model);
+            // Create a new session
+            return View(
+                new SessionViewModel()
+                {
+                    // Set the speaker information
+                    SpeakerID = speaker.ID,
+                    // Capture the page that caused the edit.  This will be
+                    // used to return to that page upon completion of edit
+                    ReferringUrl = Request.Headers["Referer"].ToString()
+                });
         }
 
         // POST: Sessions/Edit/5
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(SessionViewModel model, int? id)
+        public IActionResult Edit(SessionViewModel viewModel, int? id)
         {
 
             if (ModelState.IsValid)
             {
-                var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+                var speaker = _context.Speakers
+                    .Where(s => s.AppUser.Email == User.Identity.Name)
+                    .FirstOrDefault();
+
                 if (id.HasValue)
                 {
+                    //
+                    // Save an existing session
+                    //
                     Session session = _context.Sessions.Find(id.Value);
-                    session.Name = model.Title;
-                    session.CoSpeakers = model.CoSpeakers;
-                    session.Description = model.Description;
-                    session.KeyWords = model.Keywords;
-                    session.Level = model.Level;
+                    session.Name = viewModel.Title;
+                    session.CoSpeakers = viewModel.CoSpeakers;
+                    session.Description = viewModel.Description;
+                    session.KeyWords = viewModel.Keywords;
+                    session.Level = viewModel.Level;
                     _context.Update(session);
                 }
                 else
                 {
+                    //
+                    // Createa and save the new session
+                    //
                     Session session = new Session();
-                    session.Name = model.Title;
-                    session.CoSpeakers = model.CoSpeakers;
-                    session.Description = model.Description;
-                    session.KeyWords = model.Keywords;
-                    session.Level = model.Level;
+                    session.Name = viewModel.Title;
+                    session.CoSpeakers = viewModel.CoSpeakers;
+                    session.Description = viewModel.Description;
+                    session.KeyWords = viewModel.Keywords;
+                    session.Level = viewModel.Level;
                     session.SpeakerID = speaker.ID;
                     _context.Sessions.Add(session);
                 }
                 _context.SaveChanges();
-                return RedirectToAction("Sessions", "Speakers");
+
+                // Using the referring Url passed in the session view
+                // model to return to the invoking page.
+                return Redirect(viewModel.ReferringUrl);
             }
+
             Dictionary<int, string> levels = new Dictionary<int, string>();
             levels.Add(1, "All skill levels");
             levels.Add(2, "Some prior knowledge needed");
             levels.Add(3, "Deep Dive");
-            ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value", model.Level);
-            return View(model);
+            ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value", viewModel.Level);
+
+            return View(viewModel);
+        }
+
+        public IActionResult ReturnToCaller(string referringUrl)
+        {
+            // Return to the referring page
+            return Redirect(referringUrl);
         }
 
         private Dictionary<int, string> GetLevels()
@@ -247,30 +310,52 @@ namespace codecampster.Controllers
         [ActionName("Delete")]
         public IActionResult Delete(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
                 return NotFound();
             }
 
-            Session session = _context.Sessions.Single(m => m.SessionID == id);
+            // Retreive the specified session
+            var session 
+                = _context.Sessions.Include(s => s.Speaker)
+                .Include(s => s.Speaker.AppUser)
+                .Where(s => s.SessionID == id.Value).FirstOrDefault();
+
             if (session == null)
             {
                 return NotFound();
             }
 
-            return View(session);
+            var sessionSpeakerApplicationUser = _context.ApplicationUsers
+                .Where(au => au.Id == session.Speaker.ApplicationUserId)
+                .FirstOrDefault();
+
+            var sessionViewModel
+                = session.ToSessionViewModel(sessionSpeakerApplicationUser);
+
+            // Capture the page that caused the delete.  This will be
+            // used to return to that page upon completion of edit
+            sessionViewModel.ReferringUrl = Request.Headers["Referer"].ToString();
+
+            return View(sessionViewModel);
         }
 
         // POST: Sessions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(SessionViewModel viewModel, int id)
         {
-            Session session = _context.Sessions.Single(m => m.SessionID == id);
+            // Retrieve the session
+            Session session 
+                = _context.Sessions.Single(m => m.SessionID == id);
+
+            // Remove the session and persist the change
             _context.Sessions.Remove(session);
             _context.SaveChanges();
-            return RedirectToAction("Sessions", "Speakers");
+
+            // Return to the caller
+            return Redirect(viewModel.ReferringUrl);
         }
     }
 }

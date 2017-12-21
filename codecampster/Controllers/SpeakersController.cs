@@ -70,11 +70,13 @@ namespace codecampster.Controllers
                            where session.SpeakerID == speaker.ID
                            select new SessionViewModel
                            {
+                               SessionID = session.SessionID,
                                Title = session.Name,
                                Description = session.Description,
                                Level = session.Level,
                                Keywords = session.KeyWords,
-                               CoSpeakers = session.CoSpeakers
+                               CoSpeakers = session.CoSpeakers,
+                               IsApproved = session.IsApproved
                            };
 
             speaker.Sessions = sessions;
@@ -85,12 +87,45 @@ namespace codecampster.Controllers
         [HttpGet]
         public IActionResult Sessions()
         {
-            var speaker = _context.Speakers
-                .Include(s => s.Sessions)
-                .Where(s => s.AppUser.Email == User.Identity.Name)
-                .FirstOrDefault();
+            var speaker = (from _speaker in _context.Speakers
+                           join applicationUser in _context.ApplicationUsers on _speaker.ApplicationUserId equals applicationUser.Id
+                           where applicationUser.Email == User.Identity.Name
+                           select new SpeakerViewModel
+                           {
+                               ID = _speaker.ID,
+                               AvatarURL = _speaker.AvatarURL,
+                               Bio = _speaker.Bio,
+                               Blog = _speaker.Blog,
+                               Company = _speaker.Company,
+                               Title = _speaker.Title,
+                               Twitter = _speaker.Twitter,
+                               Website = _speaker.Website,
+                               MVPDetails = _speaker.MVPDetails,
+                               AuthorDetails = _speaker.AuthorDetails,
+                               NoteToOrganizers = _speaker.NoteToOrganizers,
+                               IsMvp = _speaker.IsMvp,
+                               PhoneNumber = _speaker.PhoneNumber,
+                               LinkedIn = _speaker.LinkedIn,
+                               FullName = (applicationUser.FirstName.Length > 0 ? applicationUser.FirstName : string.Empty)
+                                          + " " + (applicationUser.LastName.Length > 0 ? applicationUser.LastName : string.Empty)
+                           }).FirstOrDefault();
 
-            return View(speaker.Sessions);
+            var sessions = from session in _context.Sessions
+                           where session.SpeakerID == speaker.ID
+                           select new SessionViewModel
+                           {
+                               SessionID = session.SessionID,
+                               Title = session.Name,
+                               Description = session.Description,
+                               Level = session.Level,
+                               Keywords = session.KeyWords,
+                               CoSpeakers = session.CoSpeakers,
+                               IsApproved = session.IsApproved
+                           };
+
+            speaker.Sessions = sessions;
+
+            return View(speaker);
         }
 
         [HttpPost]
@@ -122,7 +157,7 @@ namespace codecampster.Controllers
                _context.SaveChanges();
             }
 
-            return View(model);
+            return RedirectToAction("Index", "Home");
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]

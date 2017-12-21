@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using codecampster.ViewModels.Speaker;
 
 namespace codecampster.ViewModels.Session
 {
@@ -24,5 +25,14 @@ namespace codecampster.ViewModels.Session
         public string CoSpeakers { get; set; }
         [Display(Name = "Approved Session")]
         public bool IsApproved { get; set; }
+        public string TrackName { get; set; }
+        public string RoomNumber { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+
+        // Referring URL, used to navigate back to invoking
+        // page
+        public string ReferringUrl { get; set; }
+        public SpeakerViewModel Speaker { get; set; }
     }
 }

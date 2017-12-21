@@ -12,12 +12,16 @@
     <p>@Model.Company</p>
 }
 
-    <p>
-        <img style="max-width:50px" src="@(string.IsNullOrEmpty(Model.AvatarURL)?"/images/default_user_icon.jpg":Model.AvatarURL)" alt="@Model.FullName" />
-    </p>
+<p>
+    <img style="max-width:50px" src="@(string.IsNullOrEmpty(Model.AvatarURL)?"/images/default_user_icon.jpg":Model.AvatarURL)" alt="@Model.FullName" />
+</p>
 @if (!string.IsNullOrEmpty(Model.Twitter))
 {
     <p><strong>Twitter:&nbsp;@@</strong><a target="_blank" href="https://twitter.com/@(Model.Twitter)">@(Model.Twitter)</a></p>
+}
+@if (!string.IsNullOrEmpty(Model.LinkedIn))
+{
+    <p><strong>LinkedIn:&nbsp;</strong><a target="_blank" href="https://linkedin.com/in/@(Model.LinkedIn)">@(Model.LinkedIn)</a></p>
 }
 @if (!string.IsNullOrEmpty(Model.Website))
 {
@@ -40,7 +44,7 @@
 {
     <p><strong>Author:&nbsp;</strong>@Model.Bio</p>
 }
-@if ((Model.Sessions != null) && (Model.Sessions.Count > 0))
+@if ((Model.Sessions != null) && (Model.Sessions.Count() > 0))
 {
     <ol>
         @if (ViewBag.IsSpeakerSubmissionOpen)
