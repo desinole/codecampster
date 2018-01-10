@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
-using codecampster.Models;
-using codecampster.Services;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Codecamp2018;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     public class HomeController : Controller
     {
@@ -46,14 +47,14 @@ namespace codecampster.Controllers
                                  on userroles.RoleId equals roles.Id
                                  where roles.Name == "ATTENDEE"
                                  select users).Count();
-                //_context.ApplicationUsers.Where(u => u.Roles.Contains(attendeeRole)).Select(a => a).ToList().Count();
-            var approveSessions = _context.Sessions.Where(s => 
-            (s.IsApproved) && !((s.Special == null ? false : s.Special.Value))).ToList();
-            ViewBag.Sessions = approveSessions.Count;
+            //_context.ApplicationUsers.Where(u => u.Roles.Contains(attendeeRole)).Select(a => a).ToList().Count();
+            var approveSessions = _context.Sessions;//.Where(s => 
+            //(s.IsApproved) && !((s.Special == null ? false : s.Special.Value))).ToList();
+            ViewBag.Sessions = approveSessions.Count<Session>();
             var approvedSpeakers = approveSessions.Select(w => w.SpeakerID).ToList();
-            ViewBag.Speakers = _context.Speakers.Where(s => 
-            (approvedSpeakers.Contains(s.ID)) && 
-            !((s.Special == null ? false : s.Special.Value))).ToList().Count();
+            ViewBag.Speakers = _context.Speakers.Count<Speaker>();//.Where(s => 
+            //(approvedSpeakers.Contains(s.ID)) && 
+            //!((s.Special == null ? false : s.Special.Value))).ToList().Count();
 
             if (User.Identity.IsAuthenticated)
             {

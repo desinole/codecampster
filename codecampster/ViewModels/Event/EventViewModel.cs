@@ -1,8 +1,8 @@
-﻿using codecampster.Models;
+﻿using Codecamp2018.Models;
 
-namespace codecampster.ViewModels.Event
+namespace Codecamp2018.ViewModels.Event
 {
-    public class EventViewModel:codecampster.Models.Event
+    public class EventViewModel:Codecamp2018.Models.Event
     {
         public bool IsAttendeeRegistrationOpen
         {
@@ -28,9 +28,9 @@ namespace codecampster.ViewModels.Event
             }
         }
 
-        public codecampster.Models.Event ToBase()
+        public Codecamp2018.Models.Event ToBase()
         {
-            var theEvent = new codecampster.Models.Event();
+            var theEvent = new Codecamp2018.Models.Event();
             theEvent.ID = this.ID;
             theEvent.AttendeeRegistrationOpen = this.IsAttendeeRegistrationOpen;
             theEvent.CompleteAddress = this.CompleteAddress;
@@ -43,7 +43,7 @@ namespace codecampster.ViewModels.Event
             return theEvent;
         }
 
-        public void FromBase(codecampster.Models.Event theEvent)
+        public void FromBase(Codecamp2018.Models.Event theEvent)
         {
             this.ID = theEvent.ID;
             this.CompleteAddress = theEvent.CompleteAddress;

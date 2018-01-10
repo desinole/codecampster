@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using codecampster.Models;
+using Codecamp2018.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 //using System.Web.Http;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
 
     [Route("api/[controller]")]

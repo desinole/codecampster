@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace codecampster.ViewModels.Manage
+namespace Codecamp2018.ViewModels.Manage
 {
     public class IndexViewModel
     {

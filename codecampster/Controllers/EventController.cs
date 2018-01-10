@@ -1,14 +1,14 @@
 using System.Linq;
-using codecampster.Models;
-using codecampster.Services;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
-using codecampster.ViewModels.Event;
+using Codecamp2018.ViewModels.Event;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     public class EventController : Controller
     {

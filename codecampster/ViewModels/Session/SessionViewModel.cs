@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using codecampster.ViewModels.Speaker;
+using Codecamp2018.ViewModels.Speaker;
 
-namespace codecampster.ViewModels.Session
+namespace Codecamp2018.ViewModels.Session
 {
     public class SessionViewModel
     {

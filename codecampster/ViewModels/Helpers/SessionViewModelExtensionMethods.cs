@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using codecampster.ViewModels.Session;
-using codecampster.Models;
+using Codecamp2018.ViewModels.Session;
+using Codecamp2018.Models;
 
-namespace codecampster.ViewModels.Helpers
+namespace Codecamp2018.ViewModels.Helpers
 {
     public static class SessionViewModelExtensionMethods
     {
         public static SessionViewModel ToSessionViewModel(
-            this codecampster.Models.Session session, ApplicationUser applicationUser)
+            this Codecamp2018.Models.Session session, ApplicationUser applicationUser)
         {
             var viewModel = new SessionViewModel()
             {

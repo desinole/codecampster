@@ -1,4 +1,9 @@
-namespace codecampster
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Codecamp2018
 {
     public class AppSettings
     {

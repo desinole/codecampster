@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using codecampster.Models;
-using codecampster.Services;
-using codecampster.ViewModels.Manage;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
+using Codecamp2018.ViewModels.Manage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     [Authorize]
     public class ManageController : Controller
@@ -271,12 +271,12 @@ namespace codecampster.Controllers
                 return View("Error");
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
-            var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
+            //var otherLogins = _signInManager.GetExternalAuthenticationSchemesAsync().Result.Where(auth => userLogins.All(ul => auth..AuthenticationScheme != ul.LoginProvider)).ToList();
             ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {
-                CurrentLogins = userLogins,
-                OtherLogins = otherLogins
+                CurrentLogins = userLogins//,
+                //OtherLogins = otherLogins
             });
         }
 

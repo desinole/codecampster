@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using codecampster.Models;
+using Codecamp2018.Models;
 using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     [Authorize(Roles = "administrator")]
     public class AnnouncementController : Controller

@@ -1,15 +1,15 @@
 using System;
 using System.Linq;
-using codecampster.Models;
-using codecampster.Services;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using codecampster.ViewModels.Sponsor;
+using Codecamp2018.ViewModels.Sponsor;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
 	public class SponsorsController : Controller
     {

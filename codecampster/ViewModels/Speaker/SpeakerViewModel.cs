@@ -1,9 +1,9 @@
-﻿using codecampster.ViewModels.Session;
+﻿using Codecamp2018.ViewModels.Session;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace codecampster.ViewModels.Speaker
+namespace Codecamp2018.ViewModels.Speaker
 {
     public class SpeakerViewModel
     {

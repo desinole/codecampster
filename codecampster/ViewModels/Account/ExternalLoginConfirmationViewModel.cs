@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace codecampster.ViewModels.Account
+namespace Codecamp2018.ViewModels.Account
 {
     public class ExternalLoginConfirmationViewModel
     {

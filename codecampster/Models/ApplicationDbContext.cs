@@ -1,10 +1,12 @@
-using System;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace codecampster.Models
+namespace Codecamp2018.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -21,25 +23,25 @@ namespace codecampster.Models
         {
             base.OnModelCreating(builder);
             builder.Entity(typeof(ApplicationUser), x =>
-           {
-               x.Property<string>("FirstName");
-               x.Property<string>("LastName");
-               x.Property<string>("Location");
-               x.Property<string>("Twitter");
-               x.Property<int?>("AvatarID");
-               x.Property<bool?>("RSVP");
-               x.Property<bool?>("Volunteer");
-           });
+            {
+                x.Property<string>("FirstName");
+                x.Property<string>("LastName");
+                x.Property<string>("Location");
+                x.Property<string>("Twitter");
+                x.Property<int?>("AvatarID");
+                x.Property<bool?>("RSVP");
+                x.Property<bool?>("Volunteer");
+            });
             builder.Entity(typeof(Event), x =>
-          {
-              x.Property<int>("ID");
-              x.Property<string>("Name");
-              x.Property<string>("SocialMediaHashtag");
-              x.Property<System.DateTime>("EventStart");
-              x.Property<System.DateTime>("EventEnd");
-              x.Property<string>("CompleteAddress");
-              x.Property<bool>("IsCurrent");
-          });
+            {
+                x.Property<int>("ID");
+                x.Property<string>("Name");
+                x.Property<string>("SocialMediaHashtag");
+                x.Property<System.DateTime>("EventStart");
+                x.Property<System.DateTime>("EventEnd");
+                x.Property<string>("CompleteAddress");
+                x.Property<bool>("IsCurrent");
+            });
             builder.Entity(typeof(Speaker), x =>
             {
                 x.Property<int>("ID");
@@ -60,13 +62,13 @@ namespace codecampster.Models
                 x.Property<string>("LinkedIn");
             });
             builder.Entity(typeof(Announcement), x =>
-             {
-                 x.Property<int>("ID");
-                 x.Property<string>("Message");
-                 x.Property<int>("Rank");
-                 x.Property<System.DateTime>("PublishOn");
-                 x.Property<System.DateTime>("ExpiresOn");
-             });
+            {
+                x.Property<int>("ID");
+                x.Property<string>("Message");
+                x.Property<int>("Rank");
+                x.Property<System.DateTime>("PublishOn");
+                x.Property<System.DateTime>("ExpiresOn");
+            });
             builder.Entity(typeof(Sponsor), x =>
             {
                 x.Property<int>("ID");
@@ -78,17 +80,17 @@ namespace codecampster.Models
                 x.Property<string>("AvatarURL");
             });
             builder.Entity(typeof(Session), x =>
-             {
-                 x.Property<int>("SessionID");
-                 x.Property<string>("Name");
-                 x.Property<string>("Description");
-                 x.Property<int>("Level");
-                 x.Property<int>("SpeakerID");
-                 x.Property<int?>("CoSpeakerID");
-                 x.Property<int>("SpeakerID");
-                 x.Property<int?>("TimeslotID");
-                 x.Property<bool?>("Special");
-             });
+            {
+                x.Property<int>("SessionID");
+                x.Property<string>("Name");
+                x.Property<string>("Description");
+                x.Property<int>("Level");
+                x.Property<int>("SpeakerID");
+                x.Property<int?>("CoSpeakerID");
+                x.Property<int>("SpeakerID");
+                x.Property<int?>("TimeslotID");
+                x.Property<bool?>("Special");
+            });
             builder.Entity<Session>().HasOne(p => p.Speaker).WithMany(p => p.Sessions);
             builder.Entity<Speaker>().HasMany(p => p.Sessions);
             builder.Entity(typeof(Track), x =>
@@ -109,22 +111,22 @@ namespace codecampster.Models
             builder.Entity<Session>().HasOne(p => p.Timeslot).WithMany(p => p.Sessions);
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);
             builder.Entity(typeof(AttendeeSession), x =>
-             {
-                 x.Property<int>("ID");
-                 x.Property<string>("ApplicationUserId");
-                 x.Property<int>("SessionID");
-             });
+            {
+                x.Property<int>("ID");
+                x.Property<string>("ApplicationUserId");
+                x.Property<int>("SessionID");
+            });
             builder.Entity<AttendeeSession>().HasOne(p => p.RelatedSession);
             builder.Entity<AttendeeSession>().HasOne(p => p.AppUser);
         }
 
         public void EnsureSeed(string adminUser, string adminPass)
         {
+            var userStore = new UserStore<ApplicationUser>(this);
             int records = 0;
             Task<bool> hasRoles = this.Roles.AnyAsync();
             if (!hasRoles.Result)
             {
-                var userStore = new UserStore<ApplicationUser>(this);
                 var role = new IdentityRole();
                 role.Name = "speaker";
                 role.NormalizedName = "SPEAKER";
@@ -140,38 +142,39 @@ namespace codecampster.Models
                 role.NormalizedName = "ADMINISTRATOR";
                 this.Roles.Add(role);
                 records = this.SaveChanges();
-                Task<bool> anyAdmins = this.UserRoles.AnyAsync(r => r.RoleId == role.Id);
-                if (!anyAdmins.Result)
+            }
+            var adminRole = this.Roles.Where(r => r.Name == "administrator" && r.NormalizedName == "ADMINISTRATOR").FirstOrDefault();
+            Task<bool> anyAdmins = this.UserRoles.AnyAsync(r => r.RoleId == adminRole.Id);
+            if (!anyAdmins.Result)
+            {
+                var user = new ApplicationUser
                 {
-                    var user = new ApplicationUser
-                    {
-                        FirstName = adminUser,
-                        LastName = adminUser,
-                        Email = adminUser,
-                        UserName = adminUser,
-                        NormalizedEmail = adminUser.ToUpper(),
-                        NormalizedUserName = adminUser.ToUpper(),
-                        EmailConfirmed = true,
-                        SecurityStamp = Guid.NewGuid().ToString("D")
-                    };
+                    FirstName = adminUser,
+                    LastName = adminUser,
+                    Email = adminUser,
+                    UserName = adminUser,
+                    NormalizedEmail = adminUser.ToUpper(),
+                    NormalizedUserName = adminUser.ToUpper(),
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D")
+                };
 
-                    var password = new PasswordHasher<ApplicationUser>();
-                    var hashed = password.HashPassword(user, adminPass);
-                    user.PasswordHash = hashed;
+                var password = new PasswordHasher<ApplicationUser>();
+                var hashed = password.HashPassword(user, adminPass);
+                user.PasswordHash = hashed;
 
-                    var userResult = userStore.CreateAsync(user);
-                    var roleResult = userStore.AddToRoleAsync(user, role.NormalizedName);
+                var userResult = userStore.CreateAsync(user);
+                var roleResult = userStore.AddToRoleAsync(user, adminRole.NormalizedName);
 
-                }
             }
             Task<bool> containsEvents = this.Events.AnyAsync();
             if (!containsEvents.Result)
             {
                 var ccEvent = new Event
                 {
-                    Name = "Orlando Codecamp 2017",
-                    EventStart = DateTime.Parse("2017-04-08 08:00:00"),
-                    EventEnd = DateTime.Parse("2017-04-08 17:00:00"),
+                    Name = "Orlando Codecamp 2018",
+                    EventStart = DateTime.Parse("2018-03-17 08:00:00"),
+                    EventEnd = DateTime.Parse("2018-03-17 17:00:00"),
                     IsCurrent = true,
                     SocialMediaHashtag = "#OrlandoCC",
                     CompleteAddress = "University Partnership Building, Seminole State College (Sanford), 100 Weldon Blvd, Sanford FL 32746",

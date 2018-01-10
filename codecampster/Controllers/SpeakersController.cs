@@ -1,18 +1,18 @@
 using System;
 using System.Linq;
-using codecampster.Models;
-using codecampster.Services;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using codecampster.ViewModels.Speaker;
+using Codecamp2018.ViewModels.Speaker;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using codecampster.ViewModels.Session;
+using Codecamp2018.ViewModels.Session;
 using System.Collections.Generic;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     public class SpeakersController : Controller
     {

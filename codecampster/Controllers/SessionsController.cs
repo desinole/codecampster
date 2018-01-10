@@ -1,19 +1,19 @@
 using System.Linq;
-using codecampster.Models;
-using codecampster.Services;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using codecampster.ViewModels.Session;
+using Codecamp2018.ViewModels.Session;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using codecampster.ViewModels.Speaker;
-using codecampster.ViewModels.Helpers;
+using Codecamp2018.ViewModels.Speaker;
+using Codecamp2018.ViewModels.Helpers;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     public class SessionsController : Controller
     {

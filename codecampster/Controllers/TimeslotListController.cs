@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using codecampster.Models;
+using Codecamp2018.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     [Produces("application/json")]
     [Route("api/TimeslotList")]

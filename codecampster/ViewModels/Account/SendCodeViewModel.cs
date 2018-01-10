@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace codecampster.ViewModels.Account
+namespace Codecamp2018.ViewModels.Account
 {
     public class SendCodeViewModel
     {

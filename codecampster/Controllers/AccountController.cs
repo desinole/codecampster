@@ -2,9 +2,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using codecampster.Models;
-using codecampster.Services;
-using codecampster.ViewModels.Account;
+using Codecamp2018.Models;
+using Codecamp2018.Services;
+using Codecamp2018.ViewModels.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace codecampster.Controllers
+namespace Codecamp2018.Controllers
 {
     [Authorize]
     public class AccountController : Controller

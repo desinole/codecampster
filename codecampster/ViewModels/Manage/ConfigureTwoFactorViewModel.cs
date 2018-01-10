@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace codecampster.ViewModels.Manage
+namespace Codecamp2018.ViewModels.Manage
 {
     public class ConfigureTwoFactorViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace codecampster.ViewModels.Sponsor
+namespace Codecamp2018.ViewModels.Sponsor
 {
     public class SponsorViewModel
     {
