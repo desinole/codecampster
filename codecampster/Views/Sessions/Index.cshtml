@@ -63,7 +63,7 @@
                 </div>
                 <div>
                     <h5>
-                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@item.Speaker.ID))">@item.Speaker.FullName</a>
+                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@item.Speaker.ID))">@(string.IsNullOrEmpty(item.Speaker.FullName)?item.Speaker.AppUser.FirstName+" "+item.Speaker.AppUser.LastName:item.Speaker.FullName)</a>
                     </h5>
                 </div>
             </div>

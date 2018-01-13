@@ -16,7 +16,7 @@
                 </div>
                 <div style="text-align:center">
                     <h5>
-                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">@speaker.FullName</a>
+                        <a href="@Url.Content(string.Format("~/speakers/details/{0}",@speaker.ID))">@speaker.AppUser.FirstName @speaker.AppUser.LastName</a>
                     </h5>
                 </div>
                 <div style="clear:both"></div>

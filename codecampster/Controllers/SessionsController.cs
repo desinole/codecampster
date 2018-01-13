@@ -41,7 +41,7 @@ namespace Codecamp2018.Controllers
         }
 
 
-        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
         {
             ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank).ToList();
@@ -95,7 +95,10 @@ namespace Codecamp2018.Controllers
         {
             ViewBag.Timeslots = _context.Timeslots.Where(s=> (!(s.Special == true))).OrderBy(t => t.Rank);
             ViewBag.Tracks = _context.Tracks.OrderBy(x => x.Name);
-            IQueryable<Session> sessions = _context.Sessions.Where(s => s.IsApproved && (!(s.Special == true))).Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
+            IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).
+                Include(s => s.Speaker).Include(s => s.Track).
+                Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
+                OrderBy(x => Guid.NewGuid());
             ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
             if (!string.IsNullOrEmpty(track))
             {

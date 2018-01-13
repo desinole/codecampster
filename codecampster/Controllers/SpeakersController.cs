@@ -167,18 +167,20 @@ namespace Codecamp2018.Controllers
             {
                 var speakers = _context.Speakers
                     .Include(s => s.Sessions)
+                    .Include(s=>s.AppUser)
                     .Where(s => !(s.Special == true)
                     && s.Sessions.Any(c => c.IsApproved)
                     )
-                    .OrderBy(x => x.FullName);
+                    .OrderBy(x => Guid.NewGuid());
                 return View(speakers);
             }
             else
             {
                 var speakers = _context.Speakers
                     .Include(s => s.Sessions)
-                    .Where(s => !(s.Special == true))
-                    .OrderBy(x => x.FullName);
+                     .Include(s => s.AppUser)
+                   .Where(s => !(s.Special == true))
+                    .OrderBy(x => Guid.NewGuid());
                 return View(speakers);
             }
 
@@ -193,7 +195,7 @@ namespace Codecamp2018.Controllers
 
             // Get the session specified by the supplied session ID
             var sessionVm = from session in _context.Sessions
-                            where session.SessionID == id
+                            where session.SpeakerID == id
                             select new SessionViewModel
                             {
                                 SessionID = session.SessionID,
@@ -223,7 +225,7 @@ namespace Codecamp2018.Controllers
                                 IsMvp = speaker.IsMvp,
                                 PhoneNumber = speaker.PhoneNumber,
                                 LinkedIn = speaker.LinkedIn,
-                                FullName = speaker.FullName,
+                                FullName = string.IsNullOrEmpty(speaker.FullName)? (speaker.AppUser.FirstName + " " + speaker.AppUser.LastName):speaker.FullName,
                                 Sessions = sessionVm != null ? sessionVm : null
                             };
 

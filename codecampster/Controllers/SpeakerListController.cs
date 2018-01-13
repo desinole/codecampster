@@ -26,7 +26,7 @@ namespace Codecamp2018.Controllers
                                    on speakers.ID equals sessions.SpeakerID
                                    where sessions.IsApproved
                                    select speakers;
-            return approvedSpeakers.OrderBy(s => s.FullName).Distinct<Speaker>();
+            return approvedSpeakers.OrderBy(s => s.AppUser.Email).Distinct<Speaker>();
         }
 
         protected override void Dispose(bool disposing)
