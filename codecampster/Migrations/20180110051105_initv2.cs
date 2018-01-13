@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace codecampster.Migrations
+namespace Codecamp2018.Migrations
 {
     public partial class initv2 : Migration
     {

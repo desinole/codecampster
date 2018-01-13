@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace codecampster.Migrations
+namespace Codecamp2018.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20180110051105_initv2")]
