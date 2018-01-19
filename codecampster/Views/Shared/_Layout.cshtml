@@ -24,7 +24,7 @@
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" style="background-image:url('/images/CodeCampHeaderLogo.png');background-repeat: no-repeat;background-size: 170px 53px;">
-        <div class="container" style="margin-left:10%;">
+        <div class="container" style="margin-left:15%;">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -43,6 +43,7 @@
                     <li><a asp-controller="Speakers" asp-action="Index">Speakers</a></li>
                     @*<li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timings</a></li>*@
                     <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
+                    <li><a asp-controller="Home" asp-action="SpreadTheWord">Spread the Word</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
