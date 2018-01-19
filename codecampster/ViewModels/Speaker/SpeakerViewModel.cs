@@ -30,7 +30,7 @@ namespace Codecamp2018.ViewModels.Speaker
         public string AuthorDetails { get; set; }
         [Display(Name = "Note to Organizers")]
         public string NoteToOrganizers { get; set; }
-        [Display(Name = "Is Speaker and MVP")]
+        [Display(Name = "Is Speaker a MVP")]
         public bool IsMvp { get; set; }
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }

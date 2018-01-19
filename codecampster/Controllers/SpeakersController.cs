@@ -209,7 +209,7 @@ namespace Codecamp2018.Controllers
 
             // Get the speaker for the supplied session ID
             var speakerVm = from speaker in _context.Speakers
-                            where speaker.ID == sessionVm.FirstOrDefault().SpeakerID
+                            where speaker.ID == id
                             select new SpeakerViewModel
                             {
                                 AvatarURL = speaker.AvatarURL,
