@@ -187,12 +187,12 @@ namespace Codecamp2018.Controllers
             // Get the speaker info
             var speaker = _context.Speakers.Include(s => s.Sessions).Include(s => s.AppUser).Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
             if (speaker == null) return NotFound();
-            if (!speaker.Sessions.Any(s => s.SessionID.Equals(id.Value))) return Forbid();
 
             ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value");
 
             if (id.HasValue)
             {
+                if (!speaker.Sessions.Any(s => s.SessionID.Equals(id.Value))) return Forbid();
                 //
                 // Edit an existing session
                 //
