@@ -185,8 +185,9 @@ namespace Codecamp2018.Controllers
         public IActionResult Edit(int? id)
         {
             // Get the speaker info
-            var speaker = _context.Speakers.Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
+            var speaker = _context.Speakers.Include(s => s.Sessions).Include(s => s.AppUser).Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
             if (speaker == null) return NotFound();
+            if (!speaker.Sessions.Any(s => s.SessionID.Equals(id.Value))) return Forbid();
 
             ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value");
 
