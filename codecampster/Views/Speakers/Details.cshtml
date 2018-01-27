@@ -46,22 +46,18 @@
 }
 @if ((Model.Sessions != null) && (Model.Sessions.Count() > 0))
 {
-    <ol>
         @if (ViewBag.IsSpeakerSubmissionOpen)
         {
             <p><strong>Submitted Sessions</strong></p>
-            @foreach (var s in Model.Sessions)
-            {
-                <li>@Html.ActionLink(s.Title, "Details", "Sessions", new { id = s.SessionID })</li>
-            }
         }
         else
         {
             <p><strong>Approved Sessions</strong></p>
-            @foreach (var s in Model.Sessions.Where(s => s.IsApproved))
-            {
-                <li>@Html.ActionLink(s.Title, "Details", "Sessions", new { id = s.SessionID })</li>
-            }
+        }
+    <ol>
+        @foreach (var submissions in Model.Sessions)
+        {
+            <li>@Html.ActionLink(submissions.Title, "Details", "Sessions", new { id = submissions.SessionID })</li>
         }
     </ol>
 }

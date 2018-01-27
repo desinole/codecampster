@@ -18,7 +18,7 @@ namespace Codecamp2018
         }
         // GET: api/TimeslotList
         [HttpGet]
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
         public IEnumerable<Sponsor> GetSponsors()
         {
             return _context.Sponsors.OrderBy(s => s.CompanyName);

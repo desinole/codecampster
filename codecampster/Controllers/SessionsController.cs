@@ -41,7 +41,7 @@ namespace Codecamp2018.Controllers
         }
 
 
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
         {
             ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank).ToList();
@@ -90,7 +90,7 @@ namespace Codecamp2018.Controllers
                 return Json(false);
             }
         }
-        [ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
             ViewBag.Timeslots = _context.Timeslots.Where(s=> (!(s.Special == true))).OrderBy(t => t.Rank);
@@ -123,7 +123,7 @@ namespace Codecamp2018.Controllers
             return View(sessions.OrderBy(t=>t.Timeslot.Rank).ThenBy(t=>t.Track.Name).ToList());
         }
 
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Details(int? id)
         {
             if (!id.HasValue)
@@ -187,12 +187,12 @@ namespace Codecamp2018.Controllers
             // Get the speaker info
             var speaker = _context.Speakers.Include(s => s.Sessions).Include(s => s.AppUser).Where(s => s.AppUser.Email == User.Identity.Name).FirstOrDefault();
             if (speaker == null) return NotFound();
-            if (!speaker.Sessions.Any(s => s.SessionID.Equals(id.Value))) return Forbid();
 
             ViewData["Level"] = new SelectList(GetLevels(), "Key", "Value");
 
             if (id.HasValue)
             {
+                if (!speaker.Sessions.Any(s => s.SessionID.Equals(id.Value))) return Forbid();
                 //
                 // Edit an existing session
                 //

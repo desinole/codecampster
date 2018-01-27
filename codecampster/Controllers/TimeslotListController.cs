@@ -18,7 +18,7 @@ namespace Codecamp2018.Controllers
 
         // GET: api/TimeslotList
         [HttpGet]
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
         public IEnumerable<Timeslot> GetTimeslots()
         {
             return _context.Timeslots.OrderBy(t => t.Rank);

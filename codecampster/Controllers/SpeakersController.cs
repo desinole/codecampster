@@ -160,14 +160,14 @@ namespace Codecamp2018.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
             if (_context.Events.SingleOrDefault().AttendeeRegistrationOpen ?? false)
             {
                 var speakers = _context.Speakers
                     .Include(s => s.Sessions)
-                    .Include(s=>s.AppUser)
+                    .Include(s => s.AppUser)
                     .Where(s => !(s.Special == true)
                     && s.Sessions.Any(c => c.IsApproved)
                     )
@@ -186,7 +186,7 @@ namespace Codecamp2018.Controllers
 
         }
 
-        [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 300)]
         public IActionResult Details(int id)
         {
             ViewBag.IsSpeakerSubmissionOpen 
@@ -204,11 +204,16 @@ namespace Codecamp2018.Controllers
                                 Description = session.Description,
                                 Level = session.Level,
                                 Keywords = session.KeyWords,
-                                CoSpeakers = session.CoSpeakers
+                                CoSpeakers = session.CoSpeakers,
+                                IsApproved = session.IsApproved
                             };
+            if (!(bool)ViewBag.IsSpeakerSubmissionOpen)
+            {
+                sessionVm = sessionVm.Where(s => s.IsApproved);
+            }
 
             // Get the speaker for the supplied session ID
-            var speakerVm = from speaker in _context.Speakers
+                var speakerVm = from speaker in _context.Speakers
                             where speaker.ID == id
                             select new SpeakerViewModel
                             {
