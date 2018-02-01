@@ -171,7 +171,7 @@ namespace Codecamp2018.Controllers
                     .Where(s => !(s.Special == true)
                     && s.Sessions.Any(c => c.IsApproved)
                     )
-                    .OrderBy(x => Guid.NewGuid());
+                    .OrderBy(s => s.FullName);
                 return View(speakers);
             }
             else
@@ -180,7 +180,7 @@ namespace Codecamp2018.Controllers
                     .Include(s => s.Sessions)
                      .Include(s => s.AppUser)
                    .Where(s => !(s.Special == true))
-                    .OrderBy(x => Guid.NewGuid());
+                    .OrderBy(s => s.FullName);
                 return View(speakers);
             }
 
