@@ -21,7 +21,7 @@ namespace Codecamp2018.Controllers
         }
 
         [HttpGet]
-        [ResponseCache(Duration =3600,Location =ResponseCacheLocation.Any)]
+        //[ResponseCache(Duration =3600,Location =ResponseCacheLocation.Any)]
         public IActionResult Get()
         {
             return Ok(_context.Sessions.Where(s=>s.IsApproved).Include(s => s.Speaker).ToList());

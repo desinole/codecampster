@@ -18,7 +18,7 @@ namespace Codecamp2018.Controllers
 
         // GET: api/TrackList
         [HttpGet]
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
         public IEnumerable<Track> GetTracks()
         {
             return _context.Tracks;

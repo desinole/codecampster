@@ -48,13 +48,13 @@ namespace Codecamp2018.Controllers
                                  where roles.Name == "ATTENDEE"
                                  select users).Count();
             //_context.ApplicationUsers.Where(u => u.Roles.Contains(attendeeRole)).Select(a => a).ToList().Count();
-            var approveSessions = _context.Sessions;//.Where(s => 
-            //(s.IsApproved) && !((s.Special == null ? false : s.Special.Value))).ToList();
+            var approveSessions = _context.Sessions.Where(s => 
+            s.IsApproved && !((s.Special == null ? false : s.Special.Value))).ToList();
             ViewBag.Sessions = approveSessions.Count<Session>();
             var approvedSpeakers = approveSessions.Select(w => w.SpeakerID).ToList();
-            ViewBag.Speakers = _context.Speakers.Count<Speaker>();//.Where(s => 
-            //(approvedSpeakers.Contains(s.ID)) && 
-            //!((s.Special == null ? false : s.Special.Value))).ToList().Count();
+            ViewBag.Speakers = _context.Speakers.Where(s =>
+            (approvedSpeakers.Contains(s.ID)) &&
+            !((s.Special == null ? false : s.Special.Value))).ToList().Count();
 
             if (User.Identity.IsAuthenticated)
             {

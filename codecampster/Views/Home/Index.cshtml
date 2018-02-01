@@ -131,8 +131,8 @@
                     </ul>
                     <li>View agenda</li>
                     <ul>
-                        <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers Speakers</a></li>
-                        <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions Sessions</a></li>
+                        <li><a asp-controller="Speakers" asp-action="Index">@ViewBag.Speakers approved Speakers</a></li>
+                        <li><a asp-controller="Sessions" asp-action="Index">@ViewBag.Sessions approved Sessions</a></li>
                         @*<li><a asp-controller="Sessions" asp-action="Agenda">Tracks &amp; Timeslots</a></li>*@
                         <li>@ViewBag.Attendees Attendees</li>
                     </ul>
@@ -143,7 +143,7 @@
     <div class="col-md-3">
         <h2>Milestones</h2>
         <ul>
-            <li><strong>Speaker Submissions:</strong> Deadline Jan 19 2018 at 23:59pm Eastern</li>
+            <li><strong>Speaker Submissions: <em>**Closed**</em></strong>  Jan 19 2018 at 23:59pm Eastern</li>
             <li><strong>Sponsors Signups</strong>: By Feb 1 2018</li>
             <li><strong>Attendees</strong>: can signup until day before event. Signing up is highly recommended so we can estimate lunches and t-shirts</li>
         </ul>
@@ -151,8 +151,8 @@
     <div class="col-md-3">
         <h2>Organized by</h2>
         <p><a target="_blank" href="http://onetug.org"><img style="width:200px" src="/images/ONETUGlogo.png"></a></p>
-        <h5>@(ViewBag.Speakers) Speakers signed up</h5>
-        <h5>@(ViewBag.Sessions) Sessions submitted</h5>
+        <h2>Hosted by</h2>
+        <p><a target="_blank" href="https://www.seminolestate.edu"><img style="width:200px" src="https://pbs.twimg.com/profile_images/722035440421744640/78pDmv7q_400x400.jpg"></a></p>
     </div>
     <div class="col-md-3">
         <a class="twitter-timeline" href="https://twitter.com/hashtag/orlandocc" data-chrome="nofooter noscrollbar" data-related="onetug" data-widget-id="403285393182687234" data-tweet-limit="5">#OrlandoCC Tweets</a>

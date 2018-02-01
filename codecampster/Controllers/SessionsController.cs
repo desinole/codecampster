@@ -44,7 +44,7 @@ namespace Codecamp2018.Controllers
         }
 
 
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
         {
             ViewBag.Timeslots = _context.Timeslots.OrderBy(t => t.Rank).ToList();
@@ -93,9 +93,12 @@ namespace Codecamp2018.Controllers
                 return Json(false);
             }
         }
-        [ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
+        //[ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
+            bool isSpeakerSubmissionOpen
+                = _context.Events.SingleOrDefault().SpeakerRegistrationOpen
+                ?? false;
             // Get the current user
             var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefault();
 
@@ -105,6 +108,11 @@ namespace Codecamp2018.Controllers
                 Include(s => s.Speaker).Include(s => s.Track).
                 Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
                 OrderBy(x => Guid.NewGuid());
+            if (!isSpeakerSubmissionOpen)
+            {
+                sessions = sessions.Where(s => s.IsApproved);
+            }
+            ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
 
             // Determine whether the current user is an Admin
             ViewBag.IsAdmin = (from userRole in _context.UserRoles
