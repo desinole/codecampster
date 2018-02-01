@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Codecamp2018.ViewModels.Speaker;
 using Codecamp2018.ViewModels.Helpers;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace Codecamp2018.Controllers
 {
@@ -93,13 +96,23 @@ namespace Codecamp2018.Controllers
         [ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
+            // Get the current user
+            var currentUser = _context.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefault();
+
             ViewBag.Timeslots = _context.Timeslots.Where(s=> (!(s.Special == true))).OrderBy(t => t.Rank);
             ViewBag.Tracks = _context.Tracks.OrderBy(x => x.Name);
             IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).
                 Include(s => s.Speaker).Include(s => s.Track).
                 Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
                 OrderBy(x => Guid.NewGuid());
-            ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
+
+            // Determine whether the current user is an Admin
+            ViewBag.IsAdmin = (from userRole in _context.UserRoles
+                               join role in _context.Roles on userRole.RoleId equals role.Id
+                               where userRole.UserId == currentUser.Id && role.NormalizedName == "ADMINISTRATOR"
+                               select userRole).Count() > 0;
+
+            ViewData["Title"] = string.Format("All {0} Sessions", sessions.Count());
             if (!string.IsNullOrEmpty(track))
             {
                 int trackID = 0;
@@ -121,6 +134,58 @@ namespace Codecamp2018.Controllers
                 }
             }
             return View(sessions.OrderBy(t=>t.Timeslot.Rank).ThenBy(t=>t.Track.Name).ToList());
+        }
+
+        public IActionResult ExportToCsv()
+        {
+            var columnHeaders = @"Speaker, Co-Speakers, Name, Description, Key Words, Level, Timeslot Start, Timeslot End, Track Name, Track Room Number";
+
+            // Get the session information
+            var sessionInfo = (from session in _context.Sessions.Include(s => s.Speaker.AppUser)
+                               join _timeSlot in _context.Timeslots on session.TimeslotID equals _timeSlot.ID into timeSlotLeftJoin
+                               join _track in _context.Tracks on session.TrackID equals _track.ID into trackLeftJoin
+                               from timeSlot in timeSlotLeftJoin.DefaultIfEmpty()
+                               from track in trackLeftJoin.DefaultIfEmpty()
+                               select new
+                               {
+                                   Speaker = session.Speaker.AppUser.FirstName + (session.Speaker.AppUser.LastName.Length > 0 ? " " + session.Speaker.AppUser.LastName : session.Speaker.AppUser.LastName),
+                                   CoSpeaker = session.CoSpeakers != null ? session.CoSpeakers : "N/A",
+                                   Name = session.Name != null ? session.Name : "Not supplied",
+                                   Description = session.Description != null ? session.Description : "Not supplied",
+                                   KeyWords = session.KeyWords != null ? session.KeyWords : "Not supplied",
+                                   Level = session.Level == 1 ? "All skill levels" : (session.Level == 2 ? "Some prior knowledge required" : "Deep dive"),
+                                   TimeslotStart = timeSlot != null ? timeSlot.StartTime : "Not supplied",
+                                   TimeslotEnd = timeSlot != null ? timeSlot.EndTime : "Not supplied",
+                                   TrackName = track != null ? track.Name : "Not supplied",
+                                   TrackRoomNumber = track != null ? track.RoomNumber : "Not supplied"
+                               }).ToList();
+
+            // Build the file content
+            var sessionCsv = new StringBuilder();
+            sessionCsv.AppendLine(columnHeaders);
+            sessionInfo.ForEach(session =>
+            {
+                // Create the line for the session
+                var line = new StringBuilder();
+                line.Append(session.Speaker.Replace(',', '|')).Append(",")
+                    .Append(session.CoSpeaker.Replace(',', '|')).Append(",")
+                    .Append(session.Name.Replace(',', '|')).Append(",")
+                    .Append(session.Description.Replace(',','|')).Append(",")
+                    .Append(session.KeyWords.Replace(',', '|')).Append(",")
+                    .Append(session.Level.Replace(',', '|')).Append(",")
+                    .Append(session.TimeslotStart.Replace(',', '|')).Append(",")
+                    .Append(session.TimeslotEnd.Replace(',', '|')).Append(",")
+                    .Append(session.TrackName.Replace(',', '|')).Append(",")
+                    .Append(session.TrackRoomNumber);
+
+                // Append the line to the collection of sessions
+                sessionCsv.AppendLine(line.ToString());
+            });
+
+
+            var buffer = Encoding.ASCII.GetBytes(sessionCsv.ToString());
+
+            return File(buffer, "text/csv", $"CodeCampSessions.csv");
         }
 
         [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
