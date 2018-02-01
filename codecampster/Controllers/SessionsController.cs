@@ -93,12 +93,19 @@ namespace Codecamp2018.Controllers
         //[ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
+            bool isSpeakerSubmissionOpen
+                = _context.Events.SingleOrDefault().SpeakerRegistrationOpen
+                ?? false;
             ViewBag.Timeslots = _context.Timeslots.Where(s=> (!(s.Special == true))).OrderBy(t => t.Rank);
             ViewBag.Tracks = _context.Tracks.OrderBy(x => x.Name);
             IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).
                 Include(s => s.Speaker).Include(s => s.Track).
                 Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
                 OrderBy(x => Guid.NewGuid());
+            if (!isSpeakerSubmissionOpen)
+            {
+                sessions = sessions.Where(s => s.IsApproved);
+            }
             ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
             if (!string.IsNullOrEmpty(track))
             {
