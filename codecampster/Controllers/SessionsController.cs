@@ -101,7 +101,7 @@ namespace Codecamp2018.Controllers
             IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).
                 Include(s => s.Speaker).Include(s => s.Track).
                 Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
-                OrderBy(x => Guid.NewGuid());
+                OrderBy(s => s.Speaker.FullName).ThenBy(s => s.Name);
             if (!isSpeakerSubmissionOpen)
             {
                 sessions = sessions.Where(s => s.IsApproved);
