@@ -46,7 +46,7 @@
 }
 @if ((Model.Sessions != null) && (Model.Sessions.Count() > 0))
 {
-        @if (ViewBag.IsSpeakerSubmissionOpen)
+        if (ViewBag.IsSpeakerSubmissionOpen)
         {
             <p><strong>Submitted Sessions</strong></p>
         }

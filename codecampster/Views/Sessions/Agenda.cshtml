@@ -76,7 +76,7 @@
                     {
                         <br /><em><strong>@session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers ?? string.Empty))</strong></em>
                         <br />
-                        @if (!string.IsNullOrEmpty(trackTime.RoomNumber))
+                        if (!string.IsNullOrEmpty(trackTime.RoomNumber))
                         {
                             <text>@string.Format(" ({0})", trackTime.RoomNumber)</text>
                         }

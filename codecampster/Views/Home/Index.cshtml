@@ -75,8 +75,8 @@
             {
                 if ((ViewBag.SpeakerProfile != null))
                 {
-                    <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-large">Edit Speaker Profile</button></a><br /><br /></li>
-                    <li><a asp-controller="Speakers" asp-action="Sessions"><button class="btn btn-large">Manage Sessions</button></a><br /><br /></li>
+                    <li><a asp-controller="Speakers" asp-action="Edit"><button class="btn btn-primary">Edit Speaker Profile</button></a><br /><br /></li>
+                    <li><a asp-controller="Speakers" asp-action="Sessions"><button class="btn btn-primary">Manage Sessions</button></a><br /><br /></li>
 
                 }
                 else
@@ -89,7 +89,7 @@
                     {
                         <li>Thank you for RSVPing</li>
                     }
-                    @if (!(ViewBag.Volunteer ?? false))
+                    if (!(ViewBag.Volunteer ?? false))
                     {
 
                         <li><a asp-controller="Event" asp-action="Volunteer">Volunteer to help</a></li>
@@ -117,7 +117,7 @@
                 {
                     <li>Speakers</li>
                     <ul>
-                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="speaker"><button class="btn btn-large">Signup as a speaker</button></a></li>
+                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="speaker"><button class="btn btn-primary">Signup as a speaker</button></a></li>
                         <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
                     </ul>
 
@@ -126,7 +126,7 @@
                 {
                     <li>Attendees</li>
                     <ul>
-                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="attendee"><button class="btn btn-large">Signup as an attendee</button></a></li>
+                        <li>No account? <a asp-controller="Account" asp-action="Register" asp-route-id="attendee"><button class="btn btn-primary">Signup as an attendee</button></a></li>
                         <li>Have an account? <a asp-controller="Account" asp-action="Login">Login</a></li>
                     </ul>
                     <li>View agenda</li>
