@@ -112,7 +112,7 @@ namespace Codecamp2018.Controllers
             {
                 sessions = sessions.Where(s => s.IsApproved);
             }
-            ViewData["Title"] = string.Format("All {0} Sessions",sessions.Count());
+            ViewData["Title"] = string.Format("All {0} Sessions", sessions.Count());
 
             // Determine whether the current user is an Admin
             ViewBag.IsAdmin = (from userRole in _context.UserRoles
@@ -120,7 +120,6 @@ namespace Codecamp2018.Controllers
                                where userRole.UserId == currentUser.Id && role.NormalizedName == "ADMINISTRATOR"
                                select userRole).Count() > 0;
 
-            ViewData["Title"] = string.Format("All {0} Sessions", sessions.Count());
             if (!string.IsNullOrEmpty(track))
             {
                 int trackID = 0;
