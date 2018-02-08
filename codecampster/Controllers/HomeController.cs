@@ -97,10 +97,5 @@ namespace Codecamp2018.Controllers
         {
             return View();
         }
-
-        public IActionResult SpreadTheWord()
-        {
-            return View();
-        }
     }
 }
