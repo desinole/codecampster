@@ -55,6 +55,8 @@ namespace codecampster.Controllers
                 })
                 .ToList();
 
+            var approvedSessionCount = approvedSessionSelectList.Count();
+
             // Speakers
 
             var approvedSpeakerSummaries = _context.Speakers
@@ -84,6 +86,8 @@ namespace codecampster.Controllers
                     Value = i.ToString()
                 })
                 .ToList();
+
+            var approvedSpeakerCount = approvedSpeakerSelectList.Count();
 
             // Sponsors
 
@@ -115,10 +119,12 @@ namespace codecampster.Controllers
                 // Sessions
                 SessionSelectList = approvedSessionSelectList,
                 SessionSummaries = approvedSessionSummaries,
+                SessionCount = approvedSessionCount,
 
                 // Speakers
                 SpeakerSelectList = approvedSpeakerSelectList,
                 SpeakerSummaries = approvedSpeakerSummaries,
+                SpeakerCount = approvedSpeakerCount,
 
                 // Sponsors
                 SponsorSelectList = sponsorSelectList,

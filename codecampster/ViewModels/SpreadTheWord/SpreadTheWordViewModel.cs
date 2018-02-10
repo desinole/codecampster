@@ -15,11 +15,15 @@ namespace codecampster.ViewModels.SpreadTheWord
 
         public IList<SessionSummary> SessionSummaries { get; set; }
 
+        public int SessionCount { get; set; }
+
         // Speakers
 
         public IList<SelectListItem> SpeakerSelectList { get; set; }
 
         public IList<SpeakerSummary> SpeakerSummaries { get; set; }
+
+        public int SpeakerCount { get; set; }
 
         // Sponsors
 
