@@ -107,7 +107,8 @@ namespace Codecamp2018.Controllers
             IQueryable<Session> sessions = _context.Sessions.Where(s => (!(s.Special == true))).
                 Include(s => s.Speaker).Include(s => s.Track).
                 Include(s => s.Timeslot).Include(s => s.Speaker.AppUser).
-                OrderBy(s => s.Speaker.FullName).ThenBy(s => s.Name);
+                OrderBy(s => s.Speaker.AppUser.FirstName + " " + s.Speaker.AppUser.LastName).
+                ThenBy(s => s.Name);
             if (!isSpeakerSubmissionOpen)
             {
                 sessions = sessions.Where(s => s.IsApproved);
@@ -140,6 +141,8 @@ namespace Codecamp2018.Controllers
                     return View(sessions.Where(s => s.TimeslotID == timeslotId).OrderBy(t=>t.Track.Name).ToList());
                 }
             }
+
+            // If Timeslot and Track not set, sort will be by Speaker name and Session name above
             return View(sessions.OrderBy(t=>t.Timeslot.Rank).ThenBy(t=>t.Track.Name).ToList());
         }
 
