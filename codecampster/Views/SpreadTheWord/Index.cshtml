@@ -249,8 +249,8 @@
         Seminole State College
     </p>
     <p class="h4 text-center">
-        @Model.SpeakerCount Speakers &bull; 
-        @Model.SessionCount Sessions &bull; 
+        @Model.SpeakerCount Speakers &bull;
+        @Model.SessionCount Sessions &bull;
         13 Tracks
     </p>
     <p class="h4 text-center">
@@ -423,6 +423,23 @@
     <h3>Event Logos</h3>
 </div>
 
+<div>
+    <p>
+        Need a low-resolution logo for social media?&ensp;
+        If so, copy and paste the logo below:
+    </p>
+</div>
+
+<div>
+    <button class="btn btn-primary" onclick="copy('#EventLogoTwitter')">
+        <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
+    </button>
+</div>
+
+<div id="EventLogoTwitter" class="image_to_copy">
+    <img src="/images/2018CodeCamp-Event-440x220-Flattened-Twitter.png"
+         alt="Orlando Code Camp 2018 Logo">
+</div>
 
 <div>
     <p>
@@ -433,36 +450,13 @@
     </p>
 </div>
 
-
-@*<div>
-        <button class="btn btn-primary" onclick="copy('#ComeSeeMeLogo2600x1022')">
-            <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
-        </button>
-    </div>
-
-    <div id="ComeSeeMeLogo2600x1022" class="image_to_copy">
-        <img src="/images/2018CodeCamp-MeetMe-2600x1022.png"
-             alt="Come See Me at Orlando Code Camp 2018">
-    </div>
-
-    <div>
-        <button class="btn btn-primary" onclick="copy('#ComeSeeUsImage2600x1022')">
-            <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
-        </button>
-    </div>
-
-    <div id="ComeSeeUsImage2600x1022" class="image_to_copy">
-        <img src="/images/2018CodeCamp-MeetUs-2600x1022.png"
-             alt="Come See Us at Orlando Code Camp 2018">
-    </div>*@
-
 <div>
-    <button class="btn btn-primary" onclick="copy('#EventLogo2600x1022')">
+    <button class="btn btn-primary" onclick="copy('#EventLogoLarge')">
         <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
     </button>
 </div>
 
-<div id="EventLogo2600x1022" class="image_to_copy">
-    <img src="/images/2018CodeCamp-Event-2600x1022.png"
+<div id="EventLogoLarge" class="image_to_copy">
+    <img src="/images/2018CodeCamp-Event-2775x1036-Flattened.png"
          alt="Orlando Code Camp 2018 Logo">
 </div>
