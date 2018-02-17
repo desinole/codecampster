@@ -102,6 +102,7 @@ namespace codecampster.Controllers
                     Website = s.Website,
                     OnetugUrl = $"{baseUrl}/Sponsors/Details/{s.ID}"
                 })
+                .OrderBy(s => s.CompanyName)
                 .ToList();
 
             var sponsorSelectList = sponsorSummaries
