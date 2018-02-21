@@ -113,23 +113,51 @@ namespace codecampster.Controllers
                 })
                 .ToList();
 
+            // Tracks
+
+            var trackSummaries = _context.Tracks
+                // Don't need to show all Track data for social media
+                .Select(t => new TrackSummary
+                {
+                    Id = t.ID,
+                    Name = t.Name,
+                    RoomNumber = t.RoomNumber
+                })
+                .OrderBy(t => t.Name)
+                .ToList();
+
+            var trackSelectList = trackSummaries
+                .Select((t, i) => new SelectListItem
+                {
+                    Text = $"{t.Name}",
+                    Value = i.ToString()
+                })
+                .ToList();
+
+            var trackCount = trackSelectList.Count();
+
             // ViewModel
 
             var viewModel = new SpreadTheWordViewModel
             {
                 // Sessions
-                SessionSelectList = approvedSessionSelectList,
                 SessionSummaries = approvedSessionSummaries,
+                SessionSelectList = approvedSessionSelectList,
                 SessionCount = approvedSessionCount,
 
                 // Speakers
-                SpeakerSelectList = approvedSpeakerSelectList,
                 SpeakerSummaries = approvedSpeakerSummaries,
+                SpeakerSelectList = approvedSpeakerSelectList,
                 SpeakerCount = approvedSpeakerCount,
 
                 // Sponsors
-                SponsorSelectList = sponsorSelectList,
                 SponsorSummaries = sponsorSummaries,
+                SponsorSelectList = sponsorSelectList,
+
+                // Tracks
+                TrackSummaries = trackSummaries,
+                TrackSelectList = trackSelectList,
+                TrackCount = trackCount
             };
 
             return View(viewModel);
