@@ -3,7 +3,7 @@
     Layout = null;//this page is one-off with every session on it, making it easier to view and print
     ViewData["Title"] = "Agenda";
 
-    var width = (int)(100 / (ViewBag.TrackCount));
+    var width = (int)(100 / (ViewBag.TrackCount==0?1:ViewBag.TrackCount));
 }
 <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 <style>
