@@ -19,7 +19,7 @@
     <a asp-action="Create">Create New</a>
 </p>*@
 
-@if(ViewBag.IsAdmin && Model.Count() > 0)
+@if(User.IsInRole("administrator") && Model.Count() > 0)
 {
     <div style="float: right; margin: 0 0 3px 0;"><a asp-controller="Sessions" asp-action="ExportToCsv"><span class="btn btn-default">Export Sessions</span></a></div>
 }

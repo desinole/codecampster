@@ -82,10 +82,10 @@ namespace Codecamp2018
                     var configurationSection = Configuration.GetSection("AppSettings");
                     var adminUser = configurationSection.GetValue<string>("AdminUser");
                     var adminPass = configurationSection.GetValue<string>("AdminPass");
-                    //serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                    //     .Database.Migrate();
-                    //serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                    //.EnsureSeed(adminUser, adminPass);
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                         .Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                    .EnsureSeed(adminUser, adminPass);
                 }
             }
             catch { }

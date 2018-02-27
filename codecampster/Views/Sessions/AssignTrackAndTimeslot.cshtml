@@ -1,0 +1,126 @@
+﻿@model Codecamp2018.ViewModels.Session.SessionManagement
+
+@{
+    ViewData["Title"] = Model.Session.Name;
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var trackSelected = $('#Session_TrackID :selected').val();
+        trackSelected = trackSelected == "" ? 0 : trackSelected;
+        var speakerId = $('#Session_SpeakerID').val();
+
+        if (trackSelected == 0) {
+            $('#Session_TimeslotID').empty(); // empty the drop down list
+            $('#Session_TimeslotID').append('<option value="">-- Select --</option>');
+            $('#Session_TimeslotID').prop('disabled', true);
+        } else {
+            $('#Session_TimeslotID').prop('disabled', false);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetTimeslotsForTrack", "Sessions")',
+                data: JSON.stringify({ _speakerId: speakerId, _trackId: trackSelected }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+
+            }).done(function (data) {
+                // When successful, get the data and populate the drop down list
+                if (data != null) {
+                    $('#Session_TimeslotID').empty();
+                    $('#Session_TimeslotID').append('<option value="">-- Select --</option>');
+
+                    $.each(data, function (index, data) {
+                        $('#Session_TimeslotID').append('<option value="' + data.value + '">' + data.text + '</option>');
+                    });
+                }
+
+            }).fail(function (response) {
+                if (response.status != 0) {
+                    alert(response.status + " " + response.statusText);
+                }
+
+            });
+        }
+
+        $('#Session_TrackID').change(function () {
+            trackSelected = $('#Session_TrackID :selected').val();
+            trackSelected = trackSelected == "" ? 0 : trackSelected;
+
+            if (trackSelected == 0) {
+                $('#Session_TimeslotID').empty(); // empty the drop down list
+                $('#Session_TimeslotID').append('<option value="">-- Select --</option>');
+                $('#Session_TimeslotID').prop('disabled', true);
+            } else {
+                $('#Session_TimeslotID').prop('disabled', false);
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetTimeslotsForTrack", "Sessions")',
+                    data: JSON.stringify({ _speakerId: speakerId, _trackId: trackSelected }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+
+                }).done(function (data) {
+                    // When successful, get the data and populate the drop down list
+                    if (data != null) {
+                        $('#Session_TimeslotID').empty();
+                        $('#Session_TimeslotID').append('<option value="">-- Select --</option>');
+
+                        $.each(data, function (index, data) {
+                            $('#Session_TimeslotID').append('<option value="' + data.value + '">' + data.text + '</option>');
+                        });
+                    }
+
+                }).fail(function (response) {
+                    if (response.status != 0) {
+                        alert(response.status + " " + response.statusText);
+                    }
+
+                });
+            }
+        });
+    });
+</script>
+
+<h2>Assign track and timeslot for @ViewData["Title"]</h2>
+
+<form asp-action="AssignTrackAndTimeslot">
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            <label class="col-md-2 control-label">Approved Session</label>
+            <div class="col-md-10">
+                <input asp-for="Session.IsApproved" type="checkbox" class="form" />
+                <span asp-validation-for="Session.IsApproved" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Assigned Track</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Session.TrackID, Model.TrackItems, "-- Select --");
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Assigned Timeslot</label>
+            <div class="col-md-10">
+                <input asp-for="Session.SpeakerID" id="Session_SpeakerID" type="hidden" />
+                @Html.DropDownListFor(m => m.Session.TimeslotID, Model.TimeslotItems, "-- Select --");
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-controller="Sessions" asp-action="Management"><span class="btn btn-default">Cancel</span></a><br />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+

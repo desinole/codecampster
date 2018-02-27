@@ -11,6 +11,7 @@ using Codecamp2018.ViewModels.Session;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Codecamp2018.ViewModels.Speaker;
+using Codecamp2018.ViewModels.Session;
 using Codecamp2018.ViewModels.Helpers;
 using System.IO;
 using Microsoft.AspNetCore.Http;
@@ -43,6 +44,149 @@ namespace Codecamp2018.Controllers
             _context = context;
         }
 
+        #region Session Management
+
+        // GET: Sessions/Management
+        public IActionResult Management()
+        {
+            var sessionViewModel
+                = from session in _context.Sessions
+                  join track in _context.Tracks on session.TrackID equals track.ID into sessTr
+                  join timeslot in _context.Timeslots on session.TimeslotID equals timeslot.ID into sessTs
+                  from sessionTrack in sessTr.DefaultIfEmpty()
+                  from sessionTimeslot in sessTs.DefaultIfEmpty()
+                  select new SessionViewModel
+                  {
+                      SessionID = session.SessionID,
+                      SpeakerID = session.SpeakerID,
+                      Title = session.Name,
+                      Description = session.Description,
+                      Level = session.Level,
+                      Keywords = session.KeyWords,
+                      CoSpeakers = session.CoSpeakers,
+                      IsApproved = session.IsApproved,
+                      TrackName = sessionTrack == null ? "Not Assigned" : sessionTrack.Name,
+                      RoomNumber = sessionTrack == null ? "Not Assigned" : sessionTrack.RoomNumber,
+                      StartTime = sessionTimeslot == null ? "Not Assigned" : sessionTimeslot.StartTime.ToString("h:mm t"),
+                      EndTime = sessionTimeslot == null ? "Not Assigned" : sessionTimeslot.EndTime.ToString("h:mm t"),
+                      Speaker = new SpeakerViewModel
+                      {
+                          ID = session.Speaker.ID,
+                          Company = session.Speaker.Company,
+                          Title = session.Speaker.Title,
+                          Bio = session.Speaker.Bio,
+                          Twitter = session.Speaker.Twitter,
+                          Website = session.Speaker.Website,
+                          Blog = session.Speaker.Blog,
+                          AvatarURL = session.Speaker.AvatarURL,
+                          MVPDetails = session.Speaker.MVPDetails,
+                          AuthorDetails = session.Speaker.AuthorDetails,
+                          NoteToOrganizers = session.Speaker.NoteToOrganizers,
+                          IsMvp = session.Speaker.IsMvp,
+                          PhoneNumber = session.Speaker.PhoneNumber,
+                          LinkedIn = session.Speaker.LinkedIn,
+                          FullName = session.Speaker.FullName
+                      }
+                  };
+
+            ViewData["Title"] = "Manage codecamp sessions: approve sessions, assign tracks and timeslots";
+
+            return View(sessionViewModel);
+        }
+
+        // GET: Sessions/AssignTrackAndTimeslot
+        public IActionResult AssignTrackAndTimeslot(int id)
+        {
+            var sessionManagementViewModel
+                = new Codecamp2018.ViewModels.Session.SessionManagement
+                {
+                    Session = _context.Sessions.Include(s => s.Speaker).Where(s => s.SessionID == id)
+                    .FirstOrDefault(),
+                    TrackItems = new SelectList(_context.Tracks, "ID", "Name"),
+                    TimeslotItems = new SelectList(new List<SelectListItem>(), "Value", "Text")
+                };
+
+            return View(sessionManagementViewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult AssignTrackAndTimeslot(SessionManagement viewModel, int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var session = _context.Sessions
+                        .Where(s => s.SessionID == id)
+                        .FirstOrDefault();
+
+                    // Update items from the form
+                    session.IsApproved = viewModel.Session.IsApproved;
+                    session.TrackID = viewModel.Session.TrackID;
+                    session.TimeslotID = viewModel.Session.TimeslotID;
+
+                    _context.Update(session);
+                }
+
+                if (_context.SaveChanges() > 0)
+                {
+                    return RedirectToAction("Management", "Sessions");
+                }
+                else
+                    return View(viewModel);
+            }
+            catch (Exception)
+            {
+                return View(viewModel);
+            }
+        }
+
+        public class TimeslotsForTrackParams
+        {
+            public string _speakerId { get; set; }
+            public string _trackId { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult GetTimeslotsForTrack([FromBody] TimeslotsForTrackParams parameters)
+        {
+            var speakerId = int.Parse(parameters._speakerId);
+            var trackId = int.Parse(parameters._trackId);
+
+            var timeslotsInUse 
+                = from session in _context.Sessions
+                  where (session.TrackID == trackId
+                  || (session.SpeakerID == speakerId && session.TrackID.HasValue)) 
+                  && session.TimeslotID.HasValue
+                  select session.TimeslotID;
+
+            var availableTimeslots
+                = from timeslot in _context.Timeslots
+                  where !timeslotsInUse.Contains(timeslot.ID)
+                  select timeslot;
+
+            var list = new List<SelectListItem>();
+            foreach (var timeslot in availableTimeslots)
+            {
+                var timeslotDisplayText = new StringBuilder();
+                timeslotDisplayText
+                    .Append(timeslot.StartTime.ToString("h:mm t"))
+                    .Append(" - ")
+                    .Append(timeslot.EndTime.ToString("h:mm t"));
+
+                list.Add(new SelectListItem()
+                {
+                    Value = timeslot.ID.ToString(),
+                    Text = timeslotDisplayText.ToString()
+                });
+            }
+
+            return Json(list);
+        }
+
+        #endregion
 
         //[ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Agenda()
@@ -93,6 +237,7 @@ namespace Codecamp2018.Controllers
                 return Json(false);
             }
         }
+
         //[ResponseCache(Duration = 300,Location=ResponseCacheLocation.Client)]
         public IActionResult Index(string track, string timeslot)
         {
@@ -114,12 +259,6 @@ namespace Codecamp2018.Controllers
                 sessions = sessions.Where(s => s.IsApproved);
             }
             ViewData["Title"] = string.Format("All {0} Sessions", sessions.Count());
-
-            // Determine whether the current user is an Admin
-            ViewBag.IsAdmin = (from userRole in _context.UserRoles
-                               join role in _context.Roles on userRole.RoleId equals role.Id
-                               where userRole.UserId == currentUser.Id && role.NormalizedName == "ADMINISTRATOR"
-                               select userRole).Count() > 0;
 
             if (!string.IsNullOrEmpty(track))
             {
@@ -164,8 +303,8 @@ namespace Codecamp2018.Controllers
                                    Description = session.Description != null ? session.Description : "Not supplied",
                                    KeyWords = session.KeyWords != null ? session.KeyWords : "Not supplied",
                                    Level = session.Level == 1 ? "All skill levels" : (session.Level == 2 ? "Some prior knowledge required" : "Deep dive"),
-                                   TimeslotStart = timeSlot != null ? timeSlot.StartTime : "Not supplied",
-                                   TimeslotEnd = timeSlot != null ? timeSlot.EndTime : "Not supplied",
+                                   TimeslotStart = timeSlot != null ? timeSlot.StartTime : DateTime.MinValue,
+                                   TimeslotEnd = timeSlot != null ? timeSlot.EndTime : DateTime.MinValue,
                                    TrackName = track != null ? track.Name : "Not supplied",
                                    TrackRoomNumber = track != null ? track.RoomNumber : "Not supplied"
                                }).ToList();
@@ -183,8 +322,8 @@ namespace Codecamp2018.Controllers
                     .Append(session.Description.Replace(',','|')).Append(",")
                     .Append(session.KeyWords.Replace(',', '|')).Append(",")
                     .Append(session.Level.Replace(',', '|')).Append(",")
-                    .Append(session.TimeslotStart.Replace(',', '|')).Append(",")
-                    .Append(session.TimeslotEnd.Replace(',', '|')).Append(",")
+                    .Append(session.TimeslotStart.ToShortTimeString().Replace(',', '|')).Append(",")
+                    .Append(session.TimeslotEnd.ToShortTimeString().Replace(',', '|')).Append(",")
                     .Append(session.TrackName.Replace(',', '|')).Append(",")
                     .Append(session.TrackRoomNumber);
 

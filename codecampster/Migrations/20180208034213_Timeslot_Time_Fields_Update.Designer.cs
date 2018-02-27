@@ -11,9 +11,10 @@ using System;
 namespace Codecamp2018.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208034213_Timeslot_Time_Fields_Update")]
+    partial class Timeslot_Time_Fields_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
