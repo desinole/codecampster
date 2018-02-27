@@ -163,27 +163,18 @@ namespace Codecamp2018.Controllers
         //[ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
+            IQueryable<Speaker> speakers = _context.Speakers
+                .Include(s => s.Sessions)
+                .Include(s => s.AppUser)
+                .Where(s => !(s.Special == true))
+                .OrderBy(s => s.AppUser.FirstName + " " + s.AppUser.LastName);
+
             if (_context.Events.SingleOrDefault().AttendeeRegistrationOpen ?? false)
             {
-                var speakers = _context.Speakers
-                    .Include(s => s.Sessions)
-                    .Include(s => s.AppUser)
-                    .Where(s => !(s.Special == true)
-                    && s.Sessions.Any(c => c.IsApproved)
-                    )
-                    .OrderBy(s => s.FullName);
-                return View(speakers);
-            }
-            else
-            {
-                var speakers = _context.Speakers
-                    .Include(s => s.Sessions)
-                     .Include(s => s.AppUser)
-                   .Where(s => !(s.Special == true))
-                    .OrderBy(s => s.FullName);
-                return View(speakers);
+                speakers = speakers.Where(s => s.Sessions.Any(c => c.IsApproved));
             }
 
+            return View(speakers);
         }
 
         //[ResponseCache(Duration = 300)]

@@ -1,0 +1,462 @@
+﻿@model codecampster.ViewModels.SpreadTheWord.SpreadTheWordViewModel
+
+@{
+    ViewData["Title"] = "Spread the Word";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<style>
+    .image_to_copy {
+        margin: 1em 0;
+        text-align: center;
+    }
+
+    .image_to_copy img {
+        border: 1px solid #999;
+        max-height: 400px;
+        max-width: 100%;
+    }
+
+    .text_to_copy {
+        border: 1px solid #999;
+        margin: 1em 0;
+        max-height: 400px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 1em;
+    }
+
+    div.section-break {
+        border-top: 1px solid #eee;
+        line-height: 3;
+    }
+
+    body {
+        line-height: 2;
+    }
+
+    br {
+        font-size: 0.5em;
+        line-height: 1;
+    }
+
+    button, li, p {
+        margin: 1ex 0;
+    }
+
+    button, li, p, p.h3, p.h4 {
+        line-height: 1.42857143;
+    }
+
+    button.twitter {
+        background-color: #1b95e0;
+        border-radius: 4px;
+        border-width: 0;
+        color: white;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-size: 13px;
+        line-height: 26px;
+        padding: 1px 10px 1px 9px;
+    }
+
+    /*i.twitter {
+        background: transparent 0 0 no-repeat;
+        background-image: url(http://th07.deviantart.net/fs70/150/i/2013/012/c/6/rock_01_png___by_alzstock-d5r84up.png);
+        display: inline-block;
+        height: 18px;
+        position: relative;
+        text-align: left;
+        top: 4px;
+        width: 18px;
+    }*/
+
+    p.h3, p.h4 {
+        margin: 1em 0;
+    }
+
+    p.h3-center {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    p.h4-center {
+        text-align: center;
+    }
+
+    select {
+        width: 400px;
+    }
+</style>
+
+<script>
+    var sessions = @Json.Serialize(Model.SessionSummaries);
+    var speakers = @Json.Serialize(Model.SpeakerSummaries);
+    var sponsors = @Json.Serialize(Model.SponsorSummaries);
+
+    //console.log(sessions);
+    //console.log(speakers);
+    //console.log(sponsors);
+
+    function tweetSession() {
+        var index = document.getElementById('SelectedSession').value;
+        var session = sessions[index];
+        var message = session.speakerName + " - " + session.sessionName;
+
+        openTwitterWindow(message, session.onetugUrl);
+    }
+
+    function tweetSpeaker() {
+        var index = document.getElementById('SelectedSpeaker').value;
+        var speaker = speakers[index];
+        var message = speaker.fullName;
+
+        openTwitterWindow(message, speaker.onetugUrl);
+    }
+
+    function tweetSponsor() {
+        var index = document.getElementById('SelectedSponsor').value;
+        var sponsor = sponsors[index];
+        var message = sponsor.companyName + " - " + sponsor.sponsorLevel;
+
+        openTwitterWindow(message, sponsor.onetugUrl);
+    }
+
+    function openTwitterWindow(message, onetugUrl) {
+        var baseUrl = "https://twitter.com/intent/tweet";
+        var twitterUrl = baseUrl + "?text=" + message;
+        twitterUrl += "&url=" + onetugUrl;
+        twitterUrl += "&hashtags=OrlandoCC";
+        twitterUrl += "&via=ONETUG";
+
+        //console.log(message);
+
+        openWindow(twitterUrl, "twitter-share", "width=500,height=500");
+    }
+
+    function openWindow(url, windowName, windowFeatures) {
+        var encodedUrl = encodeURI(url);
+
+        //console.log(encodedUrl);
+
+        window.open(encodedUrl, windowName, windowFeatures);
+
+        return false;
+    }
+</script>
+
+<div>
+    <p>
+        Are you excited about the upcoming 2018 Orlando Code Camp on March 17?&ensp;
+        Help us spread the word about the event or show your involvement.
+    </p>
+</div>
+
+<!-- ####################################################################### -->
+
+<div class="section-break">
+    <div>
+        <p class="h3">
+            <a href="#SendEmail">
+                Send an Email
+            </a>
+        </p>
+    </div>
+
+    <div>
+        <p class="h3">
+            <a href="#PromoteSession">
+                Promote a Session
+            </a>
+        </p>
+    </div>
+
+    <div>
+        <p class="h3">
+            <a href="#PromoteSpeaker">
+                Promote a Speaker
+            </a>
+        </p>
+    </div>
+
+    <div>
+        <p class="h3">
+            <a href="#PromoteSponsor">
+                Promote a Sponsor
+            </a>
+        </p>
+    </div>
+
+    <div>
+        <p class="h3">
+            <a href="#EventLogos">
+                Event Logos
+            </a>
+        </p>
+    </div>
+</div>
+
+<!-- ####################################################################### -->
+
+<div id="SendEmail" class="section-break">
+    <h3>Send an Email</h3>
+</div>
+
+<div>
+    <p>
+        Are you an attendee?&ensp;
+        Help us spread the word to your friends and colleagues.
+    </p>
+    <p>
+        Are you a speaker?&nbsp;
+        Help us spread the word about your talk.
+    </p>
+    <p>
+        Are you a sponsor?&nbsp;
+        Help us spread the word to your customers and the community.
+    </p>
+    <p>
+        Do you run a user group?&nbsp;
+        Help us spread the word to your members.
+    </p>
+</div>
+
+<!-- TODO Fix copy functionality moving to the bottom of the page -->
+
+<div>
+    <button class="btn btn-primary" onclick="copy('#FriendLetter')">
+        <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the message below
+    </button>
+</div>
+
+<!-- NOTE HTML table used for compatibility with multiple email platforms -->
+<div id="FriendLetter" class="text_to_copy">
+    <p class="h4">
+        I wanted to tell you I'll be at the 2018 Orlando Code Camp and I think
+        you should too!&ensp;
+        Here's the info:
+    </p>
+
+    <br />
+
+    <p class="h3 h3-center">
+        13th Annual Orlando Code Camp
+    </p>
+    <p class="h3 h3-center">
+        March 17th, 2018
+    </p>
+    <p class="h3 h3-center">
+        Seminole State College
+    </p>
+    <p class="h4 text-center">
+        @Model.SpeakerCount Speakers &bull;
+        @Model.SessionCount Sessions &bull;
+        13 Tracks
+    </p>
+    <p class="h4 text-center">
+        Keynote by <a target="_blank" href="http://donovanbrown.com">Donovan Brown</a>
+    </p>
+    <p class="h4 text-center">
+        <a target="_blank" href="http://orlandocodecamp.com/">OrlandoCodeCamp.com</a>
+    </p>
+
+    <br />
+
+    <p class="h4">
+        With all these tracks, you're sure to find something you like:
+    </p>
+
+    <table style="margin: 0 auto; width: 80%;">
+        <tr>
+            <td style="vertical-align: text-top;">
+                <ul class="h4">
+                    <li>.NET & C# and more</li>
+                    <li>Agile & Soft Skills</li>
+                    <li>AI/ML</li>
+                    <li>Azure</li>
+                    <li>Data</li>
+                    <li>DevOps</li>
+                    <li>General</li>
+                </ul>
+            </td>
+            <td style="vertical-align: text-top;">
+                <ul class="h4">
+                    <li>IoT</li>
+                    <li>JavaScript</li>
+                    <li>Programming Skills</li>
+                    <li>Serverless & Containers</li>
+                    <li>Web</li>
+                    <li>Xamarin</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <p class="h4">
+        Plus, there'll also be a full-day
+        <b>IoT Hands on Lab</b> presented by <b>Microsoft</b> &copy;.
+    </p>
+
+    <p class="h4">
+        Make sure to register first at
+        <a target="_blank" href="http://orlandocodecamp.com/">OrlandoCodeCamp.com</a>
+        so they can estimate the number of lunches and t-shirts.
+    </p>
+
+    <p class="h4">
+        See you there!
+    </p>
+</div>
+
+<!-- ####################################################################### -->
+
+<div id="PromoteSession" class="section-break">
+    <h3>Promote a Session</h3>
+</div>
+
+<div>
+    <p>
+        Want to promote a particular session?&ensp;
+        Select the session from the list below and hit the button to tweet about it.
+    </p>
+</div>
+
+<div>
+    <select asp-items="@(new SelectList(Model.SessionSelectList, "Value", "Text"))"
+            id="SelectedSession"></select>
+</div>
+
+<div>
+    <button class="twitter"
+            onclick="tweetSession()">
+        Tweet
+    </button>
+</div>
+
+<!-- ####################################################################### -->
+
+<div id="PromoteSpeaker" class="section-break">
+    <h3>Promote a Speaker</h3>
+</div>
+
+<div>
+    <p>
+        Want to promote a particular speaker?&ensp;
+        Select the speaker from the list below and hit the button to tweet about them.
+    </p>
+</div>
+
+<div>
+    <select asp-items="@(new SelectList(Model.SpeakerSelectList, "Value", "Text"))"
+            id="SelectedSpeaker"></select>
+</div>
+
+<div>
+    <button class="twitter"
+            onclick="tweetSpeaker()">
+        Tweet
+    </button>
+</div>
+
+<!-- ####################################################################### -->
+
+<div id="PromoteSponsor" class="section-break">
+    <h3>Promote a Sponsor</h3>
+</div>
+
+<div>
+    <p>
+        Want to promote a particular sponsor?&ensp;
+        Select the sponsor from the list below and hit the button to tweet about them.
+    </p>
+</div>
+
+<div>
+    <select id="SelectedSponsor"
+            asp-items="@(new SelectList(Model.SponsorSelectList, "Value", "Text"))"></select>
+</div>
+
+<div>
+    <button class="twitter"
+            onclick="tweetSponsor()">
+        @*<span class="glyphicon glyphicon-retweet"></span>&ensp;*@Tweet
+    </button>
+</div>
+
+@*<div>
+        <button class="twitter"
+                onclick="tweetSponsor()">
+            <i class="twitter"></i>
+            Tweet
+        </button>
+    </div>*@
+
+@*<div>
+        <button class="twitter"
+                onclick="tweetSponsor()">
+            <i class="twitter"></i>
+            Tweet
+        </button>
+    </div>*@
+
+@*<div>
+        <a id="TweetSponsor"
+           href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+           class="twitter-share-button"
+           data-size="large"
+           data-text=""
+           data-url="http://OrlandoCodeCamp.com"
+           data-via="ONETUG"
+           data-hashtags="OrlandoCC"
+           data-show-count="false">
+            Tweet
+        </a>
+
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>*@
+
+<!-- ####################################################################### -->
+<!-- TODO Copy functionality works for Word and Outlook but not Paint.Net -->
+<!-- TODO Offer higher DPI option to fit document dimensions better -->
+
+<div id="EventLogos" class="section-break">
+    <h3>Event Logos</h3>
+</div>
+
+<div>
+    <p>
+        Need a low-resolution logo for social media?&ensp;
+        If so, copy and paste the logo below:
+    </p>
+</div>
+
+<div>
+    <button class="btn btn-primary" onclick="copy('#EventLogoTwitter')">
+        <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
+    </button>
+</div>
+
+<div id="EventLogoTwitter" class="image_to_copy">
+    <img src="/images/2018CodeCamp-Event-1200x675-Flattened-Twitter.png"
+         alt="Orlando Code Camp 2018 Logo">
+</div>
+
+<div>
+    <p>
+        Need a high-resolution logo for printed materials or swag?&ensp;
+        If so, check with us first by sending an email to
+        <a href="mailto:board@onetug.org">board@onetug.org</a>
+        and then grab our logo here:
+    </p>
+</div>
+
+<div>
+    <button class="btn btn-primary" onclick="copy('#EventLogoLarge')">
+        <span class="glyphicon glyphicon-paste"></span>&ensp;Copy the image below
+    </button>
+</div>
+
+<div id="EventLogoLarge" class="image_to_copy">
+    <img src="/images/2018CodeCamp-Event-2775x1036-Flattened.png"
+         alt="Orlando Code Camp 2018 Logo">
+</div>
