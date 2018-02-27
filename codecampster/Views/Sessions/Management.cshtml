@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Codecamp2018.ViewModels.Session.SessionViewModel>
+
+<h2>@ViewData["Title"]</h2>
+
+@if (User.IsInRole("administrator"))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Session</th>
+                <th>Speaker</th>
+                <th>Approve</th>
+                <th>Track</th>
+                <th>Room Numnber</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var session in Model)
+        {
+        <tr>
+            <td>@(string.Format("{0}", session.Title))</td>
+            <td>@(string.Format("{0}", session.Speaker.FullName))</td>
+            <td><input type="checkbox" disabled="disabled" asp-for="@session.IsApproved" /></td>
+            <td>@(string.Format("{0}", session.TrackName))</td>
+            <td>@(string.Format("{0}", session.RoomNumber))</td>
+            <td>@(string.Format("{0}", session.StartTime))</td>
+            <td>@(string.Format("{0}", session.EndTime))</td>
+            <td>@Html.ActionLink("Approve session, assign track and timeslot", "AssignTrackAndTimeslot", new { id = session.SessionID })</td>
+        </tr>
+        }
+    </table>
+}

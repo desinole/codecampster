@@ -104,9 +104,9 @@ namespace Codecamp2018.Models
             builder.Entity(typeof(Timeslot), x =>
             {
                 x.Property<int>("ID");
-                x.Property<string>("StartTime");
-                x.Property<string>("EndTime");
-                x.Property<bool?>("Special");
+                x.Property<DateTime>("StartTime");
+                x.Property<DateTime>("EndTime");
+                x.Property<bool>("Special");
             });
             builder.Entity<Session>().HasOne(p => p.Timeslot).WithMany(p => p.Sessions);
             builder.Entity<Timeslot>().HasMany(p => p.Sessions);

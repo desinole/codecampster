@@ -1,0 +1,48 @@
+﻿@model Timeslot
+
+@{
+    ViewData["Title"] = "Add/Edit Timeslot";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-controller="Timeslots" asp-action="Edit" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="StartTime" class="col-md-2 control-label"></label>
+        <div class="col-md-2 input-group">
+            <input asp-for="StartTime" class="form-control" type="time" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndTime" class="col-md-2 control-label"></label>
+        <div class="col-md-2 input-group">
+            <input asp-for="EndTime" class="form-control" type="time" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Rank" class="col-md-2 control-label"></label>
+        <div class="col-md-2 input-group">
+            <input asp-for="Rank" class="form-control" type="number" />
+            <span asp-validation-for="Rank" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Special" class="col-md-2 control-label"></label>
+        <div class="col-md-2 input-group">
+            <input asp-for="Special" class="form-control" type="checkbox" />
+        </div>
+    </div>
+
+    <div class="form-group"
+        <div class="col-md-offset-2 col=md-10">
+            <button type="submit" class="btn btn-default">Save</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
