@@ -41,7 +41,7 @@ namespace codecampster.Controllers
                         string.Format("{0} {1}",
                             s.Speaker.AppUser.FirstName,
                             s.Speaker.AppUser.LastName),
-                    OnetugUrl = $"{baseUrl}/Sessions/Details/{s.SessionID}"
+                    CodeCampUrl = $"{baseUrl}/Sessions/Details/{s.SessionID}"
                 })
                 .OrderBy(s => s.SpeakerName)
                 .ThenBy(s => s.SessionName)
@@ -74,7 +74,7 @@ namespace codecampster.Controllers
                     Website = s.Website,
                     Blog = s.Blog,
                     LinkedIn = s.LinkedIn,
-                    OnetugUrl = $"{baseUrl}/Speakers/Details/{s.ID}"
+                    CodeCampUrl = $"{baseUrl}/Speakers/Details/{s.ID}"
                 })
                 .OrderBy(s => s.FullName)
                 .ToList();
@@ -100,7 +100,7 @@ namespace codecampster.Controllers
                     SponsorLevel = s.SponsorLevel,
                     Twitter = s.Twitter,
                     Website = s.Website,
-                    OnetugUrl = $"{baseUrl}/Sponsors/Details/{s.ID}"
+                    CodeCampUrl = $"{baseUrl}/Sponsors/Details/{s.ID}"
                 })
                 .OrderBy(s => s.CompanyName)
                 .ToList();
@@ -121,7 +121,8 @@ namespace codecampster.Controllers
                 {
                     Id = t.ID,
                     Name = t.Name,
-                    RoomNumber = t.RoomNumber
+                    RoomNumber = t.RoomNumber,
+                    CodeCampUrl = $"{baseUrl}/Sessions/Index?Track={t.ID}"
                 })
                 .OrderBy(t => t.Name)
                 .ToList();

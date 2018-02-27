@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Spread the Word";
+    // TODO Refactor values specific to Orlando Code Camp into common class
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -93,17 +94,19 @@
     var sessions = @Json.Serialize(Model.SessionSummaries);
     var speakers = @Json.Serialize(Model.SpeakerSummaries);
     var sponsors = @Json.Serialize(Model.SponsorSummaries);
+    var tracks = @Json.Serialize(Model.TrackSummaries);
 
-    //console.log(sessions);
-    //console.log(speakers);
-    //console.log(sponsors);
+    //console.log(sessions);              /**/
+    //console.log(speakers);              /**/
+    //console.log(sponsors);              /**/
+    //console.log(tracks);                /**/
 
     function tweetSession() {
         var index = document.getElementById('SelectedSession').value;
         var session = sessions[index];
         var message = session.speakerName + " - " + session.sessionName;
 
-        openTwitterWindow(message, session.onetugUrl);
+        openTwitterWindow(message, session.codeCampUrl);
     }
 
     function tweetSpeaker() {
@@ -111,7 +114,7 @@
         var speaker = speakers[index];
         var message = speaker.fullName;
 
-        openTwitterWindow(message, speaker.onetugUrl);
+        openTwitterWindow(message, speaker.codeCampUrl);
     }
 
     function tweetSponsor() {
@@ -119,25 +122,47 @@
         var sponsor = sponsors[index];
         var message = sponsor.companyName + " - " + sponsor.sponsorLevel;
 
-        openTwitterWindow(message, sponsor.onetugUrl);
+        openTwitterWindow(message, sponsor.codeCampUrl);
     }
 
-    function openTwitterWindow(message, onetugUrl) {
+    function tweetTrack() {
+        var index = document.getElementById('SelectedTrack').value;
+        var track = tracks[index];
+        var message = track.name;
+
+        openTwitterWindow(message, track.codeCampUrl);
+    }
+
+    function openTwitterWindow(message, codeCampUrl) {
         var baseUrl = "https://twitter.com/intent/tweet";
-        var twitterUrl = baseUrl + "?text=" + message;
-        twitterUrl += "&url=" + onetugUrl;
+        var formattedMessage = formatMessage(message);
+
+        var twitterUrl = baseUrl + "?text=" + formattedMessage;
+        twitterUrl += "&url=" + codeCampUrl;
         twitterUrl += "&hashtags=OrlandoCC";
         twitterUrl += "&via=ONETUG";
 
-        //console.log(message);
+        //console.log(twitterUrl);        /**/
 
         openWindow(twitterUrl, "twitter-share", "width=500,height=500");
+    }
+
+    // Clean up the message so it will look good inside the Twitter window
+    function formatMessage(message) {
+        //console.log(message);           /**/
+
+        var formattedMessage = message.replace(/ *\/ */g, " / ");
+        formattedMessage = formattedMessage.replace("#", "Sharp");
+
+        //console.log(formattedMessage);  /**/
+
+        return formattedMessage;
     }
 
     function openWindow(url, windowName, windowFeatures) {
         var encodedUrl = encodeURI(url);
 
-        //console.log(encodedUrl);
+        //console.log(encodedUrl);        /**/
 
         window.open(encodedUrl, windowName, windowFeatures);
 
@@ -183,6 +208,14 @@
         <p class="h3">
             <a href="#PromoteSponsor">
                 Promote a Sponsor
+            </a>
+        </p>
+    </div>
+
+    <div>
+        <p class="h3">
+            <a href="#PromoteTrack">
+                Promote a Track
             </a>
         </p>
     </div>
@@ -322,8 +355,9 @@
 </div>
 
 <div>
-    <select asp-items="@(new SelectList(Model.SessionSelectList, "Value", "Text"))"
-            id="SelectedSession"></select>
+    <select id="SelectedSession"
+            asp-items="@(new SelectList(Model.SessionSelectList, "Value", "Text"))">
+    </select>
 </div>
 
 <div>
@@ -347,8 +381,9 @@
 </div>
 
 <div>
-    <select asp-items="@(new SelectList(Model.SpeakerSelectList, "Value", "Text"))"
-            id="SelectedSpeaker"></select>
+    <select id="SelectedSpeaker"
+            asp-items="@(new SelectList(Model.SpeakerSelectList, "Value", "Text"))">
+    </select>
 </div>
 
 <div>
@@ -373,12 +408,39 @@
 
 <div>
     <select id="SelectedSponsor"
-            asp-items="@(new SelectList(Model.SponsorSelectList, "Value", "Text"))"></select>
+            asp-items="@(new SelectList(Model.SponsorSelectList, "Value", "Text"))">
+    </select>
 </div>
 
 <div>
     <button class="twitter"
             onclick="tweetSponsor()">
+        Tweet
+    </button>
+</div>
+
+<!-- ####################################################################### -->
+
+<div id="PromoteTrack" class="section-break">
+    <h3>Promote a Track</h3>
+</div>
+
+<div>
+    <p>
+        Want to promote a particular track?&ensp;
+        Select the track from the list below and hit the button to tweet about it.
+    </p>
+</div>
+
+<div>
+    <select id="SelectedTrack"
+            asp-items="@(new SelectList(Model.TrackSelectList, "Value", "Text"))">
+    </select>
+</div>
+
+<div>
+    <button class="twitter"
+            onclick="tweetTrack()">
         Tweet
     </button>
 </div>

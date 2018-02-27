@@ -54,7 +54,7 @@ namespace codecampster.ViewModels.SpreadTheWord
 
         //public Timeslot Timeslot { get; set; }
 
-        public string OnetugUrl { get; set; }
+        public string CodeCampUrl { get; set; }
 
         private string DebuggerDisplay => $"{SpeakerName} - {SessionName}";
     }
@@ -74,7 +74,7 @@ namespace codecampster.ViewModels.SpreadTheWord
 
         public string LinkedIn { get; set; }
 
-        public string OnetugUrl { get; set; }
+        public string CodeCampUrl { get; set; }
 
         private string DebuggerDisplay => $"{FullName}";
     }
@@ -92,7 +92,7 @@ namespace codecampster.ViewModels.SpreadTheWord
 
         public string Website { get; set; }
 
-        public string OnetugUrl { get; set; }
+        public string CodeCampUrl { get; set; }
 
         private string DebuggerDisplay => $"{CompanyName} - {SponsorLevel}";
     }
@@ -104,8 +104,9 @@ namespace codecampster.ViewModels.SpreadTheWord
 
         public string Name { get; set; }
         
-        //probably should be a FK from another table
         public string RoomNumber { get; set; }
+
+        public string CodeCampUrl { get; set; }
 
         private string DebuggerDisplay => $"{Name}";
     }
