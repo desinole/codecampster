@@ -42,20 +42,20 @@
     </tr>*@
     <tr>
         <th colspan="2">
-        <strong>Tracks:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+        <strong>Tracks:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>&nbsp;|&nbsp;
             @foreach (var track in ViewBag.Tracks)
             {
-                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?track={0}",track.ID))">@track.Name</a><text>&nbsp;</text>
-            }
+                <a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?track={0}",track.ID))">@track.Name</a><text>&nbsp;|&nbsp;</text>
+}
         </th>
     </tr>
     <tr>
         <th colspan="2">
-        <strong>Timings:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a>
+        <strong>Timings:&nbsp;</strong><a asp-controller="Sessions" asp-action="Index" class="sessionLinks">All</a><text>&nbsp;|&nbsp;</text>
             @foreach (var timeslot in ViewBag.Timeslots)
             {
-                <text>&nbsp;|&nbsp;</text><a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?timeslot={0}",timeslot.ID))">@string.Format("{0}-{1}",timeslot.StartTime,timeslot.EndTime)</a><text>&nbsp;</text>
-            }
+                <a class="sessionLinks" href="@Url.Content(string.Format("~/sessions/index/?timeslot={0}",timeslot.ID))">@string.Format("{0} - {1}", timeslot.StartTime.ToString("h:mm tt"), timeslot.EndTime.ToString("h:mm tt"))</a><text>&nbsp;|&nbsp;</text>
+}
         </th>
     </tr>
 @foreach (var item in Model) {
@@ -85,8 +85,8 @@
                 <em>@(item.Level == 3 ? "Deep Dive" : (item.Level == 2 ? "Prior knowledge needed" : "For all levels"))</em>
             </div>
             <div>Time &amp; Location:
-                @(item.Timeslot!=null?string.Format("{0}-{1} ",item.Timeslot.StartTime,item.Timeslot.EndTime):string.Empty)
-                @(item.Track!=null?string.Format("{0}",item.Track.RoomNumber):string.Empty)
+                @(item.Timeslot!=null? string.Format("{0} - {1}", item.Timeslot.StartTime.ToString("h:mm tt"), item.Timeslot.EndTime.ToString("h:mm tt")) : string.Empty)
+                @(item.Track!=null?string.Format(" Room {0}",item.Track.RoomNumber):string.Empty)
             </div>
             <div>
                 @(((!(string.IsNullOrEmpty(item.Description) ))? item.Description.Substring(0,Math.Min(200,item.Description.Length)):"N/A")).....@Html.ActionLink("Learn More","Details",new { id = item.SessionID })

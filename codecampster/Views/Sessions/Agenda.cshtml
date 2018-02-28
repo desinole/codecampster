@@ -60,7 +60,7 @@
             classString = "class=\"specialTimeslot\"";
         }
         <tr>
-            <td @(classString)>@string.Format("{0} - {1}", timing.StartTime, timing.EndTime)</td>
+            <td @(classString)>@string.Format("{0} - {1}", timing.StartTime.ToString("h:mm tt"), timing.EndTime.ToString("h:mm tt"))</td>
             @foreach (var trackTime in ViewBag.Tracks)
             {
                 var session = Model.Where(s => s.TrackID == trackTime.ID && s.TimeslotID == timing.ID).FirstOrDefault();
@@ -100,7 +100,7 @@
 
                             <h3>@session.Name</h3>
                             <p>Speaker: @session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers??string.Empty))</p>
-                            <p>Time: @session.Timeslot.StartTime - @session.Timeslot.EndTime</p>
+                            <p>Time: @string.Format("{0} - {1}", session.Timeslot.StartTime.ToString("h:mm tt"), session.Timeslot.EndTime.ToString("h:mm tt"))</p>
                             @if (!string.IsNullOrEmpty(session.Track.RoomNumber))
                             {
                                 <p>Room: @session.Track.RoomNumber</p>
