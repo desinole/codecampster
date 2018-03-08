@@ -30,6 +30,7 @@ namespace codecampster.Controllers
         public IActionResult Index()
         {
             return View(_context.ApplicationUsers
+                .Where(s => s.Speaker == null)
                 .OrderBy(a => a.FirstName).ThenBy(a => a.LastName));
         }
 
