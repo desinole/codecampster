@@ -36,7 +36,6 @@ namespace codecampster.Controllers.Api
                     AvatarUrl = s.AvatarURL,
                     MvpDetails = s.MVPDetails,
                     AuthorDetails = s.AuthorDetails,
-                    NoteToOrganizers = s.NoteToOrganizers,
                     IsMvp = s.IsMvp,
                     LinkedIn = s.LinkedIn,
                     Special = s.Special

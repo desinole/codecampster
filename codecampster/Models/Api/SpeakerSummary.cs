@@ -27,8 +27,6 @@ namespace codecampster.Models.Api
 
         public string AuthorDetails { get; set; }
 
-        public string NoteToOrganizers { get; set; }
-
         public bool IsMvp { get; set; }
 
         public string LinkedIn { get; set; }
