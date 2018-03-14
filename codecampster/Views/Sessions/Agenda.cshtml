@@ -74,7 +74,7 @@
                         @(session.Name)
                     @if (!(timing.Special ?? false))
                     {
-                        <br /><em><strong>@session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers ?? string.Empty))</strong></em>
+                        <br /><em><strong>@session.Speaker.AppUser.FirstName @session.Speaker.AppUser.LastName @(string.Format("{0}", session.CoSpeakers ?? string.Empty))</strong></em>
                         <br />
                         if (!string.IsNullOrEmpty(trackTime.RoomNumber))
                         {
@@ -99,7 +99,7 @@
 
 
                             <h3>@session.Name</h3>
-                            <p>Speaker: @session.Speaker.FullName @(string.Format("{0}", session.CoSpeakers??string.Empty))</p>
+                            <p>Speaker: @session.Speaker.AppUser.FirstName @session.Speaker.AppUser.LastName @(string.Format("{0}", session.CoSpeakers ?? string.Empty))</p>
                             <p>Time: @string.Format("{0} - {1}", session.Timeslot.StartTime.ToString("h:mm tt"), session.Timeslot.EndTime.ToString("h:mm tt"))</p>
                             @if (!string.IsNullOrEmpty(session.Track.RoomNumber))
                             {

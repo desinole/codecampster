@@ -199,7 +199,7 @@ namespace Codecamp2018.Controllers
             {
                 ViewBag.MySessions = _context.AttendeeSessions.Where(a => a.AppUser.UserName == User.Identity.Name).Select(a => a.SessionID).ToList();
             }
-            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
+            IQueryable<Session> sessions = _context.Sessions.Include(s => s.Speaker).Include(s=>s.Speaker.AppUser).Include(s => s.Track).Include(s => s.Timeslot).OrderBy(x => Guid.NewGuid());
             return View(sessions.ToList());
         }
 
