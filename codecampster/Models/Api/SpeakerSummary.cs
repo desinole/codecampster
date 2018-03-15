@@ -31,10 +31,11 @@ namespace codecampster.Models.Api
 
         public string LinkedIn { get; set; }
         
-        //to display or hide speakers, for instance, the organizers
+        // to display or hide speakers, for instance, the organizers
         public bool? Special { get; set; }
 
-        private string DebuggerDisplay =>
-            $"{Id} - {FullName}";
+        private string DebuggerDisplay => $"{Id} - {FullName}";
+
+        public SessionSummary[] Sessions { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace codecampster.Controllers.Api
         }
 
         [HttpGet]
-        [ResponseCache(Duration = 300,Location =ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 300,Location = ResponseCacheLocation.Any)]
         public IEnumerable<SessionSummary> Get()
         {
             var sessions = _context.Sessions
