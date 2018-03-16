@@ -15,7 +15,7 @@ namespace codecampster.Models.Api
 
         public string KeyWords { get; set; }
 
-        //to display or hide sessions, for instance, keynote, lunch, etc
+        // to display or hide sessions, for instance, keynote, lunch, etc
         public bool? Special { get; set; }
 
         public int SpeakerId { get; set; }
@@ -28,7 +28,6 @@ namespace codecampster.Models.Api
 
         public int? TimeslotId { get; set; }
 
-        private string DebuggerDisplay => 
-            $"#{Id} - Ts {TimeslotId} - Tr {TrackId} - {Name}";
+        private string DebuggerDisplay => $"#{Id} - Ts {TimeslotId} - Tr {TrackId} - {Name}";
     }
 }
